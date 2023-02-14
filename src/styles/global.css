@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 body {
-    @apply text-gray-400 px-[10%] py-[5%];
+    @apply text-gray-400 bg-gray-50 font-sans;
 }
 
 a {
-    @apply text-xs underline font-light text-gray-400 hover:text-gray-600 duration-75
+    @apply text-xs underline font-light text-gray-400 hover:text-gray-600 duration-75;
+}
+
+h1 {
+    @apply text-gray-900 text-2xl font-bold;
 }
