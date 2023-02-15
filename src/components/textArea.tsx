@@ -1,4 +1,4 @@
-import { TextareaHTMLAttributes } from 'react'
+import React, { TextareaHTMLAttributes } from 'react'
 
 interface InputProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
@@ -8,7 +8,7 @@ const TextArea = ({ label, ...props }: InputProps) => (
     <span className="text-base">{label}</span>
     <textarea
       {...props}
-      className="bg-gray-100 px-4 py-3 text-sm font-light focus:outline-purple-300 rounded placeholder-gray-200"
+      className="bg-gray-100 px-2 py-3 text-sm font-light focus:outline-purple-300 rounded placeholder-gray-200"
     />
   </div>
 )

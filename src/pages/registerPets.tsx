@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Button from '../components/button'
 import Dropdown from '../components/dropdown'
 import Input from '../components/input'
 import TextArea from '../components/textArea'
-
-const especies = [{ id: 0, value: 'cachorro' }, { id: 1, value: 'gato' }, { id: 3, value: 'pássaro' }]
+import { especies } from '../shared'
 
 const RegisterPets = () => (
   <div className="flex flex-col gap-4 justify-center items-center">

@@ -17,7 +17,7 @@ const Dropdown = ({ label = '', list, ...props }: DropdownProps) => {
       <span className="text-base">{label}</span>
       <select
         name="state"
-        className="bg-gray-100 h-11 px-4 text-sm font-light focus:outline-purple-300 rounded placeholder-gray-200"
+        className="bg-gray-100 h-11 px-2 text-sm font-light focus:outline-purple-300 rounded placeholder-gray-200"
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...props}
       >
