@@ -13,7 +13,7 @@ interface DropdownProps extends SelectHTMLAttributes<HTMLSelectElement> {
 const Dropdown = ({ label = '', list, ...props }: DropdownProps) => {
   console.log()
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-1 flex-col w-full">
       <span className="text-base">{label}</span>
       <select
         name="state"
