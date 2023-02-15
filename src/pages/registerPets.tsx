@@ -6,22 +6,6 @@ import TextArea from '../components/textArea'
 
 const especies = [{ id: 0, value: 'cachorro' }, { id: 1, value: 'gato' }, { id: 3, value: 'pássaro' }]
 
-interface CityState {
-  id: number
-  nome: string
-}
-
-interface State {
-  id: number
-  nome: string
-  municipio: CityState
-}
-
-interface List {
-  id: any
-  value: any
-}
-
 const RegisterPets = () => (
   <div className="flex flex-col gap-4 justify-center items-center">
     <h1>Cadastre seu(s) pet(s)</h1>
