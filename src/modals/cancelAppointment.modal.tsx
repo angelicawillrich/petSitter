@@ -21,7 +21,7 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
 
   return (
     <Modal title="Cancelar agendamento" onClose={onClose}>
-      <>
+      <div className="flex flex-col p-4 justify-center items-center">
         <div className="flex flex-col p-4 justify-center items-center">
           <span>Você tem certeza que deseja cancelar o seguinte agendamento?</span>
           <span className="font-bold">
@@ -38,11 +38,11 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
           {appointment.petSitter.name}
         </div>
         <div
-          className="flex flex-shrink-0 flex-wrap items-center justify-center rounded-b-md border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50"
+          className=""
         >
           <Button onClick={onCancelAppointment}>Cancelar agendamento</Button>
         </div>
-      </>
+      </div>
     </Modal>
   )
 }

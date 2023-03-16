@@ -33,6 +33,8 @@ module.exports = {
               namedComponents: "arrow-function",
               unnamedComponents: "arrow-function",
             },
-          ],
+        ],
+        "react/prop-types": "off",
+        "react/require-default-props": "off",
     }
 };
