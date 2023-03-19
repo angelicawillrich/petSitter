@@ -21,6 +21,7 @@ const Dropdown = ({ label = '', list, ...props }: DropdownProps) => {
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...props}
       >
+        <option value="" disabled>Selecione...</option>
         {list.map((item) => <option key={item.id} value={item.id}>{item.value}</option>)}
       </select>
     </div>
