@@ -2,7 +2,20 @@
 import React from 'react'
 import Button from '../components/button'
 import Modal from '../components/modal'
-import { Appointment } from '../pages/homeUser'
+
+interface Appointment {
+  id: string
+  initial_date: string
+  initial_time: string
+  final_date: string
+  final_time: string
+  petSitter: {
+    name: string
+    address: string
+    city: string
+  },
+  status: string
+}
 
 interface CancelAppointmentModalProps {
   onClose: () => void

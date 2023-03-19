@@ -2,7 +2,6 @@ import React, { InputHTMLAttributes } from 'react'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
-  className: string
 }
 const Input = ({ label, className, ...props }: InputProps) => {
   console.log('')

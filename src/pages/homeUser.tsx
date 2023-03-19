@@ -141,7 +141,7 @@ const HomeUser = () => {
           </div>
         </div>
         <div>
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-between mt-4">
             <h1 className="mb-3">Álbum</h1>
             <AiTwotoneEdit className="w-6 h-6" />
           </div>
@@ -200,7 +200,7 @@ const HomeUser = () => {
             </div>
           ))}
         </div>
-        <div>
+        <div className="mt-4">
           <h1 className="mb-3">Veja como você está sendo avaliado</h1>
           <div>
             <div className="flex flex-row items-center gap-2">
