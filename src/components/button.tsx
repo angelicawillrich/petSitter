@@ -4,7 +4,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   primary?: boolean
 }
 const Button = ({ primary = true, ...props }: ButtonProps) => {
-  console.log('')
   return (
     <button
       type="button"

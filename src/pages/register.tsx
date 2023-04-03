@@ -4,7 +4,6 @@ import Button from '../components/button'
 import Input from '../components/input'
 
 const Register = () => {
-  console.log()
   return (
     <div className="flex flex-col gap-4 justify-center items-center">
       <img src={Logo} alt="logo" />

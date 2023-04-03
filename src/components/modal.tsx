@@ -9,7 +9,6 @@ interface ModalProps {
 }
 
 const Modal = ({ title, children, onClose }: ModalProps) => {
-  console.log('#')
   return (
     <div className="flex absolute w-full top-0 bg-gray-900 bg-opacity-60 justify-center items-center h-full text-gray-900">
       <div className="flex flex-col bg-white opacity-100 justify-center items-center p-8 rounded">

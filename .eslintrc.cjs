@@ -23,7 +23,7 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
-        'max-len': ["error", { "code": 120 }],
+        'max-len': ["error", { "code": 180 }],
         "semi": ["error", "never"],
         "@typescript-eslint/semi": "off",
         "no-unexpected-multiline": "error",
@@ -36,5 +36,6 @@ module.exports = {
         ],
         "react/prop-types": "off",
         "react/require-default-props": "off",
+        "arrow-body-style": 0,
     }
 };

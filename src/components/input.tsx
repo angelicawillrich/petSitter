@@ -4,7 +4,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
 }
 const Input = ({ label, className, ...props }: InputProps) => {
-  console.log('')
   return (
     <div className="flex flex-col w-full">
       <span className="text-base">{label}</span>
