@@ -10,6 +10,7 @@ import Dog2 from '../assets/dog2.png'
 import Dog3 from '../assets/dog3.png'
 import Dog4 from '../assets/dog4.png'
 import CancelAppointmentModal from '../modals/cancelAppointment.modal'
+import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 
 export interface Appointment {
   id: string
@@ -56,7 +57,7 @@ const appointments = [
 
 const HomeUser = () => {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | object>({})
-
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const stars = 3.2
 
   const showStars = (stars) => {
@@ -79,6 +80,7 @@ const HomeUser = () => {
       {Object.keys(selectedAppointment).length > 0 && (
         <CancelAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
       )}
+      {isSearchModalOpen && <SearchPetSitterModal onClose={() => setIsSearchModalOpen(false)} />}
       <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
         <h1 className="mb-3">PetSitters recentes</h1>
         <div className="flex flex-row gap-4">
@@ -137,7 +139,15 @@ const HomeUser = () => {
                 <span>Laranjal - Pelotas</span>
               </div>
             </div>
-            <a href="#" className="text-base mb-3">Buscar</a>
+            <button
+              type="button"
+              className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none"
+              onClick={() => {
+                setIsSearchModalOpen(true)
+              }}
+            >
+              Buscar
+            </button>
           </div>
         </div>
         <div>

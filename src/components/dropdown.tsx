@@ -3,10 +3,10 @@ import React, { SelectHTMLAttributes } from 'react'
 interface ItemList {
   id: any
   value: any
+  label: string
 }
 
 interface DropdownProps extends SelectHTMLAttributes<HTMLSelectElement> {
-  // eslint-disable-next-line react/require-default-props
   label?: string
   list: ItemList[]
 }
@@ -21,7 +21,7 @@ const Dropdown = ({ label = '', list, ...props }: DropdownProps) => {
         {...props}
       >
         <option value="" disabled>Selecione...</option>
-        {list.map((item) => <option key={item.id} value={item.id}>{item.value}</option>)}
+        {list.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
       </select>
     </div>
   )
