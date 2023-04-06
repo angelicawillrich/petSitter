@@ -114,7 +114,7 @@ const RegisterPets = () => {
   }
 
   const handleSavePet = () => {
-    if (selectedPet) {
+    if (selectedPet !== undefined) {
       const tempPets = pets
       tempPets[selectedPet] = formState
       setPets([...tempPets])
@@ -140,8 +140,6 @@ const RegisterPets = () => {
     setPets([...pets.filter((pet, idx) => idx !== index)])
     setSelectedPet(undefined)
   }
-  console.log('selectedPet', selectedPet)
-  console.log('pets', pets)
 
   const disableContinueButton = pets.length === 0
 
