@@ -3,7 +3,7 @@ import React, { SelectHTMLAttributes } from 'react'
 interface ItemList {
   id: any
   value: any
-  label: string
+  label?: string
 }
 
 interface DropdownProps extends SelectHTMLAttributes<HTMLSelectElement> {

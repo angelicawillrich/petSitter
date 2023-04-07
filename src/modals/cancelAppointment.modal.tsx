@@ -28,10 +28,6 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
     onClose()
   }
 
-  const onCancelAction = () => {
-    onClose()
-  }
-
   return (
     <Modal title="Cancelar agendamento" onClose={onClose}>
       <div className="flex flex-col p-4 justify-center items-center">

@@ -6,20 +6,6 @@ import Input from '../components/input'
 import Modal from '../components/modal'
 import { especies, ratings } from '../shared'
 
-interface Appointment {
-  id: string
-  initial_date: string
-  initial_time: string
-  final_date: string
-  final_time: string
-  petSitter: {
-    name: string
-    address: string
-    city: string
-  },
-  status: string
-}
-
 interface SearchPetSitter {
   onClose: () => void
 }
