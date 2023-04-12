@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { RiStarHalfFill, RiStarFill } from 'react-icons/ri'
 
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import Dummy1 from '../assets/dummy1.png'
 import Button from '../components/button'
+import { showStars } from '../utils'
 
 export interface Appointment {
   id: string
@@ -61,17 +62,6 @@ const appointments = [
 ]
 
 const PagePetSitter = () => {
-  const showStars = (stars: number) => {
-    const starsArr = []
-    for (let i = 0; i < Math.floor(stars); i++) {
-      starsArr.push(<RiStarFill className="text-yellow-300 w-4 h-4" />)
-    }
-    if (stars > Math.floor(stars)) {
-      starsArr.push(<RiStarHalfFill className="text-yellow-300 w-4 h-4" />)
-    }
-    return starsArr
-  }
-
   const disabledDates = [
     new Date(2023, 4, 24),
     new Date(2023, 4, 25),

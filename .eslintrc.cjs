@@ -37,5 +37,6 @@ module.exports = {
         "react/prop-types": "off",
         "react/require-default-props": "off",
         "arrow-body-style": 0,
+        'no-plusplus': 'off',
     }
 };

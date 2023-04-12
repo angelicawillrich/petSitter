@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { BiSearchAlt } from 'react-icons/bi'
-import { RiStarHalfFill, RiStarFill } from 'react-icons/ri'
 import { AiTwotoneEdit } from 'react-icons/ai'
 
 import Dummy1 from '../assets/dummy1.png'
@@ -8,6 +7,7 @@ import Dummy2 from '../assets/dummy2.png'
 import CancelAppointmentModal from '../modals/cancelAppointment.modal'
 import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 import AlbumModal from '../modals/album.modal'
+import { showStars } from '../utils'
 
 export interface Appointment {
   id: string
@@ -90,17 +90,6 @@ const HomeUser = () => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false)
   const stars = 3.2
-
-  const showStars = (stars) => {
-    const starsArr = []
-    for (let i = 0; i < Math.floor(stars); i++) {
-      starsArr.push(<RiStarFill className="text-yellow-300 w-4 h-4" />)
-    }
-    if (stars > Math.floor(stars)) {
-      starsArr.push(<RiStarHalfFill className="text-yellow-300 w-4 h-4" />)
-    }
-    return starsArr
-  }
 
   const handleCloseAppointmentModal = () => {
     setSelectedAppointment({})
