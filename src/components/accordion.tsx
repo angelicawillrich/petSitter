@@ -6,12 +6,13 @@ import { FaRegEdit } from 'react-icons/fa'
 interface AccordionProps {
   header: React.ReactNode
   children: any
-  onEdit: () => void
-  onDelete: () => void
+  showControllers?: boolean
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
 const Accordion = ({
-  header, children, onEdit, onDelete,
+  header, children, showControllers = true, onEdit, onDelete,
 }: AccordionProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -26,15 +27,19 @@ const Accordion = ({
           <h3>{header}</h3>
           <span>{isOpen ? <AiOutlineCaretUp /> : <AiOutlineCaretDown />}</span>
         </button>
-        <FaRegEdit
-          className="w-6 h-6 mr-2 cursor-pointer"
-          onClick={onEdit}
-        />
-        <BsTrash
-          size={15}
-          className="w-6 h-6 text-red-600 cursor-pointer"
-          onClick={onDelete}
-        />
+        {showControllers && onEdit && onDelete && (
+          <>
+            <FaRegEdit
+              className="w-6 h-6 mr-2 cursor-pointer"
+              onClick={onEdit}
+            />
+            <BsTrash
+              size={15}
+              className="w-6 h-6 text-red-600 cursor-pointer"
+              onClick={onDelete}
+            />
+          </>
+        )}
       </div>
       {isOpen && (
         <div>{ children }</div>
