@@ -6,7 +6,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input = ({ label, className, ...props }: InputProps) => {
   return (
     <div className="flex flex-col w-full">
-      <span className="text-base">{label}</span>
+      <span className="text-base text-gray-400">{label}</span>
       <input
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...props}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RiStarHalfFill, RiStarFill } from 'react-icons/ri'
 
 import Calendar from 'react-calendar'
@@ -6,6 +6,7 @@ import 'react-calendar/dist/Calendar.css'
 import Dummy1 from '../assets/dummy1.png'
 import Button from '../components/button'
 import { showStars } from '../utils'
+import SetAppointmentModal from '../modals/setAppointment.modal'
 
 export interface Appointment {
   id: string
@@ -62,6 +63,7 @@ const appointments = [
 ]
 
 const PagePetSitter = () => {
+  const [isSetAppointmentModalOpen, setIsSetAppointmentModalOpen] = useState(false)
   const disabledDates = [
     new Date(2023, 4, 24),
     new Date(2023, 4, 25),
@@ -106,6 +108,7 @@ const PagePetSitter = () => {
 
   return (
     <div className="flex flex-row flex-3 w-full h-full gap-8 justify-center">
+      {isSetAppointmentModalOpen && <SetAppointmentModal onClose={() => setIsSetAppointmentModalOpen(false)} />}
       <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
         <div>
           <div className="flex flex-row gap-4">
@@ -200,7 +203,12 @@ const PagePetSitter = () => {
               <span className="text-red-900 font-bold">*Ocupado</span>
               <span className="text-[#637644] font-bold">*Disponível</span>
             </div>
-            <Button className="mb-3">Solicitar agendamento</Button>
+            <Button
+              className="mb-3"
+              onClick={() => setIsSetAppointmentModalOpen(true)}
+            >
+              Solicitar agendamento
+            </Button>
           </div>
         </div>
         <div className="mt-4">
