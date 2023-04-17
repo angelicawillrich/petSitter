@@ -23,25 +23,25 @@ interface Appointment {
   status: string
 }
 
-interface CancelAppointmentModalProps {
+interface ApproveAppointmentModalProps {
   onClose: () => void
   appointment: Appointment
 }
 
-const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModalProps) => {
-  const onCancelAppointment = () => {
-    console.log('cancel appointment')
+const ApproveAppointmentModal = ({ onClose, appointment }: ApproveAppointmentModalProps) => {
+  const onApproveAppointment = () => {
+    console.log('approve appointment')
     onClose()
   }
 
   return (
-    <Modal title="Cancelar agendamento" onClose={onClose}>
+    <Modal title="Aprovar agendamento" onClose={onClose}>
       <div className="flex flex-col p-4 justify-center items-center">
         <div className="flex flex-col p-4 justify-center items-center">
           <span>
             Você tem certeza que deseja
             {' '}
-            <b>cancelar</b>
+            <b>aprovar</b>
             {' '}
             o seguinte agendamento?
           </span>
@@ -54,6 +54,7 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
             {' '}
             {moment(new Date(appointment.final_date)).format('DD/MM/YYYY')}
             {' '}
+            {' '}
             {appointment.final_time}
           </span>
           {appointment.petSitter.name}
@@ -61,11 +62,11 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
         <div
           className=""
         >
-          <Button onClick={onCancelAppointment}>Cancelar agendamento</Button>
+          <Button onClick={onApproveAppointment}>Aprovar agendamento</Button>
         </div>
       </div>
     </Modal>
   )
 }
 
-export default CancelAppointmentModal
+export default ApproveAppointmentModal

@@ -68,7 +68,7 @@ const appointments = [
       address: 'Rua 1, nro 10',
       city: 'Pelotas',
     },
-    status: 'confirmado',
+    status: 'confirmed',
   },
   {
     id: 1,
@@ -81,7 +81,7 @@ const appointments = [
       address: 'Rua 1, nro 10',
       city: 'Pelotas',
     },
-    status: 'aguardando',
+    status: 'on_hold',
   },
 ]
 

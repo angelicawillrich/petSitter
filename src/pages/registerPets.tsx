@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Accordion from '../components/accordion'
 import Button from '../components/button'
 import Dropdown from '../components/dropdown'

@@ -8,6 +8,7 @@ import Dropdown from '../components/dropdown'
 import Input from '../components/input'
 import TextArea from '../components/textArea'
 import { especies, services } from '../shared'
+import { getServiceName } from '../utils'
 
 interface Service {
   id: string
@@ -101,7 +102,7 @@ const RegisterPetSitter = () => {
             className="flex flex-row w-full"
           >
             <div className="w-full font-semibold">
-              {services.find((item) => String(item?.id) === String(service?.id))?.label}
+              {getServiceName(service.id)}
             </div>
             <div className="flex w-full justify-end font-semibold">
               R$
