@@ -60,7 +60,7 @@ const pets = [
 
 const PageUser = () => {
   return (
-    <div className="flex flex-row flex-3 w-full h-full gap-8 justify-center">
+    <div className="flex flex-col flex-3 w-full h-full gap-8 justify-center md:flex-row">
       <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
         <div>
           <div className="flex flex-row gap-4">
