@@ -11,7 +11,7 @@ interface ModalProps {
 const Modal = ({ title, children, onClose }: ModalProps) => {
   return (
     <div className="flex absolute w-full top-0 left-0 bg-gray-900 bg-opacity-60 justify-center items-center h-full text-gray-900">
-      <div className="flex flex-col max-w-[300px] md:max-w-lg bg-white opacity-100 justify-center items-center p-4 sm:p-8 rounded">
+      <div className="flex flex-col max-w-[400px] sm:max-w-lg bg-white opacity-100 justify-center items-center p-2 sm:p-8 rounded">
         <div className="flex flex-row w-full justify-center items-center relative">
           <span className="font-bold">
             {title}

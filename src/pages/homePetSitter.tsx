@@ -2,6 +2,7 @@ import moment from 'moment'
 import React, { useState } from 'react'
 import { AiTwotoneEdit } from 'react-icons/ai'
 import { VscWarning } from 'react-icons/vsc'
+import AppointmentsModal from '../modals/appointments.modal'
 import ApproveAppointmentModal from '../modals/approveAppointment.modal'
 import CancelAppointmentModal from '../modals/cancelAppointment.modal'
 import PostsModal from '../modals/posts.modal'
@@ -136,6 +137,7 @@ const HomePetSitter = () => {
   const [action, setAction] = useState<Actions | undefined>(undefined)
   const [isPostsModalOpen, setIsPostsModalOpen] = useState(false)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [isAppointmetsModalOpen, setIsAppointmentsModalOpen] = useState(false)
   console.log('action', action)
   const handleOpenAppointmentModal = (appointment: Appointment, selectedAction: Actions) => {
     setSelectedAppointment(appointment)
@@ -158,6 +160,7 @@ const HomePetSitter = () => {
       {Object.keys(selectedAppointment).length > 0 && action === 'reject' && (
         <RejectAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
       )}
+      {isAppointmetsModalOpen && <AppointmentsModal onClose={() => setIsAppointmentsModalOpen(false)} />}
       <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
         <h1>Sua agenda</h1>
         <div className="mt-3">
@@ -251,7 +254,7 @@ const HomePetSitter = () => {
             <button
               type="button"
               className="w-fit decoration-transparent border-b-[1px] p-0 m-0 leading-none"
-              onClick={() => {}}
+              onClick={() => setIsAppointmentsModalOpen(true)}
             >
               Adicionar outras datas
             </button>
