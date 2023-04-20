@@ -1,7 +1,7 @@
 import React from 'react'
 import Dummy1 from '../assets/dummy1.png'
 import { showStars } from '../utils'
-import Accordion from '../components/accordion'
+import Accordion from '../components/baseComponents/accordion'
 import { especies } from '../shared'
 
 const photos = [

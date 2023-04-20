@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import React from 'react'
-import Button from '../components/button'
-import Input from '../components/input'
-import Modal from '../components/modal'
+import Button from '../components/baseComponents/button'
+import Input from '../components/baseComponents/input'
+import Modal from '../components/baseComponents/modal'
 
 interface AppointmentModalProps {
   onClose: () => void

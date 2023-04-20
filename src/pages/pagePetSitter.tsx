@@ -4,7 +4,7 @@ import { RiStarHalfFill, RiStarFill } from 'react-icons/ri'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import Dummy1 from '../assets/dummy1.png'
-import Button from '../components/button'
+import Button from '../components/baseComponents/button'
 import { showStars } from '../utils'
 import SetAppointmentModal from '../modals/setAppointment.modal'
 

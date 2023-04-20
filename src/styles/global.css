@@ -14,6 +14,10 @@ h1 {
     @apply text-gray-900 text-2xl font-bold;
 }
 
+textarea {
+  resize: none;
+}
+
 .rmsc {
     --rmsc-main: #8787b4 !important;
     --rmsc-hover: #f1f3f5;

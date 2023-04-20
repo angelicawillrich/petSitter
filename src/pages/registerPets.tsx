@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import Accordion from '../components/accordion'
-import Button from '../components/button'
-import Dropdown from '../components/dropdown'
-import Input from '../components/input'
-import TextArea from '../components/textArea'
+import Accordion from '../components/baseComponents/accordion'
+import Button from '../components/baseComponents/button'
+import Dropdown from '../components/baseComponents/dropdown'
+import Input from '../components/baseComponents/input'
+import TextArea from '../components/baseComponents/textArea'
 import { especies } from '../shared'
 
 interface FormState {
