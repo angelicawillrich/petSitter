@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import Button from '../components/button'
-import Dropdown from '../components/dropdown'
-import Input from '../components/input'
+import Button from '../components/baseComponents/button'
+import Dropdown from '../components/baseComponents/dropdown'
+import Input from '../components/baseComponents/input'
 
 interface User {
   name: string
@@ -40,14 +40,24 @@ const initialFormState = {
 }
 
 const user = {
-  name: 'Angélica',
-  address: 'sadi escouto',
-  district: '3 vendas',
-  state: '43',
-  city: '"4314407"',
-  phone: '12345',
+  name: '',
+  address: '',
+  district: '',
+  state: '',
+  city: '',
+  phone: '',
   picture: null,
 }
+
+// const user = {
+//   name: 'Angélica',
+//   address: 'sadi escouto',
+//   district: '3 vendas',
+//   state: '43',
+//   city: '"4314407"',
+//   phone: '12345',
+//   picture: null,
+// }
 
 const RegisterPersonalInfo = () => {
   const [formState, setFormState] = useState<User>(initialFormState)

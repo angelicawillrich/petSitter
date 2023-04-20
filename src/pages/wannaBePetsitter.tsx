@@ -1,5 +1,5 @@
 import React from 'react'
-import Button from '../components/button'
+import Button from '../components/baseComponents/button'
 
 const WannaBePetSitter = () => (
   <div className="flex flex-col w-full max-w-xs gap-4 justify-center items-center">

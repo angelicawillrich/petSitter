@@ -95,6 +95,33 @@ const RegisterPetSitter = () => {
           }}
         />
       </div>
+      {listOfSelectableServices?.length > 0 && (
+        <div className="flex gap-2 items-end">
+          <Dropdown
+            id="servico"
+            label="Serviço*"
+            list={listOfSelectableServices}
+            onChange={onChangeService}
+            value={selectedService.id}
+          />
+          <Input
+            label="Valor R$*"
+            value={selectedService.price}
+            type="number"
+            min="1"
+            step="any"
+            onChange={onChangePrice}
+          />
+          <button
+            type="button"
+            disabled={selectedService.id.trim().length === 0 || selectedService.price.trim().length === 0}
+            onClick={onAddService}
+            className="disabled:opacity-20"
+          >
+            <GoPlus size={40} />
+          </button>
+        </div>
+      )}
       <div className="flex flex-col w-full">
         {formState.servicesAndPrice?.map((service) => (
           <div
@@ -123,33 +150,6 @@ const RegisterPetSitter = () => {
           </div>
         ))}
       </div>
-      {listOfSelectableServices?.length > 0 && (
-        <div className="flex gap-2 items-end">
-          <Dropdown
-            id="servico"
-            label="Serviço*"
-            list={listOfSelectableServices}
-            onChange={onChangeService}
-            value={selectedService.id}
-          />
-          <Input
-            label="Valor R$*"
-            value={selectedService.price}
-            type="number"
-            min="1"
-            step="any"
-            onChange={onChangePrice}
-          />
-          <button
-            type="button"
-            disabled={selectedService.id.trim().length === 0 || selectedService.price.trim().length === 0}
-            onClick={onAddService}
-            className="disabled:opacity-20"
-          >
-            <GoPlus size={40} />
-          </button>
-        </div>
-      )}
       <div className="flex flex-col w-full">
         <TextArea
           label="Sobre você"

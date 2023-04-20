@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { RiStarFill } from 'react-icons/ri'
 import Logo from '../assets/logo.svg'
 import Button from '../components/baseComponents/button'
 import TextArea from '../components/baseComponents/textArea'

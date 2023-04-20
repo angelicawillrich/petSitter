@@ -1,9 +1,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import Button from '../components/button'
-import Dropdown from '../components/dropdown'
-import Input from '../components/input'
-import Modal from '../components/modal'
+import Button from '../components/baseComponents/button'
+import Dropdown from '../components/baseComponents/dropdown'
+import Input from '../components/baseComponents/input'
+import Modal from '../components/baseComponents/modal'
 import { especies, ratings } from '../shared'
 
 interface SearchPetSitter {

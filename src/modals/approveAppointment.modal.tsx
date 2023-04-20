@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import moment from 'moment'
 import React from 'react'
-import Button from '../components/button'
-import Modal from '../components/modal'
+import Button from '../components/baseComponents/button'
+import Modal from '../components/baseComponents/modal'
 
 interface Appointment {
   id: string

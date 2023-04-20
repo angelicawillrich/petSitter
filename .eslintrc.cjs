@@ -38,5 +38,6 @@ module.exports = {
         "react/require-default-props": "off",
         "arrow-body-style": 0,
         'no-plusplus': 'off',
+        "import/no-extraneous-dependencies": "off"
     }
 };
