@@ -81,7 +81,7 @@ const appointments = [
       address: 'Rua 1, nro 10',
       city: 'Pelotas',
     },
-    status: 'on_hold',
+    status: 'pending',
   },
 ]
 
