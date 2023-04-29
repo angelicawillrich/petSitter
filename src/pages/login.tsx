@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Logo from '../assets/logo.svg'
 import Button from '../components/baseComponents/button'
 import Input from '../components/baseComponents/input'
+import { StoreContext } from '../context/context'
 
 interface IForm {
   email: string
@@ -18,6 +19,8 @@ const initialState = {
 const Login = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState<IForm>(initialState)
+
+  const { updateToken } = useContext(StoreContext)
 
   const handleChange = (field: keyof IForm, value: string) => {
     setFormData((prevData) => ({
@@ -37,6 +40,7 @@ const Login = () => {
       if (!response.data.user[0].name) {
         navigate('/personal')
       } else {
+        updateToken(response.data.token)
         navigate('/home')
       }
     } catch (error:any) {
@@ -65,13 +69,6 @@ const Login = () => {
           onChange={(e) => handleChange('password', e.target.value)}
         />
         <Button type="submit">Entrar</Button>
-        <button
-          type="button"
-          className="w-fit text-base decoration-transparent border-b-[1px] p-0 m-0 leading-none"
-          onClick={() => {}}
-        >
-          Esqueceu sua senha?
-        </button>
         <button
           type="submit"
           className="w-fit text-base decoration-transparent border-b-[1px] p-0 m-0 leading-none"
