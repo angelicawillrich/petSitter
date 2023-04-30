@@ -17,3 +17,16 @@ export const showStars = (stars: number) => {
 export const getServiceName = (id: string) => {
   return services.find((service) => String(id) === String(service?.id))?.label
 }
+
+export const convertBase64 = async (file: File): Promise<string | ArrayBuffer | null> => {
+  try {
+    const fileReader = new FileReader()
+    fileReader.readAsDataURL(file)
+    await new Promise<void>((resolve) => {
+      fileReader.onload = () => resolve()
+    })
+    return fileReader.result
+  } catch (error) {
+    throw new Error('Nao foi possível ler a imagem.')
+  }
+}

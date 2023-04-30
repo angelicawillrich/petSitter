@@ -3,7 +3,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import axios from 'axios'
+import { fetchLoggedInUser } from '../api/user.api'
 
 interface IAllowedPets {
   petId: string
@@ -58,10 +58,12 @@ interface IPost {
 }
 
 export interface IUser {
+  _id: string
   email: string;
   password: string;
   name: string;
   address: string;
+  district: string;
   city: string;
   state: string;
   country: string;
@@ -79,49 +81,33 @@ export interface IUser {
 }
 
 interface IContext {
-  getUser: (id: string) => void
+  getLoggedInUser: (id: string) => void
   user?: IUser,
-  updateToken: (id: string | null) => void
-  token: string | null
 }
 
 export const StoreContext = createContext<IContext>({
-  getUser: () => {},
+  getLoggedInUser: () => {},
   user: undefined,
-  updateToken: () => {},
-  token: null,
 })
 
 export const ContextProvider = ({ children }: any) => {
   const [user, setUser] = useState<IUser | undefined>()
-  const [token, setToken] = useState<string | null>(null)
 
-  const getUser = async (id: string) => {
-    await axios.get(`https://http://127.0.0.1:3000/user/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((data) => {
-        setUser(data.data)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }
-
-  const updateToken = (currentToken: string | null) => {
-    setToken(currentToken)
+  const getLoggedInUser = async (id: string) => {
+    try {
+      const result = await fetchLoggedInUser(id)
+      setUser(result.data.userResult)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const valueContext = useMemo(() => {
     return {
       user,
-      getUser,
-      token,
-      updateToken,
+      getLoggedInUser,
     }
-  }, [user, getUser, token, updateToken])
+  }, [user, getLoggedInUser])
 
   return (
     <StoreContext.Provider value={valueContext}>

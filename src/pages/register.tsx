@@ -30,7 +30,7 @@ const Register = () => {
     }))
   }
 
-  const onSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     if (formData.password !== formData.passwordConfirmation) {
       setError(true)
@@ -51,7 +51,7 @@ const Register = () => {
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
 
       <div className="flex flex-col gap-4 justify-center items-center">
         <img src={Logo} alt="logo" />

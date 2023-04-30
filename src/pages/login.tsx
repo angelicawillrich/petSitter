@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
@@ -16,7 +17,8 @@ const Login = () => {
   const [formData, setFormData] = useState<ILoginForm>(initialState)
 
   const navigate = useNavigate()
-  const { updateToken } = useContext(StoreContext)
+
+  const { getLoggedInUser } = useContext(StoreContext)
 
   const handleChange = (field: keyof ILoginForm, value: string) => {
     setFormData((prevData) => ({
@@ -29,10 +31,11 @@ const Login = () => {
     event.preventDefault()
     try {
       const response = await login(formData)
+      localStorage.setItem('Token', response.data.token)
+      getLoggedInUser(response.data.user[0]._id)
       if (!response.data.user[0].name) {
         navigate('/personal')
       } else {
-        updateToken(response.data.token)
         navigate('/home')
       }
     } catch (error:any) {
