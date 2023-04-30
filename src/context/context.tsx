@@ -3,7 +3,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { fetchLoggedInUser } from '../api/user.api'
+import { fetchLoggedInUser, verifyToken } from '../api/user.api'
 
 interface IAllowedPets {
   petId: string
@@ -81,13 +81,15 @@ export interface IUser {
 }
 
 interface IContext {
-  getLoggedInUser: (id: string) => void
   user?: IUser,
+  getUserWithToken: () => void
+  getLoggedInUser: (id: string) => void
 }
 
 export const StoreContext = createContext<IContext>({
-  getLoggedInUser: () => {},
   user: undefined,
+  getLoggedInUser: () => {},
+  getUserWithToken: () => {},
 })
 
 export const ContextProvider = ({ children }: any) => {
@@ -102,12 +104,24 @@ export const ContextProvider = ({ children }: any) => {
     }
   }
 
+  const getUserWithToken = async () => {
+    try {
+      const result = await verifyToken()
+      if (result.data.user) {
+        setUser(result.data.user)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const valueContext = useMemo(() => {
     return {
       user,
       getLoggedInUser,
+      getUserWithToken,
     }
-  }, [user, getLoggedInUser])
+  }, [user, getLoggedInUser, getUserWithToken])
 
   return (
     <StoreContext.Provider value={valueContext}>

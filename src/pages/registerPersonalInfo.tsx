@@ -47,13 +47,11 @@ const RegisterPersonalInfo = () => {
 
   const navigate = useNavigate()
   console.log('formState', formState)
-  console.log(formState.profilePicture?.toString())
 
-  const { user, getLoggedInUser } = useContext(StoreContext)
+  const { user, getLoggedInUser, getUserWithToken } = useContext(StoreContext)
   useEffect(() => {
     if (user) {
       const userData = {
-        // eslint-disable-next-line no-underscore-dangle
         userId: user._id,
         name: user.name,
         address: user.address,
@@ -63,7 +61,7 @@ const RegisterPersonalInfo = () => {
         phone: user.phone,
         profilePicture: user.profilePicture,
       }
-      setFormState({ ...userData })
+      setFormState(userData)
       setSelectedState(user.state)
     }
   }, [user])
@@ -75,7 +73,7 @@ const RegisterPersonalInfo = () => {
       const sortedList = statesResult.data.sort((a:State, b:State) => (a.nome > b.nome ? 1 : -1))
       const list: List[] | [] = sortedList.map((item: State) => ({ id: item.id, value: item.nome, label: item.nome }))
       setListState(list)
-      if (!selectedState) {
+      if (selectedState !== undefined) {
         setSelectedState(list[0].id)
       }
       setLoading(false)
@@ -112,6 +110,7 @@ const RegisterPersonalInfo = () => {
   }
 
   useEffect(() => {
+    getUserWithToken()
     fetchStates()
   }, [])
 

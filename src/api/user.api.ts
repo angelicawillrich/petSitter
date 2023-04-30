@@ -41,3 +41,10 @@ export const fetchLoggedInUser = async (id: string) => {
   )
   return result
 }
+
+export const verifyToken = async () => {
+  const result = await axios.get(
+    'http://127.0.0.1:3000/verifyToken',
+  )
+  return result
+}
