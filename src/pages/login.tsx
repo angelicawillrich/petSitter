@@ -1,15 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import Logo from '../assets/logo.svg'
 import Button from '../components/baseComponents/button'
 import Input from '../components/baseComponents/input'
+import { login } from '../api/user.api'
+import { ILoginForm } from '../interfaces/interfaces'
 import { StoreContext } from '../context/context'
-
-interface IForm {
-  email: string
-  password: string
-}
 
 const initialState = {
   email: '',
@@ -17,12 +13,12 @@ const initialState = {
 }
 
 const Login = () => {
-  const navigate = useNavigate()
-  const [formData, setFormData] = useState<IForm>(initialState)
+  const [formData, setFormData] = useState<ILoginForm>(initialState)
 
+  const navigate = useNavigate()
   const { updateToken } = useContext(StoreContext)
 
-  const handleChange = (field: keyof IForm, value: string) => {
+  const handleChange = (field: keyof ILoginForm, value: string) => {
     setFormData((prevData) => ({
       ...prevData,
       [field]: value,
@@ -32,11 +28,7 @@ const Login = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:3000/login',
-        formData,
-      )
-
+      const response = await login(formData)
       if (!response.data.user[0].name) {
         navigate('/personal')
       } else {

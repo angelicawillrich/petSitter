@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import Logo from '../assets/logo.svg'
 import Button from '../components/baseComponents/button'
 import Input from '../components/baseComponents/input'
+import { createUser } from '../api/user.api'
 
 interface IForm {
   email: string
@@ -40,12 +40,9 @@ const Register = () => {
 
     try {
       const data = { email: formData.email, password: formData.password }
-      await axios.post(
-        'http://127.0.0.1:3000/user/create',
-        data,
-      )
-      navigate('/login')
+      await createUser(data)
       setFormData(initialState)
+      navigate('/login')
       alert('Usuário criado com sucesso!')
     } catch (err: any) {
       console.error(error)
