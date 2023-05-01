@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai'
 import { BsTrash } from 'react-icons/bs'
 import { FaRegEdit } from 'react-icons/fa'
@@ -7,18 +7,21 @@ interface AccordionProps {
   header: React.ReactNode
   children: any
   showControllers?: boolean
+  isSelected?: boolean
   onEdit?: () => void
   onDelete?: () => void
 }
 
 const Accordion = ({
-  header, children, showControllers = true, onEdit, onDelete,
+  header, children, showControllers = true, isSelected = false, onEdit, onDelete,
 }: AccordionProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen)
   }
+
+  useEffect(() => { if (isSelected) setIsOpen(true) }, [isSelected])
 
   return (
     <div className="accordion flex flex-col w-full border-2 rounded-md border-gray-100 p-2">

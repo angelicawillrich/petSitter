@@ -12,7 +12,7 @@ const Button = ({ primary = true, className, ...props }: ButtonProps) => {
       {...props}
       className={
         `${primary ? 'bg-purple-900' : 'bg-gray-400'} ${className}
-        w-full max-w-[400px] rounded px-4 p-2 text-base text-gray-100 hover:bg-purple-300 disabled:bg-gray-400 duration-75`
+        w-full max-w-[400px] rounded px-4 p-2 text-base text-gray-100 hover:bg-purple-300 disabled:bg-gray-200 duration-75`
       }
     >
       {props.children}

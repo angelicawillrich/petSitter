@@ -18,7 +18,7 @@ export const getServiceName = (id: string) => {
   return services.find((service) => String(id) === String(service?.id))?.label
 }
 
-export const convertBase64 = async (file: File): Promise<string | ArrayBuffer | null> => {
+export const convertBase64 = async (file: any): Promise<string | ArrayBuffer | null> => {
   try {
     const fileReader = new FileReader()
     fileReader.readAsDataURL(file)
@@ -29,4 +29,15 @@ export const convertBase64 = async (file: File): Promise<string | ArrayBuffer | 
   } catch (error) {
     throw new Error('Nao foi possível ler a imagem.')
   }
+}
+
+export const generateInitialsAvatar = (name: string) => {
+  const initial = name.substring(0, 1)
+  return (
+    <div
+      className="flex h-10 w-10 bg-purple-200 font-bold text-purple-600 rounded-full justify-center items-center p-0"
+    >
+      {initial.toLocaleUpperCase()}
+    </div>
+  )
 }

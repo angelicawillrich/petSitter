@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
-import { IUserPersonalInfo } from '../interfaces/interfaces'
+import { IUserProfile } from '../interfaces/interfaces'
 import { getCities, getStates } from '../api/external.api'
-import { updateUserPersonalInfo } from '../api/user.api'
+import { updateUserProfile } from '../api/user.api'
 import { StoreContext } from '../context/context'
 import { convertBase64 } from '../utils'
 
@@ -38,15 +38,14 @@ const initialFormState = {
   profilePicture: null,
 }
 
-const RegisterPersonalInfo = () => {
-  const [formState, setFormState] = useState<IUserPersonalInfo>(initialFormState)
+const RegisterProfile = () => {
+  const [formState, setFormState] = useState<IUserProfile>(initialFormState)
   const [listState, setListState] = useState<List[] | []>([])
   const [listCity, setListCity] = useState<List[] | []>([])
   const [selectedState, setSelectedState] = useState<string | undefined>()
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
-  console.log('formState', formState)
 
   const { user, getLoggedInUser, getUserWithToken } = useContext(StoreContext)
   useEffect(() => {
@@ -97,7 +96,7 @@ const RegisterPersonalInfo = () => {
     }
   }
 
-  const onChangeForm = (field: keyof IUserPersonalInfo, value: string) => {
+  const onChangeForm = (field: keyof IUserProfile, value: string) => {
     setFormState((previousState) => ({ ...previousState, [field]: value }))
   }
 
@@ -110,7 +109,7 @@ const RegisterPersonalInfo = () => {
   }
 
   useEffect(() => {
-    getUserWithToken()
+    getUserWithToken(() => navigate('/login'))
     fetchStates()
   }, [])
 
@@ -124,12 +123,16 @@ const RegisterPersonalInfo = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     try {
-      await updateUserPersonalInfo(formState)
+      await updateUserProfile(formState)
       if (user?._id) {
-        getLoggedInUser(user?._id)
+        await getLoggedInUser(user?._id)
       }
       setFormState(initialFormState)
-      navigate('/pets')
+      if (user?.pets.length === 0) {
+        navigate('/pets')
+      } else {
+        navigate('/home')
+      }
     } catch (err: any) {
       console.error(err)
       alert(JSON.parse(err.request.responseText).message)
@@ -192,4 +195,4 @@ const RegisterPersonalInfo = () => {
   )
 }
 
-export default RegisterPersonalInfo
+export default RegisterProfile

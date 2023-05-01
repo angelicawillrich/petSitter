@@ -37,11 +37,13 @@ interface IAvailableDates {
 interface IPet {
   id: string;
   name: string;
+  yearBirth: number;
   specie: string;
   breed: string;
   age: number;
   weight: number;
-  picture: string;
+  picture: string | null;
+  others: string;
 }
 
 interface IAlbum {
@@ -82,7 +84,7 @@ export interface IUser {
 
 interface IContext {
   user?: IUser,
-  getUserWithToken: () => void
+  getUserWithToken: (onError: () => void) => void
   getLoggedInUser: (id: string) => void
 }
 
@@ -104,14 +106,14 @@ export const ContextProvider = ({ children }: any) => {
     }
   }
 
-  const getUserWithToken = async () => {
+  const getUserWithToken = async (onError: () => void) => {
     try {
       const result = await verifyToken()
       if (result.data.user) {
         setUser(result.data.user)
       }
     } catch (error) {
-      console.error(error)
+      onError()
     }
   }
 

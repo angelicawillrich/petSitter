@@ -34,7 +34,7 @@ const Login = () => {
       localStorage.setItem('Token', response.data.token)
       getLoggedInUser(response.data.user[0]._id)
       if (!response.data.user[0].name) {
-        navigate('/personal')
+        navigate('/profile')
       } else {
         navigate('/home')
       }

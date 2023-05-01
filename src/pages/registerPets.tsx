@@ -1,115 +1,57 @@
-import React, { useState } from 'react'
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-underscore-dangle */
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Accordion from '../components/baseComponents/accordion'
 import Button from '../components/baseComponents/button'
-import Dropdown from '../components/baseComponents/dropdown'
-import Input from '../components/baseComponents/input'
-import TextArea from '../components/baseComponents/textArea'
 import { especies } from '../shared'
-
-interface FormState {
-  name: string
-  yearBirth: string
-  weight: string
-  specie: string
-  breed: string
-  picture: File | null
-  others: string
-}
+import { IPetFormState } from '../interfaces/interfaces'
+import PetForm from './petForm'
+import { updateUserPets } from '../api/user.api'
+import { StoreContext } from '../context/context'
+import { convertBase64, generateInitialsAvatar } from '../utils'
 
 const formStateInitialState = {
   name: '',
-  yearBirth: '',
-  weight: '',
+  yearBirth: 2023,
+  weight: 0,
   specie: '0',
   breed: '',
   picture: null,
+  localPicture: null,
   others: '',
 }
 
-interface PetFormProps {
-  formState: FormState
-  onChangeForm: (field: keyof FormState, value: string) => void
-  handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleSavePet: () => void
-}
-
-const PetForm = ({
-  formState, onChangeForm, handleImageSelect, handleSavePet,
-}: PetFormProps) => {
-  const disableAddPetButton = !formState.name || !formState.yearBirth || !formState.weight || !formState.specie || !formState.breed
-
-  return (
-    <div className="flex flex-col gap-2">
-      <Input
-        id="name"
-        value={formState.name}
-        label="Nome*"
-        onChange={(e) => onChangeForm('name', e.target.value)}
-      />
-      <div className="flex gap-2">
-        <Input
-          value={formState.yearBirth}
-          label="Ano de nascimento*"
-          onChange={(e) => onChangeForm('yearBirth', e.target.value)}
-        />
-        <Input
-          value={formState.weight}
-          label="Peso*"
-          onChange={(e) => onChangeForm('weight', e.target.value)}
-        />
-      </div>
-      <div className="flex w-full gap-2">
-        <Dropdown
-          id="especie"
-          value={formState.specie}
-          label="Espécie*"
-          list={especies}
-          onChange={(e) => onChangeForm('specie', e.target.value)}
-        />
-        <Input
-          value={formState.breed}
-          label="Raca*"
-          onChange={(e) => onChangeForm('breed', e.target.value)}
-        />
-      </div>
-      <Input
-        label="Foto"
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleImageSelect(e)}
-      />
-      <TextArea
-        value={formState.others}
-        label="Outras informacoes"
-        rows={4}
-        onChange={(e) => onChangeForm('others', e.target.value)}
-      />
-      <Button
-        type="button"
-        primary={false}
-        disabled={disableAddPetButton}
-        title={disableAddPetButton ? 'Preencha os campos obrigatórios.' : ''}
-        onClick={handleSavePet}
-      >
-        Salvar Pet
-      </Button>
-    </div>
-  )
-}
-
 const RegisterPets = () => {
-  const [formState, setFormState] = useState<FormState>(formStateInitialState)
-  const [pets, setPets] = useState<FormState[]>([])
+  const [formState, setFormState] = useState<IPetFormState>(formStateInitialState)
+  const [pets, setPets] = useState<IPetFormState[]>([])
   const [selectedPet, setSelectedPet] = useState<number | undefined>()
 
-  const onChangeForm = (field: keyof FormState, value: string) => {
+  const navigate = useNavigate()
+
+  const { getLoggedInUser, getUserWithToken, user } = useContext(StoreContext)
+
+  useEffect(() => { getUserWithToken(() => navigate('/login')) }, [])
+
+  useEffect(() => {
+    if (user?.pets) {
+      setPets(user?.pets)
+    }
+  }, [user])
+
+  const onChangeForm = (field: keyof IPetFormState, value: string) => {
     setFormState((previousState) => ({ ...previousState, [field]: value }))
   }
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedImage = e.target.files?.[0]
     if (selectedImage) {
-      setFormState((previousState) => ({ ...previousState, picture: selectedImage }))
+      let image: any = selectedImage
+      if (typeof selectedImage === 'object') {
+        image = await convertBase64(selectedImage)
+        setFormState((previousState) => ({ ...previousState, localPicture: selectedImage }))
+      }
+      setFormState((previousState) => ({ ...previousState, picture: image }))
     }
   }
 
@@ -119,10 +61,12 @@ const RegisterPets = () => {
       tempPets[selectedPet] = formState
       setPets([...tempPets])
     } else {
-      setPets((previousState) => [...previousState, formState])
+      const temp = formState
+      setPets((previousState) => [...previousState, temp])
     }
     setSelectedPet(undefined)
     setFormState(formStateInitialState)
+    alert('Não esqueça de salvar antes de sair!')
   }
 
   const onEdit = (index: number) => () => {
@@ -141,6 +85,27 @@ const RegisterPets = () => {
     setSelectedPet(undefined)
   }
 
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    try {
+      if (!user) return
+      const updatedPets = {
+        userId: user._id,
+        pets,
+      }
+      updatedPets.pets = updatedPets.pets.map((pet) => {
+        const { localPicture, ...rest } = pet
+        return rest
+      })
+      const response = await updateUserPets(updatedPets)
+      getLoggedInUser(response.data.result)
+      navigate('/home')
+    } catch (error:any) {
+      console.error({ error })
+      alert(JSON.parse(error.request.responseText).message)
+    }
+  }
+
   const disableContinueButton = pets.length === 0
 
   return (
@@ -149,18 +114,40 @@ const RegisterPets = () => {
       {pets && pets.map((pet, index) => (
         <Accordion
           header={(
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 items-center">
               {pet.picture
-              && <img className="h-10 w-10 rounded-full object-cover" src={URL.createObjectURL(pet.picture)} alt="Foto do pet" />}
+                ? (
+                  <img
+                    className="h-10 w-10 rounded-full object-cover"
+                    src={
+                      pet.picture?.split('/')[1] === 'images'
+                        ? (`http://localhost:3000${pet.picture}`)
+                        : pet?.localPicture
+                          ? (URL.createObjectURL(pet.localPicture))
+                          : undefined
+                    }
+                    alt="Foto do pet"
+                  />
+                )
+                : (generateInitialsAvatar(pet.name))}
               {pet.name}
             </div>
 )}
           key={pet.name}
           onEdit={onEdit(index)}
           onDelete={onDelete(index)}
+          isSelected={index === selectedPet}
         >
           {selectedPet === index
-            ? <PetForm formState={formState} onChangeForm={onChangeForm} handleImageSelect={handleImageSelect} handleSavePet={handleSavePet} />
+            ? (
+              <PetForm
+                formState={formState}
+                onChangeForm={onChangeForm}
+                handleImageSelect={handleImageSelect}
+                handleSavePet={handleSavePet}
+                haSelectedPet={!!selectedPet}
+              />
+            )
             : (
               <div className="flex flex-col w-full gap-1 justify-items-start mb-6 mt-4">
                 <div>
@@ -192,14 +179,36 @@ const RegisterPets = () => {
             )}
         </Accordion>
       ))}
-      {selectedPet === undefined && <PetForm formState={formState} onChangeForm={onChangeForm} handleImageSelect={handleImageSelect} handleSavePet={handleSavePet} />}
+      {selectedPet === undefined
+        && (
+          <div className="w-full">
+            {pets.length > 0 && <div className="w-full h-3 border-t-2" />}
+            <PetForm
+              formState={formState}
+              onChangeForm={onChangeForm}
+              handleImageSelect={handleImageSelect}
+              handleSavePet={handleSavePet}
+              haSelectedPet={!!selectedPet}
+            />
+          </div>
+        )}
       <Button
+        type="button"
         disabled={disableContinueButton}
         title={disableContinueButton ? 'Adicione um pet para continuar.' : ''}
+        onClick={(event) => handleSubmit(event)}
       >
-        Continuar
+        Salvar
       </Button>
-      <a href="#">Continuar sem registrar pets</a>
+      {user?.pets.length === 0 && (
+      <button
+        type="submit"
+        className="w-fit text-base decoration-transparent border-b-[1px] p-0 m-0 leading-none"
+        onClick={() => navigate('/home')}
+      >
+        Continuar sem registrar pets
+      </button>
+      )}
     </div>
   )
 }

@@ -17,7 +17,7 @@ interface PostsModalProps {
 }
 
 interface FormState {
-  photo?: File
+  photo?: any
   text?: string
 }
 

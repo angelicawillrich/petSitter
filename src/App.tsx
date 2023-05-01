@@ -10,7 +10,7 @@ import PagePetSitter from './pages/pagePetSitter'
 import PageUser from './pages/pageUser'
 import RatingPage from './pages/ratingPage'
 import Register from './pages/register'
-import RegisterPersonalInfo from './pages/registerPersonalInfo'
+import RegisterProfile from './pages/registerProfile'
 import RegisterPets from './pages/registerPets'
 import RegisterPetSitter from './pages/registerPetSitter'
 import WannaBePetSitter from './pages/wannaBePetsitter'
@@ -18,13 +18,14 @@ import { ContextProvider } from './context/context'
 
 const App = () => {
   return (
-    <ContextProvider>
-      <BrowserRouter>
+
+    <BrowserRouter>
+      <ContextProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/personal" element={<RegisterPersonalInfo />} />
+            <Route path="/profile" element={<RegisterProfile />} />
             <Route path="/pets" element={<RegisterPets />} />
             <Route path="/bepetsitter" element={<WannaBePetSitter />} />
             <Route path="/regpetsitter" element={<RegisterPetSitter />} />
@@ -35,8 +36,9 @@ const App = () => {
             <Route path="/rating" element={<RatingPage />} />
           </Route>
         </Routes>
-      </BrowserRouter>
-    </ContextProvider>
+      </ContextProvider>
+    </BrowserRouter>
+
   )
 }
 
