@@ -2,7 +2,7 @@ import React from 'react'
 import Dummy1 from '../assets/dummy1.png'
 import { showStars } from '../utils'
 import Accordion from '../components/baseComponents/accordion'
-import { especies } from '../shared'
+import { species } from '../shared'
 
 const photos = [
   { id: 0, url: 'src/assets/dog1.png' },
@@ -119,7 +119,7 @@ const PageUser = () => {
                 <div>
                   Espécie:
                   {' '}
-                  {especies.find((specie) => String(specie.id) === pet.specie)?.label }
+                  {species.find((specie) => String(specie.id) === pet.specie)?.label }
                 </div>
                 <div>
                   Raca:

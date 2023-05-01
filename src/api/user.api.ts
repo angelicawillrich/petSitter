@@ -1,7 +1,9 @@
 /* eslint-disable no-param-reassign */
 import React from 'react'
 import axios from 'axios'
-import { ILoginForm, IUpdatedPets, IUserProfile } from '../interfaces/interfaces'
+import {
+  ILoginForm, IUpdatePetSitter, IUpdatedPets, IUserProfile,
+} from '../interfaces/interfaces'
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('Token')
@@ -53,6 +55,14 @@ export const updateUserPets = async (updatePets: IUpdatedPets) => {
   const result = await axios.post(
     'http://127.0.0.1:3000/user/pets',
     updatePets,
+  )
+  return result
+}
+
+export const updatePetSitter = async (updatedPetSitter: IUpdatePetSitter) => {
+  const result = await axios.post(
+    'http://127.0.0.1:3000/user/petSitter',
+    updatedPetSitter,
   )
   return result
 }

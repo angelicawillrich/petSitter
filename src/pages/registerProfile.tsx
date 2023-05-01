@@ -140,7 +140,7 @@ const RegisterProfile = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-1/2">
       <div className="flex flex-col gap-4 justify-center items-center">
         <h1>Complete o seu cadastro</h1>
         <Input
@@ -158,7 +158,7 @@ const RegisterProfile = () => {
           value={formState.district}
           onChange={(e) => onChangeForm('district', e.target.value)}
         />
-        <div className="flex gap-2">
+        <div className="flex w-full gap-2">
           <Dropdown
             id="estado"
             label="Estado*"

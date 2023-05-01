@@ -4,7 +4,7 @@ import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
 import Modal from '../components/baseComponents/modal'
-import { especies, ratings } from '../shared'
+import { species, ratings } from '../shared'
 
 interface SearchPetSitter {
   onClose: () => void
@@ -140,7 +140,7 @@ const SearchPetSitterModal = ({ onClose }: SearchPetSitter) => {
         <Dropdown
           id="species"
           label="Espécie"
-          list={especies}
+          list={species}
           disabled={loading}
           value={formState.species}
           onChange={(e) => onChangeForm('species', e.target.value)}

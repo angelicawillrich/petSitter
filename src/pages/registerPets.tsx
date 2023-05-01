@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Accordion from '../components/baseComponents/accordion'
 import Button from '../components/baseComponents/button'
-import { especies } from '../shared'
+import { species } from '../shared'
 import { IPetFormState } from '../interfaces/interfaces'
 import PetForm from './petForm'
 import { updateUserPets } from '../api/user.api'
@@ -99,7 +99,11 @@ const RegisterPets = () => {
       })
       const response = await updateUserPets(updatedPets)
       getLoggedInUser(response.data.result)
-      navigate('/home')
+      if (user.isPetSitter === null || user.isPetSitter === undefined) {
+        navigate('/bepetsitter')
+      } else {
+        navigate('/home')
+      }
     } catch (error:any) {
       console.error({ error })
       alert(JSON.parse(error.request.responseText).message)
@@ -109,7 +113,7 @@ const RegisterPets = () => {
   const disableContinueButton = pets.length === 0
 
   return (
-    <div className="flex flex-col w-[420px] gap-4 justify-center items-center">
+    <div className="flex flex-col w-1/2 gap-4 justify-center items-center">
       <h1>Seu(s) pet(s)</h1>
       {pets && pets.map((pet, index) => (
         <Accordion
@@ -163,7 +167,7 @@ const RegisterPets = () => {
                 <div>
                   Espécie:
                   {' '}
-                  {especies.find((specie) => String(specie.id) === pet.specie)?.label }
+                  {species.find((specie) => String(specie.id) === pet.specie)?.label }
                 </div>
                 <div>
                   Raca:

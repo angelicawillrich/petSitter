@@ -30,3 +30,19 @@ export interface IUpdatedPets {
   userId: string
   pets: IPetFormState[]
 }
+
+export interface Service {
+  serviceId: string
+  price: string
+  currency?: string
+}
+
+export interface IUpdatePetSitter {
+  petSitterInfo: {
+    allowedPets: string[];
+    services: Service[];
+    others: string;
+  }
+  userId: string;
+  _id?: string;
+}

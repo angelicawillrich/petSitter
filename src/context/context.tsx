@@ -5,20 +5,17 @@ import React, {
 } from 'react'
 import { fetchLoggedInUser, verifyToken } from '../api/user.api'
 
-interface IAllowedPets {
-  petId: string
-}
-
 interface IServices {
   serviceId: string,
-  price: number,
+  price: string,
   currency: string
 }
 
 interface IPetSitterInfo {
-  allowedPets: IAllowedPets[],
+  allowedPets:string[],
   services: IServices[]
   others: string
+  _id: string
 }
 
 interface IWeekDaysAndTime {

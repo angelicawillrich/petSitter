@@ -2,7 +2,7 @@ import React from 'react'
 import { IPetFormState } from '../interfaces/interfaces'
 import Input from '../components/baseComponents/input'
 import Dropdown from '../components/baseComponents/dropdown'
-import { especies } from '../shared'
+import { species } from '../shared'
 import TextArea from '../components/baseComponents/textArea'
 import Button from '../components/baseComponents/button'
 
@@ -61,7 +61,7 @@ const PetForm = ({
           value={formState.specie}
           label="Espécie*"
           required
-          list={especies}
+          list={species}
           onChange={(e) => onChangeForm('specie', e.target.value)}
         />
         <Input
