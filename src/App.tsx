@@ -29,7 +29,7 @@ const App = () => {
             <Route path="/pets" element={<RegisterPets />} />
             <Route path="/bepetsitter" element={<WannaBePetSitter />} />
             <Route path="/registerpetsitter" element={<RegisterPetSitter />} />
-            <Route path="/home" element={<HomeUser />} />
+            <Route path="/" element={<HomeUser />} />
             <Route path="/homepetsitter" element={<HomePetSitter />} />
             <Route path="/user" element={<PageUser />} />
             <Route path="/petsitter" element={<PagePetSitter />} />

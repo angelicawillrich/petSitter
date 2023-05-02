@@ -102,7 +102,7 @@ const RegisterPets = () => {
       if (user.isPetSitter === null || user.isPetSitter === undefined) {
         navigate('/bepetsitter')
       } else {
-        navigate('/home')
+        navigate('/')
       }
     } catch (error:any) {
       console.error({ error })
@@ -208,7 +208,7 @@ const RegisterPets = () => {
       <button
         type="submit"
         className="w-fit text-base decoration-transparent border-b-[1px] p-0 m-0 leading-none"
-        onClick={() => navigate('/home')}
+        onClick={() => navigate('/')}
       >
         Continuar sem registrar pets
       </button>

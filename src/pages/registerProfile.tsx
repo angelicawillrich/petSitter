@@ -131,7 +131,7 @@ const RegisterProfile = () => {
       if (user?.pets.length === 0) {
         navigate('/pets')
       } else {
-        navigate('/home')
+        navigate('/')
       }
     } catch (err: any) {
       console.error(err)

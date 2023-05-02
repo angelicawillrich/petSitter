@@ -14,7 +14,7 @@ const WannaBePetSitter = () => {
     <div className="flex flex-col w-full max-w-xs gap-4 justify-center items-center">
       <span>Se você quiser oferecer seus servicos como PetSitter, clique em “Quero ser PetSitter”.</span>
       <Button primary={false} onClick={() => navigate('/registerpetsitter')}>Quero ser PetSitter</Button>
-      <Button onClick={() => navigate('/home')}>Finalizar cadastro</Button>
+      <Button onClick={() => navigate('/')}>Finalizar cadastro</Button>
     </div>
   )
 }

@@ -36,7 +36,7 @@ const Login = () => {
       if (!response.data.user[0].name) {
         navigate('/profile')
       } else {
-        navigate('/home')
+        navigate('/')
       }
     } catch (error:any) {
       console.error({ error })

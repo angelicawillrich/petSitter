@@ -102,7 +102,7 @@ const RegisterPetSitter = () => {
       }
       await updatePetSitter(updatedPetSitter)
       await getLoggedInUser(user._id)
-      navigate('/home')
+      navigate('/')
     } catch (error:any) {
       console.error({ error })
       alert(JSON.parse(error.request.responseText).message)
