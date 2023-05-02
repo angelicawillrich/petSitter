@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BiSearchAlt } from 'react-icons/bi'
 import { AiTwotoneEdit } from 'react-icons/ai'
 
+import { useNavigate } from 'react-router-dom'
 import Dummy1 from '../assets/dummy1.png'
 import Dummy2 from '../assets/dummy2.png'
 import CancelAppointmentModal from '../modals/cancelAppointment.modal'
 import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 import AlbumModal from '../modals/album.modal'
 import { showStars } from '../utils'
+import { StoreContext } from '../context/context'
+import { path } from '../shared'
 
 export interface Appointment {
   id: string
@@ -22,39 +25,6 @@ export interface Appointment {
   },
   status: string
 }
-
-const photos = [
-  { id: 0, url: 'src/assets/dog1.png' },
-  { id: 1, url: 'src/assets/dog2.png' },
-  { id: 2, url: 'src/assets/dog3.png' },
-  { id: 3, url: 'src/assets/dog1.png' },
-  { id: 4, url: 'src/assets/dog2.png' },
-  { id: 5, url: 'src/assets/dog1.png' },
-  { id: 6, url: 'src/assets/dog2.png' },
-  { id: 7, url: 'src/assets/dog3.png' },
-  { id: 8, url: 'src/assets/dog1.png' },
-  { id: 9, url: 'src/assets/dog2.png' },
-  { id: 10, url: 'src/assets/dog1.png' },
-  { id: 11, url: 'src/assets/dog2.png' },
-  { id: 12, url: 'src/assets/dog3.png' },
-  { id: 13, url: 'src/assets/dog1.png' },
-  { id: 14, url: 'src/assets/dog2.png' },
-  { id: 15, url: 'src/assets/dog1.png' },
-  { id: 16, url: 'src/assets/dog2.png' },
-  { id: 17, url: 'src/assets/dog3.png' },
-  { id: 18, url: 'src/assets/dog1.png' },
-  { id: 19, url: 'src/assets/dog2.png' },
-  { id: 20, url: 'src/assets/dog1.png' },
-  { id: 21, url: 'src/assets/dog2.png' },
-  { id: 22, url: 'src/assets/dog3.png' },
-  { id: 23, url: 'src/assets/dog1.png' },
-  { id: 24, url: 'src/assets/dog2.png' },
-  { id: 25, url: 'src/assets/dog1.png' },
-  { id: 26, url: 'src/assets/dog2.png' },
-  { id: 27, url: 'src/assets/dog3.png' },
-  { id: 28, url: 'src/assets/dog1.png' },
-  { id: 29, url: 'src/assets/dog2.png' },
-]
 
 const appointments = [
   {
@@ -91,6 +61,12 @@ const HomeUser = () => {
   const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false)
   const stars = 3.2
 
+  const navigate = useNavigate()
+
+  const { getUserWithToken, user } = useContext(StoreContext)
+
+  useEffect(() => { getUserWithToken(() => navigate('/login')) }, [])
+
   const handleCloseAppointmentModal = () => {
     setSelectedAppointment({})
   }
@@ -101,7 +77,7 @@ const HomeUser = () => {
         <CancelAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
       )}
       {isSearchModalOpen && <SearchPetSitterModal onClose={() => setIsSearchModalOpen(false)} />}
-      {isAlbumModalOpen && <AlbumModal photos={photos} onClose={() => setIsAlbumModalOpen(false)} />}
+      {isAlbumModalOpen && <AlbumModal photos={user?.album} user={user} onClose={() => setIsAlbumModalOpen(false)} />}
       <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
         <h1 className="mb-3">PetSitters recentes</h1>
         <div className="flex flex-row gap-4">
@@ -171,7 +147,7 @@ const HomeUser = () => {
             </button>
           </div>
         </div>
-        <div>
+        <div className="pb-3">
           <div className="flex flex-row justify-between mt-4">
             <h1 className="mb-3">Álbum</h1>
             <AiTwotoneEdit
@@ -179,10 +155,15 @@ const HomeUser = () => {
               onClick={() => setIsAlbumModalOpen(true)}
             />
           </div>
-          <div className="max-h-80 overflow-auto grid grid-cols-6 gap-2 grid-cols">
-            {photos.map((photo) => <img key={photo.id} src={photo.url} alt="" />)}
+          {user?.album && user?.album.length > 0
+            ? (
+              <div className="max-h-80 overflow-auto grid grid-cols-6 gap-2 grid-cols">
 
-          </div>
+                {user.album.map((photo) => <img key={photo._id} src={`${path}${photo.filename}`} alt="" />)}
+
+              </div>
+            )
+            : <span>Você ainda nao possui fotos</span>}
         </div>
       </div>
       <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">

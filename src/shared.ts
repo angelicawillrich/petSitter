@@ -16,3 +16,5 @@ export const ratings = [
   { id: '2', value: '5_to_3_stars', label: '5 à 3 estrelas' },
   { id: '3', value: 'all', label: 'Todos' },
 ]
+
+export const path = 'http://localhost:3000'

@@ -2,7 +2,7 @@
 import React from 'react'
 import axios from 'axios'
 import {
-  ILoginForm, IUpdatePetSitter, IUpdatedPets, IUserProfile,
+  ILoginForm, IUpdatePetSitter, IUpdatedPets, IUserProfile, IaddPhotoData,
 } from '../interfaces/interfaces'
 
 axios.interceptors.request.use((config) => {
@@ -63,6 +63,22 @@ export const updatePetSitter = async (updatedPetSitter: IUpdatePetSitter) => {
   const result = await axios.post(
     'http://127.0.0.1:3000/user/petSitter',
     updatedPetSitter,
+  )
+  return result
+}
+
+export const addPhotoAlbum = async (addData: IaddPhotoData) => {
+  const result = await axios.post(
+    'http://127.0.0.1:3000/user/addPhotoAlbum',
+    addData,
+  )
+  return result
+}
+
+export const deletePhotoAlbum = async (deleteData: { userId: string, album: { filename: string, date: Date }[] }) => {
+  const result = await axios.post(
+    'http://127.0.0.1:3000/user/deletePhotoAlbum',
+    deleteData,
   )
   return result
 }

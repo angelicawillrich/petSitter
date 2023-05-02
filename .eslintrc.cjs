@@ -40,6 +40,7 @@ module.exports = {
         'no-plusplus': 'off',
         "import/no-extraneous-dependencies": "off",
         "no-alert": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "no-underscore-dangle": "off"
     }
 };

@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Accordion from '../components/baseComponents/accordion'
 import Button from '../components/baseComponents/button'
-import { species } from '../shared'
+import { path, species } from '../shared'
 import { IPetFormState } from '../interfaces/interfaces'
 import PetForm from './petForm'
 import { updateUserPets } from '../api/user.api'
@@ -125,7 +125,7 @@ const RegisterPets = () => {
                     className="h-10 w-10 rounded-full object-cover"
                     src={
                       pet.picture?.split('/')[1] === 'images'
-                        ? (`http://localhost:3000${pet.picture}`)
+                        ? (`${path}${pet.picture}`)
                         : pet?.localPicture
                           ? (URL.createObjectURL(pet.localPicture))
                           : undefined

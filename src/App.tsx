@@ -34,6 +34,7 @@ const App = () => {
             <Route path="/user" element={<PageUser />} />
             <Route path="/petsitter" element={<PagePetSitter />} />
             <Route path="/rating" element={<RatingPage />} />
+            <Route path="*" element={<HomeUser />} />
           </Route>
         </Routes>
       </ContextProvider>
