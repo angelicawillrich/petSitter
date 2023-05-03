@@ -1,144 +1,138 @@
-import React, { useContext, useEffect, useState } from 'react'
+/* eslint-disable no-param-reassign */
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react'
 import { BiSearchAlt } from 'react-icons/bi'
 import { AiTwotoneEdit } from 'react-icons/ai'
 
 import { useNavigate } from 'react-router-dom'
-import Dummy1 from '../assets/dummy1.png'
-import Dummy2 from '../assets/dummy2.png'
 import CancelAppointmentModal from '../modals/cancelAppointment.modal'
 import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 import AlbumModal from '../modals/album.modal'
-import { showStars } from '../utils'
+import { handleCalculateRatingsStars, showStars } from '../utils'
 import { StoreContext } from '../context/context'
-import { path } from '../shared'
-
-export interface Appointment {
-  id: string
-  initial_date: string
-  initial_time: string
-  final_date: string
-  final_time: string
-  petSitter: {
-    name: string
-    address: string
-    city: string
-  },
-  status: string
-}
-
-const appointments = [
-  {
-    id: 0,
-    initial_date: '20.12',
-    initial_time: '10:00',
-    final_date: '21.12',
-    final_time: '18:00',
-    petSitter: {
-      name: 'Maria',
-      address: 'Rua 1, nro 10',
-      city: 'Pelotas',
-    },
-    status: 'confirmed',
-  },
-  {
-    id: 1,
-    initial_date: '25.12',
-    initial_time: '08:00',
-    final_date: '25.12',
-    final_time: '16:00',
-    petSitter: {
-      name: 'Maria',
-      address: 'Rua 1, nro 10',
-      city: 'Pelotas',
-    },
-    status: 'pending',
-  },
-]
+import { appointmentStatus, path } from '../shared'
+import {
+  IAppointment, IBooking, IBookingPersonalData, IRating,
+} from '../interfaces/interfaces'
+import Dummy2 from '../assets/dummy2.png'
 
 const HomeUser = () => {
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | object>({})
+  const [selectedAppointment, setSelectedAppointment] = useState<IAppointment | undefined>()
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false)
-  const stars = 3.2
 
   const navigate = useNavigate()
 
-  const { getUserWithToken, user } = useContext(StoreContext)
+  const {
+    getUserWithToken, user, fetchPetSittersList, petSittersList,
+  } = useContext(StoreContext)
 
-  useEffect(() => { getUserWithToken(() => navigate('/login')) }, [])
+  useEffect(() => {
+    getUserWithToken(() => navigate('/login'))
+    fetchPetSittersList()
+  }, [])
 
   const handleCloseAppointmentModal = () => {
-    setSelectedAppointment({})
+    setSelectedAppointment(undefined)
   }
+
+  const recentPetSitters = useMemo(() => {
+    if (user) {
+      const petSitters = user?.bookings.reduce((acc: IBookingPersonalData[], current:IBooking) => {
+        if (!acc.find((item) => item._id === current.petSitterId?._id)) {
+          acc.push(current.petSitterId as IBookingPersonalData)
+        }
+        return acc
+      }, [])
+      return petSitters
+    }
+    return []
+  }, [user])
 
   return (
     <div className="flex flex-col flex-3 w-full h-full gap-8 justify-center md:flex-row">
-      {Object.keys(selectedAppointment).length > 0 && (
+      {selectedAppointment && Object.keys(selectedAppointment).length > 0 && (
         <CancelAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
       )}
       {isSearchModalOpen && <SearchPetSitterModal onClose={() => setIsSearchModalOpen(false)} />}
       {isAlbumModalOpen && <AlbumModal photos={user?.album} user={user} onClose={() => setIsAlbumModalOpen(false)} />}
       <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
         <h1 className="mb-3">PetSitters recentes</h1>
-        <div className="flex flex-row gap-4">
-          <div className="flex flex-col justify-center items-center mb-3">
-            <img
-              src={Dummy1}
-              alt="dummy1"
-              className="w-12 h-12"
-            />
-            <a href="#" className="text-base text-gray-900">Ana</a>
-          </div>
-          <div className="flex flex-col justify-center items-center mb-3">
-            <img
-              src={Dummy2}
-              alt="dummy2"
-              className="w-12 h-12 rounded-full"
-            />
-            <a href="#" className="text-base text-gray-900">Henrique</a>
-          </div>
+        <div className="flex flex-row gap-4 mb-3 items-center">
+          { recentPetSitters?.length
+            ? (
+              recentPetSitters?.map((petSitter) => (
+                <div key={petSitter._id} className="flex flex-col justify-center items-center mb-3">
+                  {petSitter.profilePicture && (
+                  <img
+                    src={`${path}${petSitter.profilePicture}`}
+                    alt="Foto do PetSitter"
+                    className="w-12 h-12 rounded-full mb-2"
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null // prevents looping
+                      currentTarget.src = Dummy2
+                    }}
+                  />
+                  )}
+                  <button
+                    type="button"
+                    className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                    onClick={() => navigate('/')}
+                  >
+                    {petSitter.name}
+                  </button>
+                </div>
+              )))
+            : (
+              <span>Você ainda nao conhece nenhum PetSitter.</span>
+            )}
         </div>
         <div>
           <div className="flex flex-row justify-between items-center mt-4">
-            <h1 className="mb-3">Ache seu PetSitter</h1>
-            <BiSearchAlt className="w-6 h-6" />
+            <h1 className="mb-3">Ache outro PetSitter</h1>
+            <BiSearchAlt className="w-6 h-6 cursor-pointer hover:text-gray-600" onClick={() => { setIsSearchModalOpen(true) }} />
           </div>
           <div className="flex flex-col gap-2">
-            <div className="flex flex-row items-center mb-3 gap-3">
-              <img
-                src={Dummy1}
-                alt="dummy1"
-                className="w-12 h-12 rounded-full"
-              />
-              <div className="flex flex-col">
-                <div className="flex flex-row items-center gap-2">
-                  <a href="#" className="text-base text-gray-900">Ana</a>
-                  <div className="flex flex-row">
-                    {showStars(4)}
+            {petSittersList && petSittersList.map((petSitter) => (
+              (
+                <div key={petSitter._id} className="flex flex-row items-center mb-3 gap-3">
+                  <img
+                    src={`${path}${petSitter.profilePicture}`}
+                    alt="Foto do PetSitter"
+                    className="w-12 h-12 rounded-full"
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null // prevents looping
+                      currentTarget.src = Dummy2
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <div className="flex flex-row items-center gap-2">
+                      <button
+                        type="button"
+                        className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                        onClick={() => {}}
+                      >
+                        {petSitter.name}
+                      </button>
+                      <div className="flex flex-row">
+                        {handleCalculateRatingsStars(petSitter.ratingsReceived)}
+                      </div>
+                    </div>
+                    <span>
+                      {petSitter.district}
+                      {' '}
+                      -
+                      {' '}
+                      {petSitter.cityName}
+                    </span>
                   </div>
                 </div>
-                <span>Centro - Pelotas</span>
-              </div>
-            </div>
-            <div className="flex flex-row items-center mb-3 gap-3">
-              <img
-                src={Dummy1}
-                alt="dummy1"
-                className="w-12 h-12 rounded-full"
-              />
-              <div className="flex flex-col">
-                <div className="flex flex-row items-center gap-2">
-                  <a href="#" className="text-base text-gray-900">Maria</a>
-                  <div className="flex flex-row">
-                    {showStars(4.6)}
-                  </div>
-                </div>
-                <span>Laranjal - Pelotas</span>
-              </div>
-            </div>
+              )
+            ))}
             <button
               type="button"
-              className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none"
+              className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
               onClick={() => {
                 setIsSearchModalOpen(true)
               }}
@@ -151,7 +145,7 @@ const HomeUser = () => {
           <div className="flex flex-row justify-between mt-4">
             <h1 className="mb-3">Álbum</h1>
             <AiTwotoneEdit
-              className="w-6 h-6"
+              className="w-6 h-6 cursor-pointer hover:text-gray-600"
               onClick={() => setIsAlbumModalOpen(true)}
             />
           </div>
@@ -169,40 +163,44 @@ const HomeUser = () => {
       <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
         <h1 className="mb-3">Sua agenda</h1>
         <div>
-          {appointments.map((appointment) => (
-            <div key={appointment.id} className="flex flex-col mt-3">
+          {user?.bookings.map((appointment) => (
+            <div key={appointment._id} className="flex flex-col mt-3">
               <div className="flex flex-row text-base font-bold text-gray-900 items-center">
                 <span>
-                  {appointment.initial_date}
+                  {new Date(appointment.initialDate).toLocaleDateString('pt-BR')}
                   {' '}
-                  {appointment.initial_time}
+                  {appointment.initialTime}
                   {' '}
                   -
                   {' '}
-                  {appointment.final_date}
+                  {new Date(appointment.finalDate).toLocaleDateString('pt-BR')}
                   {' '}
-                  {appointment.final_time}
+                  {appointment.finalTime}
                 </span>
                 <span className="text-gray-200 ml-1">
                   (
-                  {appointment.status}
+                  {appointmentStatus.find((status) => status.id === String(appointment.status))?.label}
                   )
                 </span>
               </div>
-              <a href="#" className="text-base text-gray-900">{appointment.petSitter.name}</a>
+              <button
+                type="submit"
+                className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                onClick={() => {}}
+              >
+                {appointment?.petSitterId?.name}
+              </button>
               <span>
-                {appointment.petSitter.address}
+                {appointment.petSitterId?.address}
                 {' '}
                 -
                 {' '}
-                {appointment.petSitter.city}
+                {appointment.petSitterId?.cityName}
               </span>
               <button
                 type="button"
-                className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none"
-                onClick={() => {
-                  setSelectedAppointment(appointment)
-                }}
+                className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                onClick={() => setSelectedAppointment(appointment)}
               >
                 Cancelar
               </button>
@@ -211,24 +209,22 @@ const HomeUser = () => {
         </div>
         <div className="mt-4">
           <h1 className="mb-3">Veja como você está sendo avaliado</h1>
-          <div>
-            <div className="flex flex-row items-center gap-2">
-              <a href="#" className="text-base text-gray-900">Maria</a>
-              <div className="flex flex-row">
-                {showStars(4.6)}
+          {user?.ratingsReceived.length
+            ? user.ratingsReceived.map((rating: IRating) => (
+              <div key={rating._id} className="flex flex-col mb-3">
+                <div className="flex flex-row items-center gap-2">
+                  <span className="text-gray-900">
+                    {rating.reviewerId?.name}
+                  </span>
+                  <div className="flex flex-row">
+                    {showStars(rating.rating)}
+                  </div>
+                </div>
+                <span>{rating.description}</span>
               </div>
-            </div>
-            <span>Super pontual e trouxe a ração separada em porções.</span>
-          </div>
-          <div>
-            <div className="flex flex-row items-center gap-2">
-              <a href="#" className="text-base text-gray-900">Fernando</a>
-              <div className="flex flex-row">
-                {showStars(2.6)}
-              </div>
-            </div>
-            <span>A cliente não veio e não entrou mais em contato.</span>
-          </div>
+            )) : (
+              <span>Você ainda não recebeu avaliações.</span>
+            )}
         </div>
       </div>
     </div>

@@ -61,7 +61,7 @@ export const updateUserPets = async (updatePets: IUpdatedPets) => {
 
 export const updatePetSitter = async (updatedPetSitter: IUpdatePetSitter) => {
   const result = await axios.post(
-    'http://127.0.0.1:3000/user/petSitter',
+    'http://127.0.0.1:3000/petSitter',
     updatedPetSitter,
   )
   return result
@@ -79,6 +79,20 @@ export const deletePhotoAlbum = async (deleteData: { userId: string, album: { fi
   const result = await axios.post(
     'http://127.0.0.1:3000/user/deletePhotoAlbum',
     deleteData,
+  )
+  return result
+}
+
+export const fetchPetSitters = async () => {
+  const result = await axios.get(
+    'http://127.0.0.1:3000/petSitters',
+  )
+  return result
+}
+
+export const filterPetSitter = async (filter: string) => {
+  const result = await axios.get(
+    `http://127.0.0.1:3000/petSitters/filter${filter}`,
   )
   return result
 }

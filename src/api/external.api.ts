@@ -8,7 +8,7 @@ export const getStates = async () => {
   return result
 }
 
-export const getCities = async (stateId: number) => {
+export const getCitiesByState = async (stateId: number) => {
   const baseUrl = 'https://servicodados.ibge.gov.br/api/v1/'
   const url = `${baseUrl}localidades/estados/${stateId}/municipios`
   const result = axios.get(url)

@@ -50,6 +50,42 @@ export interface IPost {
   date: Date;
 }
 
+export interface IBookingPersonalData {
+  address: string
+  cityId: string
+  cityName: string
+  name: string
+  profilePicture: string
+  stateId: string
+  stateName: string
+  _id: string
+}
+export interface IBooking {
+  finalDate: Date,
+  finalTime: string,
+  initialDate: Date,
+  initialTime: string,
+  status: string,
+  userId?: IBookingPersonalData,
+  petSitterId?: IBookingPersonalData,
+  _id: string
+}
+
+export interface IRating {
+  reviewerId?: {
+    name: string
+    _id: string
+  }
+  reviewedId?: {
+    name: string
+    _id: string
+  }
+  rating: number;
+  description: string;
+  reviewedByPetSitter: boolean
+  _id: string
+}
+
 export interface IUser {
   _id: string
   email: string;
@@ -57,8 +93,10 @@ export interface IUser {
   name: string;
   address: string;
   district: string;
-  city: string;
-  state: string;
+  cityId: string;
+  cityName: string;
+  stateId: string;
+  stateName: string;
   country: string;
   phone: string;
   profilePicture: string;
@@ -69,8 +107,8 @@ export interface IUser {
   petSitterInfo: IPetSitterInfo;
   availableDates: IAvailableDates[]
   createdAt: Date;
-  ratingsReceived: string;
-  bookings: string;
+  ratingsReceived: IRating[];
+  bookings: IBooking[];
 }
 export interface ILoginForm {
   email: string
@@ -82,8 +120,10 @@ export interface IUserProfile {
   name: string
   address: string
   district: string
-  state: string
-  city: string
+  stateId: string
+  stateName: string
+  cityId: string
+  cityName: string
   phone: string
   profilePicture: string | ArrayBuffer | null
 }
@@ -124,4 +164,31 @@ export interface IUpdatePetSitter {
 export interface IaddPhotoData {
   photo: string | ArrayBuffer | null;
   userId: string;
+}
+
+export interface IFilterPetSitter {
+  name?: string
+  cityId?: string
+  stateId?: string
+  specie?: string
+  rating?: string
+}
+
+export interface IAppointment {
+  _id: string
+  initialDate: Date
+  initialTime: string
+  finalDate: Date
+  finalTime: string
+  petSitterId?: {
+    name: string
+    address: string
+    cityName: string
+  },
+  userId?: {
+    name: string
+    address: string
+    cityName: string
+  },
+  status: string
 }

@@ -1,12 +1,13 @@
 import React from 'react'
 import { RiStarHalfFill, RiStarFill } from 'react-icons/ri'
 import { services } from './shared'
+import { IRating } from './interfaces/interfaces'
 
 // eslint-disable-next-line import/prefer-default-export
 export const showStars = (stars: number) => {
   const starsArr = []
   for (let i = 0; i < Math.floor(stars); i++) {
-    starsArr.push(<RiStarFill className="text-yellow-300 w-4 h-4" />)
+    starsArr.push(<RiStarFill key={i} className="text-yellow-300 w-4 h-4" />)
   }
   if (stars > Math.floor(stars)) {
     starsArr.push(<RiStarHalfFill className="text-yellow-300 w-4 h-4" />)
@@ -40,4 +41,16 @@ export const generateInitialsAvatar = (name: string) => {
       {initial.toLocaleUpperCase()}
     </div>
   )
+}
+
+export const calculateRatingAverage = (ratings: IRating[]) => {
+  const total = ratings.reduce((acc: number, next: IRating) => {
+    return acc + Number(next.rating)
+  }, 0)
+  return total / ratings.length
+}
+
+export const handleCalculateRatingsStars = (ratings: IRating[]) => {
+  const stars = calculateRatingAverage(ratings)
+  return showStars(stars)
 }

@@ -1,102 +1,118 @@
-import axios from 'axios'
+/* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from 'react'
 import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
 import Modal from '../components/baseComponents/modal'
-import { species, ratings } from '../shared'
+import { species, searchRatings, path } from '../shared'
+import { getCitiesByState, getStates } from '../api/external.api'
+import { IFilterPetSitter, IUser } from '../interfaces/interfaces'
+import { fetchPetSitters, filterPetSitter } from '../api/user.api'
+import { calculateRatingAverage, handleCalculateRatingsStars } from '../utils'
+import Dummy2 from '../assets/dummy2.png'
 
-interface SearchPetSitter {
+interface ISearchPetSitter {
   onClose: () => void
 }
 
-interface CityState {
+interface ICityState {
   id: number
   nome: string
 }
 
-interface State {
+interface IState {
   id: number
   nome: string
-  municipio: CityState
+  municipio: ICityState
 }
 
-interface List {
-  id: any
-  value: any
+interface IList {
+  id: string
+  value: string
+  label: string
 }
 
-interface FormState {
+interface IPetSitterData {
   name: string
-  city: string
-  state: string
-  species: string
-  rating: string
+  cityName: string
+  stateName: string
+  district: string
+  profilePicture: string
+  ratingsReceived: any
 }
 
 const initialFormState = {
-  name: '',
-  city: '',
-  state: '',
-  species: '',
-  rating: '',
+  name: '', cityId: '', stateId: '', specie: '', rating: '',
 }
 
-const SearchPetSitterModal = ({ onClose }: SearchPetSitter) => {
+const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
   const [loading, setLoading] = useState(false)
-  const [formState, setFormState] = useState<FormState>(initialFormState)
-  const [listState, setListState] = useState<List[] | []>([])
-  const [listCity, setListCity] = useState<List[] | []>([])
+  const [formState, setFormState] = useState<IFilterPetSitter>(initialFormState)
+  const [listState, setListState] = useState<IList[] | []>([])
+  const [listCity, setListCity] = useState<IList[] | []>([])
   const [selectedState, setSelectedState] = useState<string | undefined>()
+  const [listOfPetSitters, setListOfPetSitters] = useState<IPetSitterData[]>([])
 
-  const onSearchPetSitter = () => {
-    console.log('search PetSitter')
-    onClose()
+  const onSearchPetSitter = async () => {
+    const selectedItems = formState
+    const filteredItems = Object.fromEntries(Object.entries(selectedItems).filter(([key, value]) => value !== '' && key !== 'rating' && key !== 'specie'))
+    const searchParams = new URLSearchParams(filteredItems)
+    const petSitterResult = Object.keys(filteredItems).length
+      ? await (await filterPetSitter(searchParams.toString())).data.result
+      : await (await fetchPetSitters()).data.result
+
+    let updatedPetSitter = petSitterResult
+
+    if (formState.rating) {
+      const formRating = Number(formState.rating)
+      const selectedRating = Number(searchRatings[formRating].value)
+
+      updatedPetSitter = updatedPetSitter.filter((petSitter: IUser) => calculateRatingAverage(petSitter.ratingsReceived) >= selectedRating)
+    }
+
+    if (formState.specie) {
+      const selectedSpecies = formState.specie
+      updatedPetSitter = updatedPetSitter.filter((petSitter: IUser) => petSitter.petSitterInfo.allowedPets.includes(selectedSpecies))
+    }
+    setListOfPetSitters(updatedPetSitter)
+    if (updatedPetSitter.length === 0) {
+      alert('Nao foi possível encontrar PetSitters.')
+    }
   }
 
-  const onCancelAction = () => {
-    onClose()
-  }
-
-  const onChangeForm = (field: keyof FormState, value: string) => {
+  const onChangeForm = (field: keyof IFilterPetSitter, value: string) => {
     setFormState((previousState) => ({ ...previousState, [field]: value }))
   }
 
-  const fetchStates = () => {
-    setLoading(true)
-    const baseUrl = 'https://servicodados.ibge.gov.br/'
-    const url = `${baseUrl}api/v1/localidades/estados`
-    axios.get(url)
-      .then((result) => {
-        const sortedList = result.data.sort((a:State, b:State) => (a.nome > b.nome ? 1 : -1))
-        const list: List[] | [] = sortedList.map((item: State) => ({ id: item.id, value: item.nome }))
-        setListState(list)
-        if (!selectedState) {
-          setSelectedState(list[0].id)
-        }
-      })
-      .catch((error) => {
-        console.error(error)
-      }).finally(() => {
-        setLoading(false)
-      })
+  const fetchStates = async () => {
+    try {
+      setLoading(true)
+      const statesResult = await getStates()
+      const sortedList = statesResult.data.sort((a:IState, b:IState) => (a.nome > b.nome ? 1 : -1))
+      const list: IList[] | [] = sortedList.map((item: IState) => ({ id: item.id, value: item.nome, label: item.nome }))
+      setListState(list)
+      if (selectedState !== undefined) {
+        setSelectedState(list[0].id)
+      }
+      setLoading(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
+    }
   }
 
-  const fetchCities = (id: number) => {
-    setLoading(true)
-    const baseUrl = 'https://servicodados.ibge.gov.br/api/v1/'
-    const url = `${baseUrl}localidades/estados/${id}/municipios`
-    axios.get(url)
-      .then((result) => {
-        const sortedList = result.data.sort((a:State, b:State) => (a.nome > b.nome ? 1 : -1))
-        const list: List[] | [] = sortedList.map((item: State) => ({ id: item.id, value: item.nome }))
-        setListCity(list)
-      })
-      .catch((error) => {
-        console.error(error)
-      }).finally(() => {
-        setLoading(false)
-      })
+  const fetchCities = async (id: number) => {
+    try {
+      setLoading(true)
+      const citiesResult = await getCitiesByState(id)
+      const sortedList = citiesResult.data.sort((a:IState, b:IState) => (a.nome > b.nome ? 1 : -1))
+      const list: IList[] | [] = sortedList.map((item: IState) => ({ id: item.id, value: item.nome, label: item.nome }))
+      setListCity(list)
+      setLoading(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -111,52 +127,95 @@ const SearchPetSitterModal = ({ onClose }: SearchPetSitter) => {
 
   return (
     <Modal title="Filtro" onClose={onClose}>
-      <div className="flex flex-col p-4 gap-2 justify-center items-center">
-        <Input
-          label="Nome"
-          value={formState.name}
-          onChange={(e) => onChangeForm('name', e.target.value)}
-        />
-        <div className="flex gap-2">
-          <Dropdown
-            id="estado"
-            label="Estado"
-            list={listState}
-            onChange={(e) => {
-              setSelectedState(e.target.value)
-              onChangeForm('state', e.target.value)
-            }}
-            value={formState.state}
-          />
-          <Dropdown
-            id="city"
-            label="Cidade"
-            list={listCity}
-            disabled={loading}
-            value={formState.city}
-            onChange={(e) => onChangeForm('city', e.target.value)}
-          />
-        </div>
-        <Dropdown
-          id="species"
-          label="Espécie"
-          list={species}
-          disabled={loading}
-          value={formState.species}
-          onChange={(e) => onChangeForm('species', e.target.value)}
-        />
-        <Dropdown
-          id="rating"
-          label="Avaliacoes"
-          list={ratings}
-          value={formState.rating}
-          onChange={(e) => onChangeForm('rating', e.target.value)}
-        />
-        <div
-          className=""
-        >
-          <Button onClick={onSearchPetSitter}>Buscar</Button>
-        </div>
+      <div className="flex flex-col w-full p-4 gap-2 justify-center items-center">
+        {!listOfPetSitters.length
+          ? (
+            <>
+              <Input
+                label="Nome"
+                value={formState.name}
+                onChange={(e) => onChangeForm('name', e.target.value)}
+              />
+              <div className="flex w-full gap-2">
+                <Dropdown
+                  id="estado"
+                  label="Estado"
+                  list={listState}
+                  onChange={(e) => {
+                    setSelectedState(e.target.value)
+                    onChangeForm('stateId', e.target.value)
+                  }}
+                  value={formState.stateId}
+                />
+                <Dropdown
+                  id="cityId"
+                  label="Cidade"
+                  list={listCity}
+                  disabled={loading}
+                  value={formState.cityId}
+                  onChange={(e) => onChangeForm('cityId', e.target.value)}
+                />
+              </div>
+              <Dropdown
+                id="species"
+                label="Espécie"
+                list={species}
+                disabled={loading}
+                value={formState.specie}
+                onChange={(e) => onChangeForm('specie', e.target.value)}
+              />
+              <Dropdown
+                id="rating"
+                label="Avaliacoes"
+                list={searchRatings}
+                value={formState.rating}
+                onChange={(e) => onChangeForm('rating', e.target.value)}
+              />
+              <div
+                className=""
+              >
+                <Button type="button" onClick={() => onSearchPetSitter()}>Buscar</Button>
+              </div>
+            </>
+          ) : (
+            listOfPetSitters.map((petSitter) => (
+              <div key={petSitter.name} className="flex flex-row w-full justify-start items-center mb-3 gap-3">
+                <img
+                  src={`${path}${petSitter.profilePicture}`}
+                  alt="Foto do PetSitter"
+                  className="w-12 h-12 rounded-full"
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null // prevents looping
+                    currentTarget.src = Dummy2
+                  }}
+                />
+                <div className="flex flex-col">
+                  <div className="flex flex-row items-center gap-2">
+                    <button
+                      type="button"
+                      className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                      onClick={() => {}}
+                    >
+                      {petSitter.name}
+                    </button>
+                    <div className="flex flex-row">
+                      {petSitter.ratingsReceived && handleCalculateRatingsStars(petSitter.ratingsReceived)}
+                    </div>
+                  </div>
+                  <span>
+                    {petSitter.district}
+                    {' '}
+                    -
+                    {' '}
+                    {petSitter.cityName}
+                    -
+                    {' '}
+                    {petSitter.stateName}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
       </div>
     </Modal>
   )

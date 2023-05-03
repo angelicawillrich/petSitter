@@ -5,23 +5,23 @@ import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
 import { IUserProfile } from '../interfaces/interfaces'
-import { getCities, getStates } from '../api/external.api'
+import { getCitiesByState, getStates } from '../api/external.api'
 import { updateUserProfile } from '../api/user.api'
 import { StoreContext } from '../context/context'
 import { convertBase64 } from '../utils'
 
-interface CityState {
+interface ICityState {
   id: number
   nome: string
 }
 
-interface State {
+interface IState {
   id: number
   nome: string
-  municipio: CityState
+  municipio: ICityState
 }
 
-interface List {
+interface IList {
   id: string
   value: string
   label: string
@@ -32,16 +32,18 @@ const initialFormState = {
   name: '',
   address: '',
   district: '',
-  state: '',
-  city: '',
+  stateId: '',
+  stateName: '',
+  cityId: '',
+  cityName: '',
   phone: '',
   profilePicture: null,
 }
 
 const RegisterProfile = () => {
   const [formState, setFormState] = useState<IUserProfile>(initialFormState)
-  const [listState, setListState] = useState<List[] | []>([])
-  const [listCity, setListCity] = useState<List[] | []>([])
+  const [listState, setListState] = useState<IList[] | []>([])
+  const [listCity, setListCity] = useState<IList[] | []>([])
   const [selectedState, setSelectedState] = useState<string | undefined>()
   const [loading, setLoading] = useState(false)
 
@@ -55,13 +57,15 @@ const RegisterProfile = () => {
         name: user.name,
         address: user.address,
         district: user.district,
-        state: user.state,
-        city: user.city,
+        stateId: user.stateId,
+        stateName: user.stateName,
+        cityId: user.cityId,
+        cityName: user.cityName,
         phone: user.phone,
         profilePicture: user.profilePicture,
       }
       setFormState(userData)
-      setSelectedState(user.state)
+      setSelectedState(user.stateId)
     }
   }, [user])
 
@@ -69,8 +73,8 @@ const RegisterProfile = () => {
     try {
       setLoading(true)
       const statesResult = await getStates()
-      const sortedList = statesResult.data.sort((a:State, b:State) => (a.nome > b.nome ? 1 : -1))
-      const list: List[] | [] = sortedList.map((item: State) => ({ id: item.id, value: item.nome, label: item.nome }))
+      const sortedList = statesResult.data.sort((a:IState, b:IState) => (a.nome > b.nome ? 1 : -1))
+      const list: IList[] | [] = sortedList.map((item: IState) => ({ id: item.id, value: item.nome, label: item.nome }))
       setListState(list)
       if (selectedState !== undefined) {
         setSelectedState(list[0].id)
@@ -85,9 +89,9 @@ const RegisterProfile = () => {
   const fetchCities = async (id: number) => {
     try {
       setLoading(true)
-      const citiesResult = await getCities(id)
-      const sortedList = citiesResult.data.sort((a:State, b:State) => (a.nome > b.nome ? 1 : -1))
-      const list: List[] | [] = sortedList.map((item: State) => ({ id: item.id, value: item.nome, label: item.nome }))
+      const citiesResult = await getCitiesByState(id)
+      const sortedList = citiesResult.data.sort((a:IState, b:IState) => (a.nome > b.nome ? 1 : -1))
+      const list: IList[] | [] = sortedList.map((item: IState) => ({ id: item.id, value: item.nome, label: item.nome }))
       setListCity(list)
       setLoading(false)
     } catch (error) {
@@ -98,6 +102,19 @@ const RegisterProfile = () => {
 
   const onChangeForm = (field: keyof IUserProfile, value: string) => {
     setFormState((previousState) => ({ ...previousState, [field]: value }))
+    if (field === 'cityId') {
+      const cityName = listCity.find((city) => String(city.id) === String(value))?.label
+      if (cityName) {
+        setFormState((previousState) => ({ ...previousState, cityName }))
+      }
+    }
+
+    if (field === 'stateId') {
+      const stateName = listState.find((state) => String(state.id) === String(value))?.label
+      if (stateName) {
+        setFormState((previousState) => ({ ...previousState, stateName }))
+      }
+    }
   }
 
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,17 +182,17 @@ const RegisterProfile = () => {
             list={listState}
             onChange={(e) => {
               setSelectedState(e.target.value)
-              onChangeForm('state', e.target.value)
+              onChangeForm('stateId', e.target.value)
             }}
-            value={formState.state}
+            value={formState.stateId}
           />
           <Dropdown
             id="city"
             label="Cidade*"
             list={listCity}
             disabled={loading}
-            value={formState.city}
-            onChange={(e) => onChangeForm('city', e.target.value)}
+            value={formState.cityId}
+            onChange={(e) => onChangeForm('cityId', e.target.value)}
           />
         </div>
         <Input

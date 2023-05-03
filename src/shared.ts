@@ -10,11 +10,19 @@ export const services = [
   { id: '2', value: 'cuidar em casa', label: 'cuidar em casa' },
 ]
 
-export const ratings = [
-  { id: '0', value: '5_stars', label: '5 estrelas' },
-  { id: '1', value: '5_to_4_stars', label: '5 à 4 estrelas' },
-  { id: '2', value: '5_to_3_stars', label: '5 à 3 estrelas' },
-  { id: '3', value: 'all', label: 'Todos' },
+export const searchRatings = [
+  { id: '0', value: '5', label: '5 estrelas' },
+  { id: '1', value: '4', label: '5 à 4 estrelas' },
+  { id: '2', value: '3', label: '5 à 3 estrelas' },
+  { id: '3', value: '2', label: '5 à 2 estrelas' },
+  { id: '4', value: '1', label: 'Todos' },
 ]
 
 export const path = 'http://localhost:3000'
+
+export const appointmentStatus = [
+  { id: 'confirmed', label: 'confirmado' },
+  { id: 'pending', label: 'Aguardando' },
+  { id: 'canceled', label: 'cancelado' },
+  { id: 'rejected', label: 'rejeitado' },
+]

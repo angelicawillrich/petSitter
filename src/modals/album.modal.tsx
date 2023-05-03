@@ -34,9 +34,9 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
         userId: user?._id,
         photo: image,
       }
+      setSelectedPhoto(undefined)
       await addPhotoAlbum(addData)
       await getLoggedInUser(user._id)
-      setSelectedPhoto(undefined)
       alert('Imagem salva com sucesso!')
     }
   }
@@ -54,7 +54,6 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
       userId: user?._id,
       album,
     }
-    console.log('deleteData', deleteData)
     await deletePhotoAlbum(deleteData)
     await getLoggedInUser(user._id)
     alert('Imagem removida com sucesso!')
@@ -63,11 +62,9 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedImage = e.target.files?.[0]
     if (selectedImage) {
-      console.log('selectedImage', selectedImage)
       setSelectedPhoto(selectedImage)
     }
   }
-  console.log('photos', photos)
 
   return (
     <Modal title="Álbum" onClose={onClose}>
