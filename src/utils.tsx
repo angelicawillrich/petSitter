@@ -50,7 +50,7 @@ export const calculateRatingAverage = (ratings: IRating[]) => {
   return total / ratings.length
 }
 
-export const handleCalculateRatingsStars = (ratings: IRating[]) => {
+export const calculateRatingsStars = (ratings: IRating[]) => {
   const stars = calculateRatingAverage(ratings)
   return showStars(stars)
 }

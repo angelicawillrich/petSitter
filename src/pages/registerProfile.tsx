@@ -157,7 +157,7 @@ const RegisterProfile = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-1/2">
+    <form onSubmit={handleSubmit} className="w-full">
       <div className="flex flex-col gap-4 justify-center items-center">
         <h1>Complete o seu cadastro</h1>
         <Input

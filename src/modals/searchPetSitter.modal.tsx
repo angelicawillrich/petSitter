@@ -8,7 +8,7 @@ import { species, searchRatings, path } from '../shared'
 import { getCitiesByState, getStates } from '../api/external.api'
 import { IFilterPetSitter, IUser } from '../interfaces/interfaces'
 import { fetchPetSitters, filterPetSitter } from '../api/user.api'
-import { calculateRatingAverage, handleCalculateRatingsStars } from '../utils'
+import { calculateRatingAverage, calculateRatingsStars } from '../utils'
 import Dummy2 from '../assets/dummy2.png'
 
 interface ISearchPetSitter {
@@ -199,7 +199,7 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
                       {petSitter.name}
                     </button>
                     <div className="flex flex-row">
-                      {petSitter.ratingsReceived && handleCalculateRatingsStars(petSitter.ratingsReceived)}
+                      {petSitter.ratingsReceived && calculateRatingsStars(petSitter.ratingsReceived)}
                     </div>
                   </div>
                   <span>

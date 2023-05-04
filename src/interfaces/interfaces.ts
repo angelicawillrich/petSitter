@@ -25,7 +25,7 @@ export interface IAvailableDates {
 }
 
 export interface IPet {
-  id: string;
+  _id: string;
   name: string;
   yearBirth: number;
   specie: string;

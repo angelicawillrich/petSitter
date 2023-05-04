@@ -96,3 +96,10 @@ export const filterPetSitter = async (filter: string) => {
   )
   return result
 }
+
+export const getUserById = async (id: string) => {
+  const result = await axios.get(
+    `http://127.0.0.1:3000/user/${id}`,
+  )
+  return result
+}

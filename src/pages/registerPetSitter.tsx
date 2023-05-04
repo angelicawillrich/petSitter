@@ -110,7 +110,7 @@ const RegisterPetSitter = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-1/2">
+    <form onSubmit={handleSubmit} className="w-full">
       <div className="flex flex-col gap-4 justify-center items-center">
         <h1>Cadastro de PetSitter</h1>
         <div className="flex flex-1 flex-col w-full">

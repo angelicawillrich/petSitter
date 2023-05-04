@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import CancelAppointmentModal from '../modals/cancelAppointment.modal'
 import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 import AlbumModal from '../modals/album.modal'
-import { handleCalculateRatingsStars, showStars } from '../utils'
+import { calculateRatingsStars, showStars } from '../utils'
 import { StoreContext } from '../context/context'
 import { appointmentStatus, path } from '../shared'
 import {
@@ -116,7 +116,7 @@ const HomeUser = () => {
                         {petSitter.name}
                       </button>
                       <div className="flex flex-row">
-                        {handleCalculateRatingsStars(petSitter.ratingsReceived)}
+                        {calculateRatingsStars(petSitter.ratingsReceived)}
                       </div>
                     </div>
                     <span>
@@ -151,7 +151,7 @@ const HomeUser = () => {
           </div>
           {user?.album && user?.album.length > 0
             ? (
-              <div className="max-h-80 overflow-auto grid grid-cols-6 gap-2 grid-cols">
+              <div className="max-h-80 overflow-auto grid grid-cols-3 gap-2 grid-cols">
 
                 {user.album.map((photo) => <img key={photo._id} src={`${path}${photo.filename}`} alt="" />)}
 
