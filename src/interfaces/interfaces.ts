@@ -184,11 +184,13 @@ export interface IAppointment {
     name: string
     address: string
     cityName: string
+    _id: string
   },
   userId?: {
     name: string
     address: string
     cityName: string
+    _id: string
   },
   status: string
 }

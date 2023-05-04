@@ -1,9 +1,10 @@
 /* eslint-disable max-len */
-import moment from 'moment'
-import React from 'react'
+import React, { useContext } from 'react'
 import Button from '../components/baseComponents/button'
 import Modal from '../components/baseComponents/modal'
 import { IAppointment } from '../interfaces/interfaces'
+import { updateBookingStatus } from '../api/booking.api'
+import { StoreContext } from '../context/context'
 
 interface CancelAppointmentModalProps {
   onClose: () => void
@@ -11,9 +12,23 @@ interface CancelAppointmentModalProps {
 }
 
 const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModalProps) => {
-  const onCancelAppointment = () => {
-    console.log('cancel appointment')
-    onClose()
+  const { getLoggedInUser, user } = useContext(StoreContext)
+
+  const onCancelAppointment = async () => {
+    try {
+      const data = {
+        bookingId: appointment._id,
+        status: 'canceled',
+      }
+      await updateBookingStatus(data)
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      user && getLoggedInUser(user?._id)
+      alert('Agendamento cancelado com sucesso!')
+      onClose()
+    } catch (err) {
+      console.error(err)
+      alert('Nao foi possível cancelar o agendamento. Tente novamente.')
+    }
   }
 
   return (
