@@ -73,7 +73,6 @@ const PageUser = () => {
                   />
                   <div className="fley flex-col">
                     <h1>{userInfo?.name}</h1>
-                    <div className="flex">{showStars(4)}</div>
                   </div>
                 </div>
               </div>
@@ -154,19 +153,25 @@ const PageUser = () => {
                 ))}
               </div>
             </div>
-            <div>
-              <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols mt-4">
-                {userInfo?.album && userInfo.album.map((photo) => (
-                  <div key={photo._id} className="mb-3">
-                    <img
-                      src={`${path}${photo.filename}`}
-                      alt=""
-                      className="w-40"
-                    />
-                  </div>
-                ))}
+            <div className="mt-3 w-full">
+              <h1 className="mb-3">Álbum</h1>
+              {userInfo?.album && userInfo?.album?.length > 0
+                ? (
+                  <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols mt-4 mb-3">
+                    {userInfo.album.map((photo) => (
 
-              </div>
+                      <div key={photo._id} className="mb-3">
+                        <img
+                          src={`${path}${photo.filename}`}
+                          alt=""
+                          className="w-40"
+                        />
+                      </div>
+
+                    ))}
+                  </div>
+                )
+                : <span>Usuário ainda nao tem fotos.</span>}
             </div>
           </div>
           <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
@@ -174,8 +179,7 @@ const PageUser = () => {
               <h1 className="mb-3">
                 Avaliações
                 {' '}
-                {userInfo?.ratingsReceived && userInfo?.ratingsReceived?.length > 0 && calculateRatingAverage(userInfo.ratingsReceived)}
-                /5
+                {userInfo?.ratingsReceived && userInfo?.ratingsReceived?.length > 0 && `${calculateRatingAverage(userInfo.ratingsReceived)}/5`}
               </h1>
               {userInfo?.ratingsReceived.length
                 ? userInfo.ratingsReceived.map((rating) => (
