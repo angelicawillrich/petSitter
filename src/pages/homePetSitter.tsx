@@ -149,7 +149,7 @@ const HomePetSitter = () => {
   }
 
   return (
-    <div className="flex flex-col flex-3 w-full h-full gap-8 justify-center md:flex-row">
+    <div className="flex flex-col flex-3 w-full h-full gap-10 justify-center md:flex-row">
       {isPostsModalOpen && <PostsModal onClose={() => setIsPostsModalOpen(false)} />}
       {Object.keys(selectedAppointment).length > 0 && action === 'cancel' && (
         <CancelAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
