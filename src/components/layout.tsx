@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 import Header from './baseComponents/header'
 
 const Layout = () => (
-  <div>
+  <div className="flex flex-col flex-1 w-full justify-center items-center">
     <Header />
 
     <div className="flex flex-col flex-1 w-full justify-center items-center">
