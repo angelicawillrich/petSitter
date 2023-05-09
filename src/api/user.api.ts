@@ -101,5 +101,12 @@ export const getUserById = async (id: string) => {
   const result = await axios.get(
     `http://127.0.0.1:3000/user/${id}`,
   )
-  return result
+  return result.data.userResult
+}
+
+export const getPetSitterById = async (id: string) => {
+  const result = await axios.get(
+    `http://127.0.0.1:3000/petSitter/${id}`,
+  )
+  return result.data.result[0]
 }
