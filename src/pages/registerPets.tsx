@@ -155,27 +155,27 @@ const RegisterPets = () => {
             : (
               <div className="flex flex-col w-full gap-1 justify-items-start mb-6 mt-4">
                 <div>
-                  Ano de nascimento:
+                  <b>Ano de nascimento:</b>
                   {' '}
                   {pet.yearBirth}
                 </div>
                 <div>
-                  Peso:
+                  <b>Peso:</b>
                   {' '}
                   {pet.weight}
                 </div>
                 <div>
-                  Espécie:
+                  <b>Espécie:</b>
                   {' '}
                   {species.find((specie) => String(specie.id) === pet.specie)?.label }
                 </div>
                 <div>
-                  Raca:
+                  <b>Raca:</b>
                   {' '}
                   {pet.breed}
                 </div>
                 <div>
-                  Outras informacoes:
+                  <b>Outras informacoes:</b>
                   {' '}
                   {pet.others}
                 </div>

@@ -27,7 +27,7 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
       onClose()
     } catch (err) {
       console.error(err)
-      alert('Nao foi possível cancelar o agendamento. Tente novamente.')
+      alert('Não foi possível cancelar o agendamento. Tente novamente.')
     }
   }
 

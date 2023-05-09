@@ -14,40 +14,37 @@ import { getUserById } from '../api/user.api'
 const PageUser = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [userInfo, setUserInfo] = useState<IUser>()
+
   const navigate = useNavigate()
 
   const { getUserWithToken } = useContext(StoreContext)
-  const { id } = useParams()
+  const { userId } = useParams()
 
   const getUser = async () => {
     try {
       setIsLoading(true)
-      if (id) {
-        const result = await (await getUserById(id)).data.userResult
+      if (userId) {
+        const result = await (await getUserById(userId))
         setUserInfo(result)
       } else {
         console.log('ELSE')
-        alert('Usuário nao encontrado.')
+        alert('Usuário não encontrado.')
         navigate('/')
       }
     } catch (err) {
       console.log('ERROR')
-      alert('Usuário nao encontrado.')
+      alert('Usuário não encontrado.')
       navigate('/')
     } finally {
       setIsLoading(false)
     }
   }
 
-  console.log({ userInfo })
-
   useEffect(() => {
     getUserWithToken(() => navigate('/login'))
   }, [])
 
-  useEffect(() => { getUser() }, [id])
-
-  console.log({ userInfo })
+  useEffect(() => { getUser() }, [userId])
 
   const onImageError = (e: any) => {
     e.target.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D'
@@ -55,7 +52,7 @@ const PageUser = () => {
 
   return (
     isLoading
-      ? (<span>LOADING...</span>)
+      ? (<span>CARREGANDO...</span>)
       : (
         <div className="flex flex-col flex-3 w-full h-full gap-10 justify-center md:flex-row">
           <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
@@ -118,33 +115,33 @@ const PageUser = () => {
                         {pet.name}
                       </div>
                     )}
-                    key={pet.name}
+                    key={pet._id}
                     showControllers={false}
                   >
 
                     <div className="flex flex-col w-full gap-1 justify-items-start mb-6 mt-4">
                       <div>
-                        Ano de nascimento:
+                        <b>Ano de nascimento:</b>
                         {' '}
                         {pet.yearBirth}
                       </div>
                       <div>
-                        Peso:
+                        <b>Peso:</b>
                         {' '}
                         {pet.weight}
                       </div>
                       <div>
-                        Espécie:
+                        <b>Espécie:</b>
                         {' '}
                         {species.find((specie) => String(specie.id) === pet.specie)?.label }
                       </div>
                       <div>
-                        Raca:
+                        <b>Raca:</b>
                         {' '}
                         {pet.breed}
                       </div>
                       <div>
-                        Outras informacoes:
+                        <b>Outras informacoes:</b>
                         {' '}
                         {pet.others}
                       </div>
@@ -171,7 +168,7 @@ const PageUser = () => {
                     ))}
                   </div>
                 )
-                : <span>Usuário ainda nao tem fotos.</span>}
+                : <span>Usuário ainda não tem fotos.</span>}
             </div>
           </div>
           <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
@@ -193,7 +190,7 @@ const PageUser = () => {
                     </div>
                   </div>
                 )) : (
-                  <span>Este usuário ainda nao recebeu avaliações.</span>
+                  <span>Este usuário ainda não recebeu avaliações.</span>
                 )}
             </div>
           </div>

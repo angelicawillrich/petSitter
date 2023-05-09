@@ -76,7 +76,7 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
     }
     setListOfPetSitters(updatedPetSitter)
     if (updatedPetSitter.length === 0) {
-      alert('Nao foi possível encontrar PetSitters.')
+      alert('Não foi possível encontrar PetSitters.')
     }
   }
 

@@ -86,7 +86,7 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
         )
         : (
           <div className="flex justify-center">
-            <span>Você ainda nao possui fotos</span>
+            <span>Você ainda não possui fotos</span>
           </div>
         )}
       <div

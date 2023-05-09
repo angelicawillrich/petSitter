@@ -78,14 +78,14 @@ const HomeUser = () => {
                   <button
                     type="button"
                     className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate(`/petSitter/${petSitter._id}`)}
                   >
                     {petSitter.name}
                   </button>
                 </div>
               )))
             : (
-              <span>Você ainda nao conhece nenhum PetSitter.</span>
+              <span>Você ainda não conhece nenhum PetSitter.</span>
             )}
         </div>
         <div>
@@ -111,7 +111,7 @@ const HomeUser = () => {
                       <button
                         type="button"
                         className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                        onClick={() => {}}
+                        onClick={() => navigate(`/petSitter/${petSitter._id}`)}
                       >
                         {petSitter.name}
                       </button>
@@ -157,7 +157,7 @@ const HomeUser = () => {
 
               </div>
             )
-            : <span>Você ainda nao possui fotos</span>}
+            : <span>Você ainda não possui fotos</span>}
         </div>
       </div>
       <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
