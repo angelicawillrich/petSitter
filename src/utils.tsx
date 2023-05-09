@@ -1,7 +1,9 @@
 import React from 'react'
 import { RiStarHalfFill, RiStarFill } from 'react-icons/ri'
+import moment from 'moment'
+import { BiTime } from 'react-icons/bi'
 import { services } from './shared'
-import { IRating } from './interfaces/interfaces'
+import { IBooking, IRating } from './interfaces/interfaces'
 
 // eslint-disable-next-line import/prefer-default-export
 export const showStars = (stars: number) => {
@@ -28,7 +30,7 @@ export const convertBase64 = async (file: any): Promise<string | ArrayBuffer | n
     })
     return fileReader.result
   } catch (error) {
-    throw new Error('Nao foi possível ler a imagem.')
+    throw new Error('Não foi possível ler a imagem.')
   }
 }
 
@@ -53,4 +55,97 @@ export const calculateRatingAverage = (ratings: IRating[]) => {
 export const calculateRatingsStars = (ratings: IRating[]) => {
   const stars = calculateRatingAverage(ratings)
   return showStars(stars)
+}
+
+export const tileDisabled = ({ date, disabledDates }: any) => {
+  let result = false
+  if (date < new Date() || disabledDates.some((disabledDate: any) => date.getFullYear() === disabledDate.getFullYear()
+            && date.getMonth() === (disabledDate.getMonth() - 1)
+            && date.getDate() === disabledDate.getDate())) {
+    result = true
+  }
+  return result
+}
+
+interface ITileAvailableDate {
+  initialDate: Date
+  finalDate: Date
+  weekDays?: string[]
+}
+
+interface ITile {
+  availableDates?: ITileAvailableDate[]
+  date: Date
+  bookings?: IBooking[]
+}
+
+export const tileClassName = ({ date, availableDates, bookings }: ITile): string => {
+  let result = 'disabled'
+  let isDateAvailable = false
+
+  if (availableDates) {
+    for (let i = 0; i < availableDates.length; i++) {
+      const availableWeekDays = availableDates[i].weekDays
+      isDateAvailable = moment(date).isBetween(availableDates[i].initialDate, availableDates[i].finalDate, undefined, '()')
+      if (isDateAvailable && availableWeekDays && availableWeekDays.includes(String(moment(date).weekday()))) {
+        result = 'available'
+        break
+      }
+    }
+  }
+
+  if (!bookings) return result
+
+  for (let i = 0; i < bookings.length; i++) {
+    const bookingInitialDate = bookings[i].initialDate
+    const bookingFinallDate = bookings[i].finalDate
+    const isDateBooked = moment(date).isBetween(bookingInitialDate, bookingFinallDate, undefined, '()')
+    if (isDateBooked) {
+      result = 'occupied'
+      break
+    }
+  }
+
+  return result
+}
+
+interface IWeekDayAndTime {
+  initialTime: string
+  finalTime: string
+  weekday: string
+}
+
+export const getTileContent = ({ date, availableDates }: any) => {
+  let content = ''
+  let info = <span className="text-white">*</span>
+
+  if (availableDates) {
+    for (let i = 0; i < availableDates.length; i++) {
+      const { initialDate } = availableDates[i]
+      const { finalDate } = availableDates[i]
+      const availableWeekDays = availableDates[i].weekDays
+      const weekDay = String(moment(date).weekday())
+      const isDateAvailable = moment(date).isBetween(initialDate, finalDate, undefined, '()')
+      if (isDateAvailable && availableWeekDays && availableWeekDays.includes(weekDay)) {
+        const dayAndTime = availableDates[i].weekDaysAndTime.find((weekDayAndTime: IWeekDayAndTime) => weekDayAndTime.weekday === weekDay)
+        content = (`${dayAndTime.initialTime} - ${dayAndTime.finalTime}`)
+        info = <BiTime className="w-3 h-3" />
+        break
+      }
+    }
+  }
+
+  return (
+    <div className="items-container">
+      <div
+        key={1}
+        className="item flex flex-row justify-center"
+        data-tooltip-id="my-tooltip"
+        data-tooltip-content={content}
+      >
+        {info}
+      </div>
+
+    </div>
+  )
 }
