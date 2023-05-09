@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import React, { useContext, useEffect, useState } from 'react'
+import moment from 'moment'
 import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
@@ -76,6 +77,7 @@ const SetAppointmentModal = ({ petSitterId, userId, onClose }: SetAppointmentMod
                 label="Data início*"
                 value={formState.initialDate}
                 onChange={(e) => onChangeForm('initialDate', e.target.value)}
+                min={moment(new Date()).format('YYYY-MM-DD')}
                 required
               />
               <Input
@@ -92,6 +94,8 @@ const SetAppointmentModal = ({ petSitterId, userId, onClose }: SetAppointmentMod
                 label="Data fim*"
                 value={formState.finalDate}
                 onChange={(e) => onChangeForm('finalDate', e.target.value)}
+                min={moment(new Date(formState.initialDate)).format('YYYY-MM-DD')}
+                required
               />
               <Input
                 type="time"
