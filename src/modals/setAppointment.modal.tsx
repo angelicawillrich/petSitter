@@ -1,89 +1,115 @@
 /* eslint-disable max-len */
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
 import Modal from '../components/baseComponents/modal'
 import { services } from '../shared'
+import { createBooking } from '../api/booking.api'
+import { StoreContext } from '../context/context'
 
 interface SetAppointmentModalProps {
+  petSitterId: string
+  userId: string
   onClose: () => void
 }
 
-interface FormState {
+interface IFormState {
   service: string
-  initial_date: string
-  initial_time: string
-  final_date: string
-  final_time: string
+  initialDate: string
+  initialTime: string
+  finalDate: string
+  finalTime: string
+  petSitterId: string
+  userId: string
 }
 
 const initialFormState = {
   service: '',
-  initial_date: '',
-  initial_time: '',
-  final_date: '',
-  final_time: '',
+  initialDate: '',
+  initialTime: '',
+  finalDate: '',
+  finalTime: '',
+  petSitterId: '',
+  userId: '',
 }
 
-const SetAppointmentModal = ({ onClose }: SetAppointmentModalProps) => {
-  const [formState, setFormState] = useState<FormState>(initialFormState)
-  const onSetAppointment = () => {
-    console.log('set appointment')
-    onClose()
+const SetAppointmentModal = ({ petSitterId, userId, onClose }: SetAppointmentModalProps) => {
+  const [formState, setFormState] = useState<IFormState>(initialFormState)
+
+  const { getLoggedInUser } = useContext(StoreContext)
+
+  useEffect(() => {
+    setFormState((previousState) => ({ ...previousState, userId, petSitterId }))
+  }, [])
+
+  const handleCreateAppointment = async () => {
+    try {
+      await createBooking(formState)
+      alert('A sua solicitação foi enviada ao PetSitter. Aguarde pela resposta que será enviada por e-mail.')
+      await getLoggedInUser(formState.userId)
+    } catch (error) {
+      console.error(error)
+      alert('Não foi possível solicitar o agendamento. Tente novamente.')
+    }
   }
-  const onChangeForm = (field: keyof FormState, value: string) => {
+  const onChangeForm = (field: keyof IFormState, value: string) => {
     setFormState((previousState) => ({ ...previousState, [field]: value }))
   }
-  console.log('formState', formState)
 
   return (
     <Modal title="Agendamento" onClose={onClose}>
-      <div className="flex flex-col w-full p-4 justify-center items-center gap-4">
+      <form onSubmit={handleCreateAppointment}>
         <div className="flex flex-col w-full p-4 justify-center items-center gap-4">
-          <Dropdown
-            id="service"
-            label="Selecione o servico"
-            list={services}
-            value={formState.service}
-            onChange={(e) => onChangeForm('service', e.target.value)}
-          />
-          <div className="flex flex-row w-full gap-4">
-            <Input
-              type="date"
-              label="Data início*"
-              value={formState.initial_date}
-              onChange={(e) => onChangeForm('initial_date', e.target.value)}
+          <div className="flex flex-col w-full p-4 justify-center items-center gap-4">
+            <Dropdown
+              id="service"
+              label="Selecione o servico"
+              list={services}
+              value={formState.service}
+              onChange={(e) => onChangeForm('service', e.target.value)}
+              required
             />
-            <Input
-              type="time"
-              label="Hora início*"
-              value={formState.initial_time}
-              onChange={(e) => onChangeForm('initial_time', e.target.value)}
-            />
+            <div className="flex flex-row w-full gap-4">
+              <Input
+                type="date"
+                label="Data início*"
+                value={formState.initialDate}
+                onChange={(e) => onChangeForm('initialDate', e.target.value)}
+                required
+              />
+              <Input
+                type="time"
+                label="Hora início*"
+                value={formState.initialTime}
+                onChange={(e) => onChangeForm('initialTime', e.target.value)}
+                required
+              />
+            </div>
+            <div className="flex flex-row w-full gap-4">
+              <Input
+                type="date"
+                label="Data fim*"
+                value={formState.finalDate}
+                onChange={(e) => onChangeForm('finalDate', e.target.value)}
+              />
+              <Input
+                type="time"
+                label="Hora fim*"
+                value={formState.finalTime}
+                onChange={(e) => onChangeForm('finalTime', e.target.value)}
+                required
+              />
+            </div>
           </div>
-          <div className="flex flex-row w-full gap-4">
-            <Input
-              type="date"
-              label="Data fim*"
-              value={formState.final_date}
-              onChange={(e) => onChangeForm('final_date', e.target.value)}
-            />
-            <Input
-              type="time"
-              label="Hora fim*"
-              value={formState.final_time}
-              onChange={(e) => onChangeForm('final_time', e.target.value)}
-            />
-          </div>
+          <Button type="submit">Solicitar agendamento</Button>
+          <span>
+            <b>Atenção:</b>
+            {' '}
+            O agendamento precisa ser aprovado pelo PetSitter. Um e-mail será enviado com a resposta do PetSitter.
+          </span>
         </div>
-        <Button onClick={onSetAppointment}>Solicitar agendamento</Button>
-        <span>
-          <b>Atenção:</b>
-          {' '}
-          O agendamento precisa ser aprovado pelo PetSitter. Um e-mail será enviado com a aprovação ou cancelamento.
-        </span>
-      </div>
+      </form>
     </Modal>
   )
 }

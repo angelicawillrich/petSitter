@@ -11,7 +11,7 @@ export const updateBookingStatus = async (data: { bookingId: string, status: str
 
 export const createBooking = async (data: any) => {
   const result = await axios.post(
-    'http://127.0.0.1:3000/booking/creates',
+    'http://127.0.0.1:3000/booking/create',
     data,
   )
   return result

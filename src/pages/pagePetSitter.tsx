@@ -25,7 +25,7 @@ const PagePetSitter = () => {
 
   const navigate = useNavigate()
 
-  const { getUserWithToken } = useContext(StoreContext)
+  const { getUserWithToken, user } = useContext(StoreContext)
   const { petSitterId } = useParams()
 
   const getUser = async () => {
@@ -61,7 +61,8 @@ const PagePetSitter = () => {
       ? (<span>CARREGANDO...</span>)
       : (
         <div className="flex flex-col flex-3 w-full h-full gap-5 md:gap-10 justify-center md:flex-row">
-          {isSetAppointmentModalOpen && <SetAppointmentModal onClose={() => setIsSetAppointmentModalOpen(false)} />}
+          {petSitterInfo?._id && user?._id && isSetAppointmentModalOpen
+            && <SetAppointmentModal petSitterId={petSitterInfo._id} userId={user._id} onClose={() => setIsSetAppointmentModalOpen(false)} />}
           <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
             <div>
               <div className="flex flex-row gap-4">
