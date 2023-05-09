@@ -162,7 +162,7 @@ const HomeUser = () => {
       </div>
       <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
         <h1 className="mb-3">Sua agenda</h1>
-        <div>
+        <div className="max-h-96 overflow-auto">
           {user?.bookings.map((appointment) => (
             <div key={appointment._id} className="flex flex-col mt-3">
               <div className="flex flex-row text-base font-bold text-gray-900 items-center">
@@ -177,16 +177,16 @@ const HomeUser = () => {
                   {' '}
                   {appointment.finalTime}
                 </span>
-                <span className="text-gray-200 ml-1">
-                  (
-                  {appointmentStatus.find((status) => status.id === String(appointment.status))?.label}
-                  )
-                </span>
               </div>
+              <span className="text-gray-200">
+                (
+                {appointmentStatus.find((status) => status.id === String(appointment.status))?.label}
+                )
+              </span>
               <button
                 type="submit"
                 className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                onClick={() => {}}
+                onClick={() => navigate(`/petsitter/${appointment.petSitterId?._id}`)}
               >
                 {appointment?.petSitterId?.name}
               </button>
