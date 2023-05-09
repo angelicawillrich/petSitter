@@ -41,15 +41,15 @@ const RegisterPetSitter = () => {
 
   const navigate = useNavigate()
 
-  const { user, getUserWithToken, getLoggedInUser } = useContext(StoreContext)
+  const { loggedInUser, getUserWithToken, getLoggedInUser } = useContext(StoreContext)
 
   useEffect(() => {
-    if (user?.petSitterInfo) {
-      const selectedPets = species.filter((specie) => user.petSitterInfo.allowedPets.includes(specie.value))
-      const petSitterData = { ...user.petSitterInfo, allowedPets: selectedPets.filter((pet) => pet !== undefined) }
+    if (loggedInUser?.petSitterInfo) {
+      const selectedPets = species.filter((specie) => loggedInUser.petSitterInfo.allowedPets.includes(specie.value))
+      const petSitterData = { ...loggedInUser.petSitterInfo, allowedPets: selectedPets.filter((pet) => pet !== undefined) }
       setFormState(petSitterData)
     }
-  }, [user])
+  }, [loggedInUser])
 
   useEffect(() => { getUserWithToken(() => navigate('/login')) }, [])
 
@@ -91,17 +91,17 @@ const RegisterPetSitter = () => {
     event.preventDefault()
 
     try {
-      if (!user) return
+      if (!loggedInUser) return
       const updatedPetSitter = {
         petSitterInfo: {
           allowedPets: formState.allowedPets.map((pet) => (String(pet.value))),
           services: formState.services,
           others: formState.others,
         },
-        userId: user._id,
+        userId: loggedInUser._id,
       }
       await updatePetSitter(updatedPetSitter)
-      await getLoggedInUser(user._id)
+      await getLoggedInUser(loggedInUser._id)
       navigate('/')
     } catch (error:any) {
       console.error({ error })

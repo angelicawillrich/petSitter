@@ -29,15 +29,15 @@ const RegisterPets = () => {
 
   const navigate = useNavigate()
 
-  const { getLoggedInUser, getUserWithToken, user } = useContext(StoreContext)
+  const { getLoggedInUser, getUserWithToken, loggedInUser } = useContext(StoreContext)
 
   useEffect(() => { getUserWithToken(() => navigate('/login')) }, [])
 
   useEffect(() => {
-    if (user?.pets) {
-      setPets(user?.pets)
+    if (loggedInUser?.pets) {
+      setPets(loggedInUser?.pets)
     }
-  }, [user])
+  }, [loggedInUser])
 
   const onChangeForm = (field: keyof IPetFormState, value: string) => {
     setFormState((previousState) => ({ ...previousState, [field]: value }))
@@ -88,9 +88,9 @@ const RegisterPets = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     try {
-      if (!user) return
+      if (!loggedInUser) return
       const updatedPets = {
-        userId: user._id,
+        userId: loggedInUser._id,
         pets,
       }
       updatedPets.pets = updatedPets.pets.map((pet) => {
@@ -99,7 +99,7 @@ const RegisterPets = () => {
       })
       const response = await updateUserPets(updatedPets)
       getLoggedInUser(response.data.result)
-      if (user.isPetSitter === null || user.isPetSitter === undefined) {
+      if (loggedInUser.isPetSitter === null || loggedInUser.isPetSitter === undefined) {
         navigate('/bepetsitter')
       } else {
         navigate('/')
@@ -204,7 +204,7 @@ const RegisterPets = () => {
       >
         Salvar
       </Button>
-      {user?.pets.length === 0 && (
+      {loggedInUser?.pets.length === 0 && (
       <button
         type="submit"
         className="w-fit text-base decoration-transparent border-b-[1px] p-0 m-0 leading-none"

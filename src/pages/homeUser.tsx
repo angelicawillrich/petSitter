@@ -25,7 +25,7 @@ const HomeUser = () => {
   const navigate = useNavigate()
 
   const {
-    getUserWithToken, user, fetchPetSittersList, petSittersList,
+    getUserWithToken, loggedInUser, fetchPetSittersList, petSittersList,
   } = useContext(StoreContext)
 
   useEffect(() => {
@@ -38,8 +38,8 @@ const HomeUser = () => {
   }
 
   const recentPetSitters = useMemo(() => {
-    if (user) {
-      const petSitters = user?.bookings.reduce((acc: IBookingPersonalData[], current:IBooking) => {
+    if (loggedInUser) {
+      const petSitters = loggedInUser?.bookings.reduce((acc: IBookingPersonalData[], current:IBooking) => {
         if (!acc.find((item) => item._id === current.petSitterId?._id)) {
           acc.push(current.petSitterId as IBookingPersonalData)
         }
@@ -48,7 +48,7 @@ const HomeUser = () => {
       return petSitters
     }
     return []
-  }, [user])
+  }, [loggedInUser])
 
   return (
     <div className="flex flex-col flex-3 w-full h-full gap-10 justify-center md:flex-row">
@@ -56,7 +56,7 @@ const HomeUser = () => {
         <CancelAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
       )}
       {isSearchModalOpen && <SearchPetSitterModal onClose={() => setIsSearchModalOpen(false)} />}
-      {isAlbumModalOpen && <AlbumModal photos={user?.album} user={user} onClose={() => setIsAlbumModalOpen(false)} />}
+      {isAlbumModalOpen && <AlbumModal photos={loggedInUser?.album} user={loggedInUser} onClose={() => setIsAlbumModalOpen(false)} />}
       <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
         <h1 className="mb-3">PetSitters recentes</h1>
         <div className="flex flex-row gap-4 mb-3 items-center">
@@ -149,11 +149,11 @@ const HomeUser = () => {
               onClick={() => setIsAlbumModalOpen(true)}
             />
           </div>
-          {user?.album && user?.album.length > 0
+          {loggedInUser?.album && loggedInUser?.album.length > 0
             ? (
               <div className="max-h-80 overflow-auto grid grid-cols-3 gap-2 grid-cols">
 
-                {user.album.map((photo) => <img key={photo._id} src={`${path}${photo.filename}`} alt="" />)}
+                {loggedInUser.album.map((photo) => <img key={photo._id} src={`${path}${photo.filename}`} alt="" />)}
 
               </div>
             )
@@ -163,7 +163,7 @@ const HomeUser = () => {
       <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
         <h1 className="mb-3">Sua agenda</h1>
         <div className="max-h-96 overflow-auto">
-          {user?.bookings.map((appointment) => (
+          {loggedInUser?.bookings.map((appointment) => (
             <div key={appointment._id} className="flex flex-col mt-3">
               <div className="flex flex-row text-base font-bold text-gray-900 items-center">
                 <span>
@@ -209,8 +209,8 @@ const HomeUser = () => {
         </div>
         <div className="mt-4">
           <h1 className="mb-3">Veja como você está sendo avaliado</h1>
-          {user?.ratingsReceived.length
-            ? user.ratingsReceived.map((rating: IRating) => (
+          {loggedInUser?.ratingsReceived.length
+            ? loggedInUser.ratingsReceived.map((rating: IRating) => (
               <div key={rating._id} className="flex flex-col mb-3">
                 <div className="flex flex-row items-center gap-2">
                   <span className="text-gray-900">

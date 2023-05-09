@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
@@ -33,6 +34,7 @@ interface IList {
 }
 
 interface IPetSitterData {
+  _id: string
   name: string
   cityName: string
   stateName: string
@@ -52,6 +54,8 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
   const [listCity, setListCity] = useState<IList[] | []>([])
   const [selectedState, setSelectedState] = useState<string | undefined>()
   const [listOfPetSitters, setListOfPetSitters] = useState<IPetSitterData[]>([])
+
+  const navigate = useNavigate()
 
   const onSearchPetSitter = async () => {
     const selectedItems = formState
@@ -194,7 +198,7 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
                     <button
                       type="button"
                       className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                      onClick={() => {}}
+                      onClick={() => navigate(`/petsitter/${petSitter._id}`)}
                     >
                       {petSitter.name}
                     </button>

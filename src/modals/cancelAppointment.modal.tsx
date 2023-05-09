@@ -12,7 +12,7 @@ interface CancelAppointmentModalProps {
 }
 
 const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModalProps) => {
-  const { getLoggedInUser, user } = useContext(StoreContext)
+  const { getLoggedInUser, loggedInUser } = useContext(StoreContext)
 
   const onCancelAppointment = async () => {
     try {
@@ -22,7 +22,7 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
       }
       await updateBookingStatus(data)
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      user && getLoggedInUser(user?._id)
+      loggedInUser && getLoggedInUser(loggedInUser?._id)
       alert('Agendamento cancelado com sucesso!')
       onClose()
     } catch (err) {

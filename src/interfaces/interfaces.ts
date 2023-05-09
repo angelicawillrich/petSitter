@@ -176,7 +176,7 @@ export interface IFilterPetSitter {
 }
 
 export interface IAppointment {
-  _id?: string
+  _id: string
   initialDate: Date
   initialTime: string
   finalDate: Date

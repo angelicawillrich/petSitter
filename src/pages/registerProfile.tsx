@@ -49,25 +49,25 @@ const RegisterProfile = () => {
 
   const navigate = useNavigate()
 
-  const { user, getLoggedInUser, getUserWithToken } = useContext(StoreContext)
+  const { loggedInUser, getLoggedInUser, getUserWithToken } = useContext(StoreContext)
   useEffect(() => {
-    if (user) {
+    if (loggedInUser) {
       const userData = {
-        userId: user._id,
-        name: user.name,
-        address: user.address,
-        district: user.district,
-        stateId: user.stateId,
-        stateName: user.stateName,
-        cityId: user.cityId,
-        cityName: user.cityName,
-        phone: user.phone,
-        profilePicture: user.profilePicture,
+        userId: loggedInUser._id,
+        name: loggedInUser.name,
+        address: loggedInUser.address,
+        district: loggedInUser.district,
+        stateId: loggedInUser.stateId,
+        stateName: loggedInUser.stateName,
+        cityId: loggedInUser.cityId,
+        cityName: loggedInUser.cityName,
+        phone: loggedInUser.phone,
+        profilePicture: loggedInUser.profilePicture,
       }
       setFormState(userData)
-      setSelectedState(user.stateId)
+      setSelectedState(loggedInUser.stateId)
     }
-  }, [user])
+  }, [loggedInUser])
 
   const fetchStates = async () => {
     try {
@@ -141,11 +141,11 @@ const RegisterProfile = () => {
     event.preventDefault()
     try {
       await updateUserProfile(formState)
-      if (user?._id) {
-        await getLoggedInUser(user?._id)
+      if (loggedInUser?._id) {
+        await getLoggedInUser(loggedInUser?._id)
       }
       setFormState(initialFormState)
-      if (user?.pets.length === 0) {
+      if (loggedInUser?.pets.length === 0) {
         navigate('/pets')
       } else {
         navigate('/')

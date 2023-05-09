@@ -7,7 +7,7 @@ import { fetchLoggedInUser, fetchPetSitters, verifyToken } from '../api/user.api
 import { IUser } from '../interfaces/interfaces'
 
 interface IContext {
-  user?: IUser,
+  loggedInUser?: IUser,
   petSittersList: IUser[],
   getUserWithToken: (onError: () => void) => void
   getLoggedInUser: (id: string) => void
@@ -15,7 +15,7 @@ interface IContext {
 }
 
 export const StoreContext = createContext<IContext>({
-  user: undefined,
+  loggedInUser: undefined,
   petSittersList: [],
   getLoggedInUser: () => {},
   getUserWithToken: () => {},
@@ -23,13 +23,13 @@ export const StoreContext = createContext<IContext>({
 })
 
 export const ContextProvider = ({ children }: any) => {
-  const [user, setUser] = useState<IUser | undefined>()
+  const [loggedInUser, setLoggedInUser] = useState<IUser | undefined>()
   const [petSittersList, setPetSittersList] = useState<IUser[]>([])
 
   const getLoggedInUser = async (id: string) => {
     try {
       const result = await fetchLoggedInUser(id)
-      setUser(result.data.userResult)
+      setLoggedInUser(result.data.userResult)
     } catch (error) {
       console.error(error)
     }
@@ -39,7 +39,7 @@ export const ContextProvider = ({ children }: any) => {
     try {
       const result = await verifyToken()
       if (result.data.user) {
-        setUser(result.data.user)
+        setLoggedInUser(result.data.user)
       }
     } catch (error) {
       onError()
@@ -59,13 +59,13 @@ export const ContextProvider = ({ children }: any) => {
 
   const valueContext = useMemo(() => {
     return {
-      user,
+      loggedInUser,
       petSittersList,
       getLoggedInUser,
       getUserWithToken,
       fetchPetSittersList,
     }
-  }, [user, petSittersList, getLoggedInUser, getUserWithToken, fetchPetSittersList])
+  }, [loggedInUser, petSittersList, getLoggedInUser, getUserWithToken, fetchPetSittersList])
 
   return (
     <StoreContext.Provider value={valueContext}>
