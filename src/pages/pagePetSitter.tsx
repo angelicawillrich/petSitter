@@ -1,237 +1,233 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { HiOutlineMail } from 'react-icons/hi'
+import { BsWhatsapp } from 'react-icons/bs'
 
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
-import Dummy1 from '../assets/dummy1.png'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Tooltip } from 'react-tooltip'
 import Button from '../components/baseComponents/button'
-import { showStars } from '../utils'
+import {
+  calculateRatingAverage, generateInitialsAvatar, getTileContent, showStars, tileClassName,
+} from '../utils'
 import SetAppointmentModal from '../modals/setAppointment.modal'
+import { StoreContext } from '../context/context'
+import { getPetSitterById } from '../api/user.api'
+import { IUser } from '../interfaces/interfaces'
+import { path, services, species } from '../shared'
 
-export interface Appointment {
-  id: string
-  initial_date: string
-  initial_time: string
-  final_date: string
-  final_time: string
-  petSitter: {
-    name: string
-    address: string
-    city: string
-  },
-  status: string
-}
-
-const posts = [
-  { id: 0, imageUrl: 'src/assets/dog1.png', text: 'Oi! Esta é a Mione!' },
-  { id: 1, imageUrl: 'src/assets/dog2.png', text: 'Essa é a Cacau!' },
-  { id: 2, imageUrl: 'src/assets/dog3.png', text: 'Bom dia!' },
-  { id: 3, imageUrl: 'src/assets/dog4.png', text: 'Essa é a Cacau!' },
-  { id: 4, imageUrl: 'src/assets/dog1.png', text: 'Oie!' },
-  { id: 5, imageUrl: 'src/assets/dog2.png', text: 'Essa é a Cacau!' },
-  { id: 6, imageUrl: 'src/assets/dog3.png', text: 'Oi! Esta é a Mione!' },
-  { id: 7, imageUrl: 'src/assets/dog4.png', text: 'Essa é a Cacau!' },
-]
-
-const appointments = [
-  {
-    id: 0,
-    initial_date: '20.12',
-    initial_time: '10:00',
-    final_date: '21.12',
-    final_time: '18:00',
-    petSitter: {
-      name: 'Maria',
-      address: 'Rua 1, nro 10',
-      city: 'Pelotas',
-    },
-    status: 'confirmed',
-  },
-  {
-    id: 1,
-    initial_date: '25.12',
-    initial_time: '08:00',
-    final_date: '25.12',
-    final_time: '16:00',
-    petSitter: {
-      name: 'Maria',
-      address: 'Rua 1, nro 10',
-      city: 'Pelotas',
-    },
-    status: 'pending',
-  },
-]
+import 'react-tooltip/dist/react-tooltip.css'
 
 const PagePetSitter = () => {
   const [isSetAppointmentModalOpen, setIsSetAppointmentModalOpen] = useState(false)
-  const disabledDates = [
-    new Date(2023, 4, 24),
-    new Date(2023, 4, 25),
-  ]
-  const availabledDates = [
-    new Date(2023, 4, 9),
-    new Date(2023, 4, 10),
-    new Date(2023, 4, 11),
-    new Date(2023, 4, 12),
-    new Date(2023, 4, 13),
-    new Date(2023, 4, 14),
-  ]
-  const occupiedDates = [
-    new Date(2023, 4, 9),
-    new Date(2023, 4, 10),
-  ]
+  const [isLoading, setIsLoading] = useState(false)
+  const [petSitterInfo, setPetSitterInfo] = useState<IUser>()
 
-  const tileDisabled = ({ date }) => {
-    let result = false
-    if (date < new Date() || disabledDates.some((disabledDate) => date.getFullYear() === disabledDate.getFullYear()
-              && date.getMonth() === (disabledDate.getMonth() - 1)
-              && date.getDate() === disabledDate.getDate())) {
-      result = true
+  const navigate = useNavigate()
+
+  const { getUserWithToken } = useContext(StoreContext)
+  const { petSitterId } = useParams()
+
+  const getUser = async () => {
+    try {
+      setIsLoading(true)
+      if (petSitterId) {
+        const result = await (await getPetSitterById(petSitterId))
+        setPetSitterInfo(result)
+      } else {
+        alert('PetSitter não encontrado.')
+        navigate('/')
+      }
+    } catch (err) {
+      alert('PetSitter não encontrado.')
+      navigate('/')
+    } finally {
+      setIsLoading(false)
     }
-    return result
   }
 
-  const titleClassName = ({ date }: any) => {
-    let result = ''
-    if (availabledDates.some((availabledDate) => date.getFullYear() === availabledDate.getFullYear()
-              && date.getMonth() === (availabledDate.getMonth() - 1)
-              && date.getDate() === availabledDate.getDate())) {
-      result = 'available'
-    }
-    if (occupiedDates.some((occupiedDate) => date.getFullYear() === occupiedDate.getFullYear()
-              && date.getMonth() === (occupiedDate.getMonth() - 1)
-              && date.getDate() === occupiedDate.getDate())) {
-      result = 'occupied'
-    }
-    return result
+  useEffect(() => {
+    getUserWithToken(() => navigate('/login'))
+  }, [])
+
+  useEffect(() => { getUser() }, [petSitterId])
+
+  const onImageError = (e: any) => {
+    e.target.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D'
   }
 
   return (
-    <div className="flex flex-col flex-3 w-full h-full gap-10 justify-center md:flex-row">
-      {isSetAppointmentModalOpen && <SetAppointmentModal onClose={() => setIsSetAppointmentModalOpen(false)} />}
-      <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
-        <div>
-          <div className="flex flex-row gap-4">
-            <div className="flex justify-center items-center mb-3">
-              <img
-                src={Dummy1}
-                alt="dummy1"
-                className="w-12 h-12"
-              />
-              <div className="fley flex-col">
-                <h1>Maria Alves</h1>
-                <div className="flex">{showStars(4)}</div>
+    isLoading
+      ? (<span>CARREGANDO...</span>)
+      : (
+        <div className="flex flex-col flex-3 w-full h-full gap-5 md:gap-10 justify-center md:flex-row">
+          {isSetAppointmentModalOpen && <SetAppointmentModal onClose={() => setIsSetAppointmentModalOpen(false)} />}
+          <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
+            <div>
+              <div className="flex flex-row gap-4">
+                <div className="flex justify-center items-center mb-3">
+                  {petSitterInfo?.profilePicture
+                    ? (
+                      <img
+                        src={`${path}${petSitterInfo?.profilePicture}`}
+                        alt="dummy1"
+                        className="w-16 h-16 rounded-full"
+                        onError={onImageError}
+                      />
+                    )
+                    : (generateInitialsAvatar(petSitterInfo?.name || ''))}
+
+                  <div className="fley flex-col ml-2">
+                    <h1>{petSitterInfo?.name}</h1>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col text-gray-900 text-base mb-3">
+                <span>{petSitterInfo?.address}</span>
+                <span>
+                  {petSitterInfo?.district}
+                  {' '}
+                  -
+                  {' '}
+                  {petSitterInfo?.cityName}
+                  {' '}
+                  -
+                  {' '}
+                  {petSitterInfo?.stateName}
+                </span>
+                <div className="flex flex-row items-center gap-2">
+                  {' '}
+                  <HiOutlineMail className="w-4 h-4" />
+                  <span>
+                    {petSitterInfo?.email}
+                  </span>
+                </div>
+                <div className="flex flex-row items-center gap-2">
+                  <BsWhatsapp className="w-4 h-4" />
+                  <span>
+                    {petSitterInfo?.phone}
+                  </span>
+                </div>
+
+              </div>
+            </div>
+            <div />
+            <div className="mt-4 pb-3">
+              <h1>Conheça este(a) PetSitter</h1>
+              <span>
+                {petSitterInfo?.petSitterInfo?.others || ''}
+              </span>
+            </div>
+            <div className="mt-4 pb-3">
+              <h1>Serviços e preços</h1>
+              {petSitterInfo?.petSitterInfo.services.length
+                ? petSitterInfo.petSitterInfo.services.map((petSitterService) => (
+                  <div key={petSitterService.serviceId} className="flex justify-between items-center">
+                    <span>{services.find((service) => service.id === petSitterService.serviceId)?.label }</span>
+                    <span>
+                      R$
+                      {petSitterService.price}
+                    </span>
+                  </div>
+                ))
+                : (<span>Não foi possível encontrar serviços.</span>)}
+
+            </div>
+            <div className="flex flex-col mt-4 pb-3">
+              <h1>Animais aceitos</h1>
+              <div className="flex flex-row">
+                {species.map((specie) => (
+                  <specie.icon
+                    key={specie.id}
+                    className={`w-12 h-12 m-4 transition-all
+                      ${petSitterInfo?.petSitterInfo.allowedPets.includes(specie.id)
+                      ? 'text-purple-900 hover:scale-110'
+                      : 'text-gray-100'}`}
+                  />
+                ))}
+              </div>
+
+            </div>
+            <div className="pb-3">
+              <div className="flex flex-row justify-between mt-4">
+                <h1 className="mb-3">Posts</h1>
+              </div>
+              <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols">
+                {petSitterInfo?.posts.map((post) => (
+                  <div key={post.id} className="flex flex-col">
+                    <img
+                      src={`${path}${post?.filename}`}
+                      alt=""
+                      className="w-40"
+                    />
+                    <span className="text-gray-400 text-xs font-medium">{post.description}</span>
+                    <span className="text-gray-400 text-[8px] font-medium">{new Date(post.date).toLocaleDateString('pt-BR')}</span>
+                  </div>
+                ))}
+
               </div>
             </div>
           </div>
-          <div className="flex flex-col text-gray-900 text-base">
-            <span>Rua das Margaridas, nro 1</span>
-            <span>
-              Laranjal - Pelotas - RS
-            </span>
-            <span>
-              maria.a@email.com.br
-            </span>
-            <span>
-              (53) 123456789
-            </span>
-          </div>
-        </div>
-        <div />
-        <div className="mt-4">
-          <h1>Conheça este(a) PetSitter</h1>
-          <span>
-            Eu adoro animais! Eu comecei a cuidar de cachorros e gatos há 5 anos. No momento, possuo um cachorro de 10 anos. Moro em uma casa espaçosa com um jardim bem cercado, super seguro para cachorros e gatos. Caso você tenha alguma dúvida, pode me contatar por e-mail ou whtasapp.
-          </span>
-        </div>
-        <div className="mt-4">
-          <h1>Serviços e preços</h1>
-          <div className="flex justify-between items-center">
-            <span>Levar para passear</span>
-            <span>R$30,00</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span>Hospedagem (por hora)</span>
-            <span>R$20,00</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span>Hospedagem (por dia)</span>
-            <span>R$100,00</span>
-          </div>
-        </div>
-        <div className="flex flex-col mt-4">
-          <h1>Animais aceitos</h1>
-          <span>
-            Cachorro
-          </span>
-          <span>
-            Gato
-          </span>
-          <span>
-            Peixe
-          </span>
-        </div>
-        <div>
-          <div className="flex flex-row justify-between mt-4">
-            <h1 className="mb-3">Posts</h1>
-          </div>
-          <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols">
-            {posts.map((post) => (
-              <div key={post.id}>
-                <img
-                  src={post.imageUrl}
-                  alt=""
-                  className="w-40"
+          <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
+            <h1 className="mb-3">Agenda</h1>
+            <div className="w-full">
+
+              <div className="w-fit">
+                <Calendar
+                  tileClassName={(date) => tileClassName({
+                    date: date.date,
+                    availableDates: petSitterInfo?.availableDates.map((availableDate) => {
+                      return {
+                        ...availableDate, weekDays: availableDate.weekDaysAndTime.map((day) => day.weekday),
+                      }
+                    }),
+                    bookings: petSitterInfo?.bookings,
+                  })}
+                  tileContent={(date) => getTileContent({
+                    date: date.date,
+                    availableDates: petSitterInfo?.availableDates.map((availableDate) => {
+                      return {
+                        ...availableDate, weekDays: availableDate.weekDaysAndTime.map((day) => day.weekday),
+                      }
+                    }),
+                  })}
+                  selectRange
                 />
-                <span className="text-gray-400 text-xs font-medium">{post.text}</span>
+                <Tooltip id="my-tooltip" />
+                <div className="flex gap-2 mb-4">
+                  <span className="text-red-900 font-bold">*Ocupado</span>
+                  <span className="text-[#637644] font-bold">*Disponível</span>
+                </div>
+                <Button
+                  className="mb-3"
+                  onClick={() => setIsSetAppointmentModalOpen(true)}
+                >
+                  Solicitar agendamento
+                </Button>
               </div>
-            ))}
-
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
-        <h1 className="mb-3">Agenda</h1>
-        <div className="w-full">
-
-          <div className="w-fit">
-            <Calendar
-              tileDisabled={tileDisabled}
-              tileClassName={titleClassName}
-            />
-            <div className="flex gap-2 mb-4">
-              <span className="text-red-900 font-bold">*Ocupado</span>
-              <span className="text-[#637644] font-bold">*Disponível</span>
             </div>
-            <Button
-              className="mb-3"
-              onClick={() => setIsSetAppointmentModalOpen(true)}
-            >
-              Solicitar agendamento
-            </Button>
-          </div>
-        </div>
-        <div className="mt-4">
-          <h1 className="mb-3">Avaliações 3.5/5</h1>
-          <div>
-            <div className="flex flex-col mb-4">
-              <span className="text-base text-gray-900 font-bold">Ótima PetSitter!</span>
-              <div className="flex flex-row">
-                {showStars(4)}
-              </div>
-              <span>José da Silva</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-base text-gray-900 font-bold">É uma ótima cuidadora mas é muito cara.</span>
-              <div className="flex flex-row">
-                {showStars(3)}
-              </div>
-              <span>Joana Silveira</span>
+            <div className="mt-4">
+              <h1 className="mb-3">
+                Avaliações
+                {' '}
+                {petSitterInfo?.ratingsReceived && petSitterInfo?.ratingsReceived?.length > 0 && `${calculateRatingAverage(petSitterInfo.ratingsReceived)}/5`}
+              </h1>
+              {petSitterInfo?.ratingsReceived.length
+                ? petSitterInfo?.ratingsReceived.map((rating) => (
+                  <div key={rating._id} className="flex flex-col mb-4">
+                    <div className="flex flex-row">
+                      {showStars(rating.rating)}
+                    </div>
+                    <span className="text-base text-gray-900 font-bold">{rating.description}</span>
+                    <span>{rating.reviewerId?.name}</span>
+                    <span className="text-[8px]">{new Date(rating.createdAt).toLocaleDateString('pt-BR')}</span>
+                  </div>
+                ))
+                : (<span>Usuário ainda não recebeu avaliações.</span>)}
+
             </div>
           </div>
-
         </div>
-      </div>
-    </div>
-  )
+      ))
 }
 export default PagePetSitter
