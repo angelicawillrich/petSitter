@@ -14,11 +14,11 @@ export interface IPetSitterInfo {
 export interface IWeekDaysAndTime {
   weekday: string;
   initialTime: string;
-  finalTime: string
+  finalTime: string;
+  _id: string;
 }
 
 export interface IAvailableDates {
-  id: string;
   initialDate: Date;
   finalDate: Date;
   weekDaysAndTime: IWeekDaysAndTime[]
@@ -84,6 +84,7 @@ export interface IRating {
   description: string;
   reviewedByPetSitter: boolean
   _id: string
+  createdAt: Date
 }
 
 export interface IUser {
@@ -175,7 +176,7 @@ export interface IFilterPetSitter {
 }
 
 export interface IAppointment {
-  _id: string
+  _id?: string
   initialDate: Date
   initialTime: string
   finalDate: Date
