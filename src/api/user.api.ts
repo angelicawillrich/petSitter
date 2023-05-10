@@ -110,3 +110,19 @@ export const getPetSitterById = async (id: string) => {
   )
   return result.data.result[0]
 }
+
+export const deletePost = async (deleteData: { petSitterId: string, posts: { filename: string, date: Date, description: string }[] }) => {
+  const result = await axios.post(
+    'http://127.0.0.1:3000/user/deletePost',
+    deleteData,
+  )
+  return result
+}
+
+export const createPost = async (addData: { petSitterId: string, filename: string | ArrayBuffer | null, description?: string }) => {
+  const result = await axios.post(
+    'http://127.0.0.1:3000/user/createPost',
+    addData,
+  )
+  return result
+}
