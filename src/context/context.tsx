@@ -3,33 +3,49 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { fetchLoggedInUser, fetchPetSitters, verifyToken } from '../api/user.api'
+import {
+  fetchLoggedInUser, fetchPetSitters, getPetSitterById, verifyToken,
+} from '../api/user.api'
 import { IUser } from '../interfaces/interfaces'
 
 interface IContext {
   loggedInUser?: IUser,
+  loggedInPetSitter?: IUser,
   petSittersList: IUser[],
   getUserWithToken: (onError: () => void) => void
   getLoggedInUser: (id: string) => void
+  getLoggedInPetSitter: (id: string) => void
   fetchPetSittersList: () => void
 }
 
 export const StoreContext = createContext<IContext>({
   loggedInUser: undefined,
+  loggedInPetSitter: undefined,
   petSittersList: [],
   getLoggedInUser: () => {},
+  getLoggedInPetSitter: () => {},
   getUserWithToken: () => {},
   fetchPetSittersList: () => {},
 })
 
 export const ContextProvider = ({ children }: any) => {
   const [loggedInUser, setLoggedInUser] = useState<IUser | undefined>()
+  const [loggedInPetSitter, setLoggedInPetSitter] = useState<IUser | undefined>()
   const [petSittersList, setPetSittersList] = useState<IUser[]>([])
 
   const getLoggedInUser = async (id: string) => {
     try {
       const result = await fetchLoggedInUser(id)
       setLoggedInUser(result.data.userResult)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getLoggedInPetSitter = async (id: string) => {
+    try {
+      const result = await getPetSitterById(id)
+      setLoggedInPetSitter(result)
     } catch (error) {
       console.error(error)
     }
@@ -60,12 +76,14 @@ export const ContextProvider = ({ children }: any) => {
   const valueContext = useMemo(() => {
     return {
       loggedInUser,
+      loggedInPetSitter,
       petSittersList,
       getLoggedInUser,
+      getLoggedInPetSitter,
       getUserWithToken,
       fetchPetSittersList,
     }
-  }, [loggedInUser, petSittersList, getLoggedInUser, getUserWithToken, fetchPetSittersList])
+  }, [loggedInUser, loggedInPetSitter, petSittersList, getLoggedInUser, getLoggedInPetSitter, getUserWithToken, fetchPetSittersList])
 
   return (
     <StoreContext.Provider value={valueContext}>
