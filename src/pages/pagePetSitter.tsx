@@ -28,7 +28,7 @@ const PagePetSitter = () => {
   const { getUserWithToken, loggedInUser } = useContext(StoreContext)
   const { petSitterId } = useParams()
 
-  const getUser = async () => {
+  const getPetSitter = async () => {
     try {
       setIsLoading(true)
       if (petSitterId) {
@@ -50,7 +50,7 @@ const PagePetSitter = () => {
     getUserWithToken(() => navigate('/login'))
   }, [])
 
-  useEffect(() => { getUser() }, [petSitterId])
+  useEffect(() => { getPetSitter() }, [petSitterId])
 
   const onImageError = (e: any) => {
     e.target.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D'
@@ -155,7 +155,7 @@ const PagePetSitter = () => {
               </div>
               <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols">
                 {petSitterInfo?.posts.map((post) => (
-                  <div key={post.id} className="flex flex-col">
+                  <div key={post._id} className="flex flex-col">
                     <img
                       src={`${path}${post?.filename}`}
                       alt=""
