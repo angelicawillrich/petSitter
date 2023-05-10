@@ -44,7 +44,7 @@ export interface IAlbum {
 }
 
 export interface IPost {
-  id: string;
+  _id: string;
   filename: string;
   description: string;
   date: Date;
@@ -69,6 +69,7 @@ export interface IBooking {
   userId?: IBookingPersonalData,
   petSitterId?: IBookingPersonalData,
   _id: string
+  service: string
 }
 
 export interface IRating {
