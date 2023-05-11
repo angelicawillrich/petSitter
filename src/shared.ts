@@ -41,7 +41,7 @@ export const appointmentStatus = [
   { id: 'rejected', label: 'rejeitado' },
 ]
 
-export const weekDays = [
+export const listWeekDays = [
   { id: '0', value: '0', label: 'Domingos' },
   { id: '1', value: '1', label: 'Segundas' },
   { id: '2', value: '2', label: 'Tercas' },
