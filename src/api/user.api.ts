@@ -23,14 +23,14 @@ export const login = async (formData: ILoginForm) => {
 
 export const createUser = async (data: { email: string, password: string }) => {
   const result = await axios.post(
-    'http://127.0.0.1:3000/user/create',
+    'http://127.0.0.1:3000/user',
     data,
   )
   return result
 }
 
 export const updateUserProfile = async (data: IUserProfile) => {
-  const result = await axios.post(
+  const result = await axios.patch(
     'http://127.0.0.1:3000/user/profile',
     data,
   )
@@ -52,7 +52,7 @@ export const verifyToken = async () => {
 }
 
 export const updateUserPets = async (updatePets: IUpdatedPets) => {
-  const result = await axios.post(
+  const result = await axios.patch(
     'http://127.0.0.1:3000/user/pets',
     updatePets,
   )
@@ -60,15 +60,15 @@ export const updateUserPets = async (updatePets: IUpdatedPets) => {
 }
 
 export const updatePetSitter = async (updatedPetSitter: IUpdatePetSitter) => {
-  const result = await axios.post(
-    'http://127.0.0.1:3000/petSitter',
+  const result = await axios.patch(
+    'http://127.0.0.1:3000/user/petSitter',
     updatedPetSitter,
   )
   return result
 }
 
 export const addPhotoAlbum = async (addData: IaddPhotoData) => {
-  const result = await axios.post(
+  const result = await axios.patch(
     'http://127.0.0.1:3000/user/addPhotoAlbum',
     addData,
   )
@@ -76,7 +76,7 @@ export const addPhotoAlbum = async (addData: IaddPhotoData) => {
 }
 
 export const deletePhotoAlbum = async (deleteData: { userId: string, album: { filename: string, date: Date }[] }) => {
-  const result = await axios.post(
+  const result = await axios.patch(
     'http://127.0.0.1:3000/user/deletePhotoAlbum',
     deleteData,
   )
@@ -112,7 +112,7 @@ export const getPetSitterById = async (id: string) => {
 }
 
 export const deletePost = async (deleteData: { petSitterId: string, posts: { filename: string, date: Date, description: string }[] }) => {
-  const result = await axios.post(
+  const result = await axios.patch(
     'http://127.0.0.1:3000/user/deletePost',
     deleteData,
   )
@@ -120,7 +120,7 @@ export const deletePost = async (deleteData: { petSitterId: string, posts: { fil
 }
 
 export const createPost = async (addData: { petSitterId: string, filename: string | ArrayBuffer | null, description?: string }) => {
-  const result = await axios.post(
+  const result = await axios.patch(
     'http://127.0.0.1:3000/user/createPost',
     addData,
   )
