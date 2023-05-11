@@ -99,7 +99,9 @@ export const tileClassName = ({ date, availableDates, bookings }: ITile): string
   for (let i = 0; i < bookings.length; i++) {
     const bookingInitialDate = bookings[i].initialDate
     const bookingFinallDate = bookings[i].finalDate
-    const isDateBooked = moment(date).isBetween(bookingInitialDate, bookingFinallDate, undefined, '()')
+    const isDateBooked = moment(date).isBetween(bookingInitialDate, bookingFinallDate, undefined, '[]')
+      || moment(date).format('YYYY-DD-MM') === moment(bookingInitialDate).format('YYYY-DD-MM')
+      || moment(date).format('YYYY-DD-MM') === moment(bookingFinallDate).format('YYYY-DD-MM')
     if (isDateBooked) {
       result = 'occupied'
       break
