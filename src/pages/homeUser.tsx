@@ -51,7 +51,7 @@ const HomeUser = () => {
   }, [loggedInUser])
 
   return (
-    <div className="flex flex-col flex-3 w-full h-full gap-10 justify-center md:flex-row">
+    <div className="flex flex-col flex-3 w-full h-full gap-5 md:gap-10 justify-center md:flex-row">
       {selectedAppointment && Object.keys(selectedAppointment).length > 0 && (
         <CancelAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
       )}
