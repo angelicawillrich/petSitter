@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable max-len */
 import React, { useContext } from 'react'
 import Button from '../components/baseComponents/button'
@@ -12,7 +13,9 @@ interface CancelAppointmentModalProps {
 }
 
 const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModalProps) => {
-  const { getLoggedInUser, loggedInUser } = useContext(StoreContext)
+  const {
+    getLoggedInUser, loggedInUser, loggedInPetSitter, getLoggedInPetSitter,
+  } = useContext(StoreContext)
 
   const onCancelAppointment = async () => {
     try {
@@ -21,8 +24,8 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
         status: 'canceled',
       }
       await updateBookingStatus(data)
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       loggedInUser && getLoggedInUser(loggedInUser?._id)
+      loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
       alert('Agendamento cancelado com sucesso!')
       onClose()
     } catch (err) {

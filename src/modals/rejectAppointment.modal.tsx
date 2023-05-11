@@ -1,37 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable max-len */
 import moment from 'moment'
-import React from 'react'
+import React, { useContext } from 'react'
 import Button from '../components/baseComponents/button'
 import Modal from '../components/baseComponents/modal'
-
-interface Appointment {
-  id: string
-  initial_date: string
-  initial_time: string
-  final_date: string
-  final_time: string
-  petSitter: {
-    name: string
-    address: string
-    city: string
-  },
-  user: {
-    name: string
-    address: string
-    city: string
-  },
-  status: string
-}
+import { IAppointment } from '../interfaces/interfaces'
+import { StoreContext } from '../context/context'
+import { updateBookingStatus } from '../api/booking.api'
 
 interface RejectAppointmentModalProps {
   onClose: () => void
-  appointment: Appointment
+  appointment: IAppointment
 }
 
 const RejectAppointmentModal = ({ onClose, appointment }: RejectAppointmentModalProps) => {
-  const onRejectAppointment = () => {
-    console.log('Reject appointment')
-    onClose()
+  const {
+    getLoggedInUser, loggedInUser, loggedInPetSitter, getLoggedInPetSitter,
+  } = useContext(StoreContext)
+
+  const onRejectAppointment = async () => {
+    try {
+      const data = {
+        bookingId: appointment._id,
+        status: 'rejected',
+      }
+      await updateBookingStatus(data)
+      loggedInUser && getLoggedInUser(loggedInUser?._id)
+      loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
+      alert('Agendamento rejeitado com sucesso!')
+      onClose()
+    } catch (err) {
+      console.error(err)
+      alert('Não foi possível rejeitar o agendamento. Tente novamente.')
+    }
   }
 
   return (
@@ -46,18 +47,18 @@ const RejectAppointmentModal = ({ onClose, appointment }: RejectAppointmentModal
             o seguinte agendamento?
           </span>
           <span className="font-bold">
-            {moment(new Date(appointment.initial_date)).format('DD/MM/YYYY')}
+            {moment(new Date(appointment.initialDate)).format('DD/MM/YYYY')}
             {' '}
-            {appointment.initial_time}
+            {appointment.initialTime}
             {' '}
             -
             {' '}
-            {moment(new Date(appointment.final_date)).format('DD/MM/YYYY')}
+            {moment(new Date(appointment.finalDate)).format('DD/MM/YYYY')}
             {' '}
             {' '}
-            {appointment.final_time}
+            {appointment.finalTime}
           </span>
-          {appointment.petSitter.name}
+          {appointment.petSitterId?.name}
         </div>
         <div
           className=""
