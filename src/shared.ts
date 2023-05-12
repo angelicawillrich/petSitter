@@ -42,11 +42,11 @@ export const appointmentStatus = [
 ]
 
 export const listWeekDays = [
-  { id: '0', value: '0', label: 'Domingos' },
-  { id: '1', value: '1', label: 'Segundas' },
-  { id: '2', value: '2', label: 'Tercas' },
-  { id: '3', value: '3', label: 'Quartas' },
-  { id: '4', value: '4', label: 'Quintas' },
-  { id: '5', value: '5', label: 'Sextas' },
-  { id: '6', value: '6', label: 'Sábados' },
+  { id: '0', value: '0', label: 'DOM' },
+  { id: '1', value: '1', label: 'SEG' },
+  { id: '2', value: '2', label: 'TER' },
+  { id: '3', value: '3', label: 'QUA' },
+  { id: '4', value: '4', label: 'QUI' },
+  { id: '5', value: '5', label: 'SEX' },
+  { id: '6', value: '6', label: 'SAB' },
 ]
