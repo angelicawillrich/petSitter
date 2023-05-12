@@ -28,9 +28,9 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
       loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
       alert('Agendamento cancelado com sucesso!')
       onClose()
-    } catch (err) {
-      console.error(err)
-      alert('Não foi possível cancelar o agendamento. Tente novamente.')
+    } catch (error: any) {
+      console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     }
   }
 

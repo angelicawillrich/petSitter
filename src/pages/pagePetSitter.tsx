@@ -36,9 +36,9 @@ const PagePetSitter = () => {
         alert('PetSitter não encontrado.')
         navigate('/')
       }
-    } catch (err) {
-      alert('PetSitter não encontrado.')
-      navigate('/')
+    } catch (error: any) {
+      console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     } finally {
       setIsLoading(false)
     }

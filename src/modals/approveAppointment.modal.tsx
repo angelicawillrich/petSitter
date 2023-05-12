@@ -29,9 +29,9 @@ const ApproveAppointmentModal = ({ onClose, appointment }: ApproveAppointmentMod
       loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
       alert('Agendamento aprovado com sucesso!')
       onClose()
-    } catch (err) {
-      console.error(err)
-      alert('Não foi possível aprovar o agendamento. Tente novamente.')
+    } catch (error: any) {
+      console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     }
   }
 

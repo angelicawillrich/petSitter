@@ -29,9 +29,9 @@ const RejectAppointmentModal = ({ onClose, appointment }: RejectAppointmentModal
       loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
       alert('Agendamento rejeitado com sucesso!')
       onClose()
-    } catch (err) {
-      console.error(err)
-      alert('Não foi possível rejeitar o agendamento. Tente novamente.')
+    } catch (error: any) {
+      console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     }
   }
 

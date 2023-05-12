@@ -37,8 +37,9 @@ export const ContextProvider = ({ children }: any) => {
     try {
       const result = await fetchLoggedInUser(id)
       setLoggedInUser(result.data.userResult)
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     }
   }
 
@@ -46,8 +47,9 @@ export const ContextProvider = ({ children }: any) => {
     try {
       const result = await getPetSitterById(id)
       setLoggedInPetSitter(result)
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     }
   }
 
@@ -68,8 +70,9 @@ export const ContextProvider = ({ children }: any) => {
       if (result.data.result) {
         setPetSittersList(result.data.result)
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     }
   }
 

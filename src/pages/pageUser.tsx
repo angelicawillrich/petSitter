@@ -31,10 +31,9 @@ const PageUser = () => {
         alert('Usuário não encontrado.')
         navigate('/')
       }
-    } catch (err) {
-      console.log('ERROR')
-      alert('Usuário não encontrado.')
-      navigate('/')
+    } catch (error: any) {
+      console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
     } finally {
       setIsLoading(false)
     }
