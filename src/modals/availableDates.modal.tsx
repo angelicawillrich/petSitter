@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import React, {
-  ChangeEvent, useContext, useEffect, useState,
+  ChangeEvent, useContext, useEffect, useMemo, useState,
 } from 'react'
 import moment from 'moment'
 import Button from '../components/baseComponents/button'
@@ -9,7 +9,7 @@ import Modal from '../components/baseComponents/modal'
 import { StoreContext } from '../context/context'
 import { listWeekDays } from '../shared'
 import { createAvailableDate, updateAvailableDate } from '../api/user.api'
-import { IWeekDaysAndTime } from '../interfaces/interfaces'
+import { IAvailableDates, IWeekDaysAndTime } from '../interfaces/interfaces'
 
 interface IBookingModalProps {
   selectedAvailableDateId: string
@@ -26,6 +26,11 @@ interface IWeekDaysState {
 interface IDatesState {
   initialDate: string
   finalDate: string
+}
+
+interface ICheckConflicts {
+  dates?: IAvailableDates[],
+  dateInfo: IDatesState
 }
 
 const datesInitialState = {
@@ -73,6 +78,29 @@ const AvailableDatesModal = ({ selectedAvailableDateId, onClose }: IBookingModal
       })
     }
   }
+
+  const checkDateConflicts = ({ dateInfo, dates }: ICheckConflicts) => {
+    let result = false
+
+    if (dateInfo && dates?.length) {
+      const initialDate = new Date(dateInfo.initialDate)
+      const finalDate = new Date(dateInfo.finalDate)
+
+      for (let i = 0; i < dates.length; i++) {
+        if (initialDate <= new Date(dates[i].finalDate)
+          && (finalDate >= new Date(dates[i].initialDate)
+          && selectedAvailableDateId !== dates[i]._id)) {
+          result = true
+        }
+      }
+    }
+
+    return result
+  }
+
+  const hasConflict = useMemo(() => {
+    return checkDateConflicts({ dateInfo: formStateDates, dates: loggedInPetSitter?.availableDates })
+  }, [formStateDates, loggedInPetSitter])
 
   const onSave = async () => {
     if (!loggedInPetSitter) return
@@ -183,6 +211,8 @@ const AvailableDatesModal = ({ selectedAvailableDateId, onClose }: IBookingModal
             onChange={(e) => setFormStateDates((previousState: IDatesState) => ({ ...previousState, finalDate: e.target.value }))}
           />
         </div>
+        {hasConflict && <span className="text-red-700">As datas escolhidas conflitam com outros horários registrados.</span>}
+
         <span className="text-gray-900 text-sm">
           <b>Atenção:</b>
           {' '}
@@ -194,6 +224,7 @@ const AvailableDatesModal = ({ selectedAvailableDateId, onClose }: IBookingModal
           <Button
             type="button"
             onClick={() => onSave()}
+            disabled={hasConflict}
           >
             Salvar
           </Button>
