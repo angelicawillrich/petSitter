@@ -86,7 +86,11 @@ export const tileClassName = ({ date, availableDates, bookings }: ITile): string
   if (availableDates) {
     for (let i = 0; i < availableDates.length; i++) {
       const availableWeekDays = availableDates[i].weekDays
-      isDateAvailable = moment(date).isBetween(availableDates[i].initialDate, availableDates[i].finalDate, undefined, '()')
+      const availableInitialDate = availableDates[i].initialDate
+      const availableFinalDate = availableDates[i].finalDate
+      isDateAvailable = moment(date).isBetween(availableInitialDate, availableFinalDate, undefined, '[]')
+        || moment(date).format('YYYY-DD-MM') === moment(availableInitialDate).format('YYYY-DD-MM')
+        || moment(date).format('YYYY-DD-MM') === moment(availableFinalDate).format('YYYY-DD-MM')
       if (isDateAvailable && availableWeekDays && availableWeekDays.includes(String(moment(date).weekday()))) {
         result = 'available'
         break
