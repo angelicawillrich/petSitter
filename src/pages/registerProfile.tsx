@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AiOutlineDoubleRight } from 'react-icons/ai'
 import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
@@ -157,58 +158,86 @@ const RegisterProfile = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="flex flex-col gap-4 justify-center items-center">
-        <h1>Dados pessoais</h1>
-        <Input
-          label="Nome*"
-          value={formState.name}
-          onChange={(e) => onChangeForm('name', e.target.value)}
-        />
-        <Input
-          label="Endereco*"
-          value={formState.address}
-          onChange={(e) => onChangeForm('address', e.target.value)}
-        />
-        <Input
-          label="Bairro*"
-          value={formState.district}
-          onChange={(e) => onChangeForm('district', e.target.value)}
-        />
-        <div className="flex w-full gap-2">
-          <Dropdown
-            id="estado"
-            label="Estado*"
-            list={listState}
-            onChange={(e) => {
-              setSelectedState(e.target.value)
-              onChangeForm('stateId', e.target.value)
-            }}
-            value={formState.stateId}
+    <>
+      {loggedInUser?.name && (
+        loggedInUser?.isPetSitter
+          ? (
+            <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+              <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
+              <button
+                type="button"
+                className="text-purple-900 font-bold"
+                onClick={() => navigate(`/homepetsitter/${loggedInUser._id}`)}
+              >
+                Home PetSitter
+              </button>
+            </div>
+          )
+          : (
+            <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+              <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
+              <button
+                type="button"
+                className="text-purple-900 font-bold"
+                onClick={() => navigate('/')}
+              >
+                Home usuário
+              </button>
+            </div>
+          ))}
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="flex flex-col gap-4 justify-center items-center">
+          <h1>Dados pessoais</h1>
+          <Input
+            label="Nome*"
+            value={formState.name}
+            onChange={(e) => onChangeForm('name', e.target.value)}
           />
-          <Dropdown
-            id="city"
-            label="Cidade*"
-            list={listCity}
-            disabled={loading}
-            value={formState.cityId}
-            onChange={(e) => onChangeForm('cityId', e.target.value)}
+          <Input
+            label="Endereco*"
+            value={formState.address}
+            onChange={(e) => onChangeForm('address', e.target.value)}
           />
+          <Input
+            label="Bairro*"
+            value={formState.district}
+            onChange={(e) => onChangeForm('district', e.target.value)}
+          />
+          <div className="flex w-full gap-2">
+            <Dropdown
+              id="estado"
+              label="Estado*"
+              list={listState}
+              onChange={(e) => {
+                setSelectedState(e.target.value)
+                onChangeForm('stateId', e.target.value)
+              }}
+              value={formState.stateId}
+            />
+            <Dropdown
+              id="city"
+              label="Cidade*"
+              list={listCity}
+              disabled={loading}
+              value={formState.cityId}
+              onChange={(e) => onChangeForm('cityId', e.target.value)}
+            />
+          </div>
+          <Input
+            label="Fone*"
+            value={formState.phone}
+            onChange={(e) => onChangeForm('phone', e.target.value)}
+          />
+          <Input
+            label="Foto de perfil"
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageSelect(e)}
+          />
+          <Button type="submit">Salvar</Button>
         </div>
-        <Input
-          label="Fone*"
-          value={formState.phone}
-          onChange={(e) => onChangeForm('phone', e.target.value)}
-        />
-        <Input
-          label="Foto de perfil"
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleImageSelect(e)}
-        />
-        <Button type="submit">Salvar</Button>
-      </div>
-    </form>
+      </form>
+    </>
   )
 }
 

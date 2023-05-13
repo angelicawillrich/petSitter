@@ -7,6 +7,7 @@ import { MultiSelect, Option } from 'react-multi-select-component'
 import { GoArrowSmallRight, GoPlus } from 'react-icons/go'
 import { BsTrash } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
+import { AiOutlineDoubleRight } from 'react-icons/ai'
 import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
@@ -110,103 +111,130 @@ const RegisterPetSitter = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="flex flex-col gap-4 justify-center items-center">
-        <h1>Cadastro de PetSitter</h1>
-        <div className="flex flex-1 flex-col w-full">
-          <span className="text-base">Selecione os tipos de pets que você cuidará*</span>
-          <MultiSelect
-            options={species}
-            value={formState.allowedPets}
-            onChange={(event: []) => onSelectPets(event)}
-            labelledBy="Selecione"
-            overrideStrings={{
-              allItemsAreSelected: 'Todos os items foram selecionados.',
-              clearSearch: 'Limpar busca',
-              clearSelected: 'Limpar selecionados',
-              noOptions: 'Sem opcoes',
-              search: 'Busca',
-              selectAll: 'Selecionar todos',
-              selectAllFiltered: 'Selecionar todos (Filtrado)',
-              selectSomeItems: 'Selecione...',
-            }}
-          />
-        </div>
-        {listOfSelectableServices?.length > 0 && (
-        <div className="flex w-full gap-2 items-end">
-          <Dropdown
-            id="servico"
-            label="Serviço*"
-            list={listOfSelectableServices}
-            onChange={onChangeService}
-            value={selectedService.serviceId}
-          />
-          <Input
-            label="Valor R$*"
-            value={selectedService.price}
-            type="number"
-            min="1"
-            step="any"
-            onChange={onChangePrice}
-          />
-          <button
-            type="button"
-            disabled={selectedService.serviceId.trim().length === 0 || selectedService.price.trim().length === 0}
-            onClick={onAddService}
-            className="disabled:opacity-20"
-          >
-            <GoPlus size={40} className="cursor-pointer" />
-          </button>
-        </div>
-        )}
-        <div className="flex flex-col w-full">
-          {formState.services?.map((service) => (
-            <div
-              key={service.serviceId}
-              className="flex flex-row w-full"
+    <>
+      { loggedInUser?.isPetSitter
+        ? (
+          <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+            <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
+            <button
+              type="button"
+              className="text-purple-900 font-bold"
+              onClick={() => navigate(`/homepetsitter/${loggedInUser._id}`)}
             >
-              <div className="flex flex-row w-full items-center font-semibold">
-                <GoArrowSmallRight className="h-6 w-6" />
-                {getServiceName(service.serviceId)}
-              </div>
-              <div className="flex w-full justify-end font-semibold">
-                R$
-                {' '}
-                {service.price}
-              </div>
-              <button
-                type="button"
-                disabled={selectedService.serviceId.trim().length === 0 || selectedService.price.trim().length === 0}
-                onClick={onAddService}
+              Home PetSitter
+            </button>
+          </div>
+        )
+        : (
+          <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+            <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
+            <button
+              type="button"
+              className="text-purple-900 font-bold"
+              onClick={() => navigate('/')}
+            >
+              Home usuário
+            </button>
+          </div>
+        )}
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="flex flex-col gap-4 justify-center items-center">
+          <h1>Cadastro de PetSitter</h1>
+          <div className="flex flex-1 flex-col w-full">
+            <span className="text-base">Selecione os tipos de pets que você cuidará*</span>
+            <MultiSelect
+              options={species}
+              value={formState.allowedPets}
+              onChange={(event: []) => onSelectPets(event)}
+              labelledBy="Selecione"
+              overrideStrings={{
+                allItemsAreSelected: 'Todos os items foram selecionados.',
+                clearSearch: 'Limpar busca',
+                clearSelected: 'Limpar selecionados',
+                noOptions: 'Sem opcoes',
+                search: 'Busca',
+                selectAll: 'Selecionar todos',
+                selectAllFiltered: 'Selecionar todos (Filtrado)',
+                selectSomeItems: 'Selecione...',
+              }}
+            />
+          </div>
+          {listOfSelectableServices?.length > 0 && (
+          <div className="flex w-full gap-2 items-end">
+            <Dropdown
+              id="servico"
+              label="Serviço*"
+              list={listOfSelectableServices}
+              onChange={onChangeService}
+              value={selectedService.serviceId}
+            />
+            <Input
+              label="Valor R$*"
+              value={selectedService.price}
+              type="number"
+              min="1"
+              step="any"
+              onChange={onChangePrice}
+            />
+            <button
+              type="button"
+              disabled={selectedService.serviceId.trim().length === 0 || selectedService.price.trim().length === 0}
+              onClick={onAddService}
+              className="disabled:opacity-20"
+            >
+              <GoPlus size={40} className="cursor-pointer" />
+            </button>
+          </div>
+          )}
+          <div className="flex flex-col w-full">
+            {formState.services?.map((service) => (
+              <div
+                key={service.serviceId}
+                className="flex flex-row w-full"
               >
-                <BsTrash
-                  size={15}
-                  className=" text-red-600 cursor-pointer ml-5"
-                  onClick={() => onRemoveService(service.serviceId)}
-                />
-              </button>
-            </div>
-          ))}
+                <div className="flex flex-row w-full items-center font-semibold">
+                  <GoArrowSmallRight className="h-6 w-6" />
+                  {getServiceName(service.serviceId)}
+                </div>
+                <div className="flex w-full justify-end font-semibold">
+                  R$
+                  {' '}
+                  {service.price}
+                </div>
+                <button
+                  type="button"
+                  disabled={selectedService.serviceId.trim().length === 0 || selectedService.price.trim().length === 0}
+                  onClick={onAddService}
+                >
+                  <BsTrash
+                    size={15}
+                    className=" text-red-600 cursor-pointer ml-5"
+                    onClick={() => onRemoveService(service.serviceId)}
+                  />
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col w-full">
+            <TextArea
+              label="Sobre você*"
+              value={formState.others}
+              rows={4}
+              maxLength={400}
+              onChange={(e) => onChangeAboutYou(e)}
+              required
+            />
+            <span className="text-xs self-end">Máx. 400 caracteres</span>
+          </div>
+          <Button
+            disabled={formState.allowedPets.length === 0 || formState.services.length === 0 || !formState.others}
+            type="submit"
+          >
+            Salvar
+          </Button>
         </div>
-        <div className="flex flex-col w-full">
-          <TextArea
-            label="Sobre você*"
-            value={formState.others}
-            rows={4}
-            maxLength={400}
-            onChange={(e) => onChangeAboutYou(e)}
-            required
-          />
-          <span className="text-xs self-end">Máx. 400 caracteres</span>
-        </div>
-        <Button
-          disabled={formState.allowedPets.length === 0 || formState.services.length === 0 || !formState.others}
-          type="submit"
-        >
-          Salvar
-        </Button>
-      </div>
-    </form>
+      </form>
+    </>
   )
 }
 

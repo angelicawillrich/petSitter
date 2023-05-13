@@ -25,6 +25,7 @@ module.exports = {
     "rules": {
         'max-len': ["error", { "code": 180 }],
         "semi": ["error", "never"],
+        "react/jsx-no-useless-fragment": "off",
         "@typescript-eslint/semi": "off",
         "no-unexpected-multiline": "error",
         "react/function-component-definition": [
@@ -41,6 +42,6 @@ module.exports = {
         "import/no-extraneous-dependencies": "off",
         "no-alert": "off",
         "no-console": "off",
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
     }
 };

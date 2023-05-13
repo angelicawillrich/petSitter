@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AiOutlineDoubleRight } from 'react-icons/ai'
 import Accordion from '../components/baseComponents/accordion'
 import Button from '../components/baseComponents/button'
 import { path, species } from '../shared'
@@ -115,77 +116,103 @@ const RegisterPets = () => {
   const disableContinueButton = pets.length === 0
 
   return (
-    <div className="flex flex-col w-full gap-4 justify-center items-center">
-      <h1>Seu(s) pet(s)</h1>
-      {pets && pets.map((pet, index) => (
-        <Accordion
-          header={(
-            <div className="flex flex-row gap-2 items-center">
-              {pet.picture
-                ? (
-                  <img
-                    className="h-10 w-10 rounded-full object-cover"
-                    src={
+    <>
+      { loggedInUser?.isPetSitter
+        ? (
+          <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+            <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
+            <button
+              type="button"
+              className="text-purple-900 font-bold"
+              onClick={() => navigate(`/homepetsitter/${loggedInUser._id}`)}
+            >
+              Home PetSitter
+            </button>
+          </div>
+        )
+        : (
+          <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+            <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
+            <button
+              type="button"
+              className="text-purple-900 font-bold"
+              onClick={() => navigate('/')}
+            >
+              Home usuário
+            </button>
+          </div>
+        )}
+      <div className="flex flex-col w-full gap-4 justify-center items-center">
+        <h1>Seu(s) pet(s)</h1>
+        {pets && pets.map((pet, index) => (
+          <Accordion
+            header={(
+              <div className="flex flex-row gap-2 items-center">
+                {pet.picture
+                  ? (
+                    <img
+                      className="h-10 w-10 rounded-full object-cover"
+                      src={
                       pet.picture?.split('/')[1] === 'images'
                         ? (`${path}${pet.picture}`)
                         : pet?.localPicture
                           ? (URL.createObjectURL(pet.localPicture))
                           : undefined
                     }
-                    alt="Foto do pet"
-                  />
-                )
-                : (generateInitialsAvatar(pet.name))}
-              {pet.name}
-            </div>
-)}
-          key={pet.name}
-          onEdit={onEdit(index)}
-          onDelete={onDelete(index)}
-          isSelected={index === selectedPet}
-        >
-          {selectedPet === index
-            ? (
-              <PetForm
-                formState={formState}
-                onChangeForm={onChangeForm}
-                handleImageSelect={handleImageSelect}
-                handleSavePet={handleSavePet}
-                haSelectedPet={!!selectedPet}
-              />
-            )
-            : (
-              <div className="flex flex-col w-full gap-1 justify-items-start mb-6 mt-4">
-                <div>
-                  <b>Ano de nascimento:</b>
-                  {' '}
-                  {pet.yearBirth}
-                </div>
-                <div>
-                  <b>Peso:</b>
-                  {' '}
-                  {pet.weight}
-                </div>
-                <div>
-                  <b>Espécie:</b>
-                  {' '}
-                  {species.find((specie) => String(specie.id) === pet.specie)?.label }
-                </div>
-                <div>
-                  <b>Raca:</b>
-                  {' '}
-                  {pet.breed}
-                </div>
-                <div>
-                  <b>Outras informacoes:</b>
-                  {' '}
-                  {pet.others}
-                </div>
+                      alt="Foto do pet"
+                    />
+                  )
+                  : (generateInitialsAvatar(pet.name))}
+                {pet.name}
               </div>
-            )}
-        </Accordion>
-      ))}
-      {selectedPet === undefined
+)}
+            key={pet.name}
+            onEdit={onEdit(index)}
+            onDelete={onDelete(index)}
+            isSelected={index === selectedPet}
+          >
+            {selectedPet === index
+              ? (
+                <PetForm
+                  formState={formState}
+                  onChangeForm={onChangeForm}
+                  handleImageSelect={handleImageSelect}
+                  handleSavePet={handleSavePet}
+                  haSelectedPet={!!selectedPet}
+                />
+              )
+              : (
+                <div className="flex flex-col w-full gap-1 justify-items-start mb-6 mt-4">
+                  <div>
+                    <b>Ano de nascimento:</b>
+                    {' '}
+                    {pet.yearBirth}
+                  </div>
+                  <div>
+                    <b>Peso:</b>
+                    {' '}
+                    {pet.weight}
+                  </div>
+                  <div>
+                    <b>Espécie:</b>
+                    {' '}
+                    {species.find((specie) => String(specie.id) === pet.specie)?.label }
+                  </div>
+                  <div>
+                    <b>Raca:</b>
+                    {' '}
+                    {pet.breed}
+                  </div>
+                  <div>
+                    <b>Outras informacoes:</b>
+                    {' '}
+                    {pet.others}
+                  </div>
+                </div>
+              )}
+          </Accordion>
+        ))}
+        {selectedPet === undefined
         && (
           <div className="w-full">
             {pets.length > 0 && <div className="w-full h-3 border-t-2" />}
@@ -198,24 +225,25 @@ const RegisterPets = () => {
             />
           </div>
         )}
-      <Button
-        type="button"
-        disabled={disableContinueButton}
-        title={disableContinueButton ? 'Adicione um pet para continuar.' : ''}
-        onClick={(event) => handleSubmit(event)}
-      >
-        Salvar
-      </Button>
-      {loggedInUser?.pets.length === 0 && (
-      <button
-        type="submit"
-        className="w-fit text-base decoration-transparent border-b-[1px] p-0 m-0 leading-none"
-        onClick={() => navigate('/')}
-      >
-        Continuar sem registrar pets
-      </button>
-      )}
-    </div>
+        <Button
+          type="button"
+          disabled={disableContinueButton}
+          title={disableContinueButton ? 'Adicione um pet para continuar.' : ''}
+          onClick={(event) => handleSubmit(event)}
+        >
+          Salvar
+        </Button>
+        {loggedInUser?.pets.length === 0 && (
+        <button
+          type="submit"
+          className="w-fit text-base decoration-transparent border-b-[1px] p-0 m-0 leading-none"
+          onClick={() => navigate('/')}
+        >
+          Continuar sem registrar pets
+        </button>
+        )}
+      </div>
+    </>
   )
 }
 export default RegisterPets
