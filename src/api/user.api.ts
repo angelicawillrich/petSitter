@@ -2,6 +2,7 @@
 import React from 'react'
 import axios from 'axios'
 import {
+  IAvailableDates,
   ILoginForm, IUpdatePetSitter, IUpdatedPets, IUserProfile, IaddPhotoData,
 } from '../interfaces/interfaces'
 
@@ -123,6 +124,29 @@ export const createPost = async (addData: { petSitterId: string, filename: strin
   const result = await axios.patch(
     'http://127.0.0.1:3000/user/createPost',
     addData,
+  )
+  return result
+}
+
+export const createAvailableDate = async (data: { userId: string, availableDate: Omit<IAvailableDates, '_id'> }) => {
+  const result = await axios.post(
+    'http://127.0.0.1:3000/user/petSitter/availableDate',
+    data,
+  )
+  return result
+}
+
+export const updateAvailableDate = async (data: { userId: string, availableDateId: string, availableDate: Omit<IAvailableDates, '_id'> }) => {
+  const result = await axios.patch(
+    'http://127.0.0.1:3000/user/petSitter/availableDate',
+    data,
+  )
+  return result
+}
+
+export const deleteAvailableDate = async (availableDateParams: string) => {
+  const result = await axios.delete(
+    `http://127.0.0.1:3000/user/petSitter/availableDates/availableDateParams${availableDateParams}`,
   )
   return result
 }
