@@ -91,7 +91,7 @@ const AvailableDatesModal = ({ selectedAvailableDateId, onClose }: IBookingModal
       return
     }
 
-    const formattedWeekDays: IWeekDaysAndTime[] = Object.entries(formStateWeekDays).map(([key, value]) => {
+    const formattedWeekDay: IWeekDaysAndTime[] = Object.entries(formStateWeekDays).map(([key, value]) => {
       return {
         weekday: key,
         initialTime: value.initialTime,
@@ -104,7 +104,7 @@ const AvailableDatesModal = ({ selectedAvailableDateId, onClose }: IBookingModal
     const availableDate = {
       initialDate: new Date(formStateDates.initialDate),
       finalDate: new Date(formStateDates.finalDate),
-      weekDaysAndTime: formattedWeekDays,
+      weekDaysAndTime: formattedWeekDay,
     }
 
     try {
