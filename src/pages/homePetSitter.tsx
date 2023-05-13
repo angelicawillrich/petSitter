@@ -91,7 +91,7 @@ const HomePetSitter = () => {
       const availableDateParams = new URLSearchParams({ userId: loggedInPetSitter._id, availableDateId })
       await deleteAvailableDate(availableDateParams.toString())
       getLoggedInPetSitter(loggedInPetSitter?._id)
-      alert('Deletado!')
+      alert('Horário deletado com sucesso! Os agendamentos feitos para as datas deletadas serao mantidos.')
     } catch (error: any) {
       console.error(error)
       alert(JSON.parse(error.request.responseText).message)
