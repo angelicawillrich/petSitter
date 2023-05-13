@@ -50,7 +50,9 @@ const HomePetSitter = () => {
 
   const navigate = useNavigate()
 
-  const { getUserWithToken, getLoggedInPetSitter, loggedInPetSitter } = useContext(StoreContext)
+  const {
+    getUserWithToken, getLoggedInPetSitter, loggedInPetSitter, loggedInUser,
+  } = useContext(StoreContext)
   const { petSitterId } = useParams()
 
   useEffect(() => {
@@ -62,6 +64,12 @@ const HomePetSitter = () => {
       getLoggedInPetSitter(petSitterId)
     }
   }, [petSitterId])
+
+  useEffect(() => {
+    if (petSitterId && loggedInUser && petSitterId !== loggedInUser._id) {
+      navigate('/home')
+    }
+  }, [petSitterId, loggedInUser])
 
   const handleOpenBookingModal = (booking: IBooking, selectedAction: Actions) => {
     setSelectedBooking(booking)
