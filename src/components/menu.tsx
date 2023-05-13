@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MdLogout } from 'react-icons/md'
 import { StoreContext } from '../context/context'
 import { generateInitialsAvatar } from '../utils'
 import { path } from '../shared'
 import { logout } from '../api/user.api'
+import useOutsideClick from '../hooks'
 
 const Menu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -12,6 +13,12 @@ const Menu = () => {
   const navigate = useNavigate()
 
   const { loggedInUser } = useContext(StoreContext)
+
+  const componentRef = useRef<HTMLInputElement>(null)
+
+  useOutsideClick(componentRef.current, () => {
+    setIsMenuOpen(false)
+  })
 
   const handleLogout = async () => {
     await logout()
@@ -21,7 +28,10 @@ const Menu = () => {
   return (
     loggedInUser && loggedInUser.name
       ? (
-        <div className="flex flex-col max-w-xs absolute right-0 top-1 transition-all">
+        <div
+          className="flex flex-col max-w-xs absolute right-0 top-1 transition-all"
+          ref={componentRef as any}
+        >
           <button
             type="button"
             className="right-1 absolute w-10 h-10"
@@ -40,6 +50,19 @@ const Menu = () => {
           {isMenuOpen
       && (
       <div className="flex flex-col mt-12 shadow-md p-2 bg-white gap-3">
+        {!loggedInUser.isPetSitter && (
+        <button
+          type="button"
+          className="hover:text-gray-900 transition-all w-fit"
+          onClick={() => {
+            navigate('/registerpetsitter')
+            setIsMenuOpen(false)
+          }}
+        >
+          Quero ser PetSitter
+
+        </button>
+        )}
         <button
           type="button"
           className="hover:text-gray-900 transition-all w-fit"
