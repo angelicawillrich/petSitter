@@ -148,3 +148,9 @@ export const deleteAvailableDate = async (availableDateParams: string) => {
   )
   return result
 }
+
+export const logout = async () => {
+  await axios.post(
+    'http://127.0.0.1:3000/logout',
+  )
+}
