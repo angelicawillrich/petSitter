@@ -32,9 +32,11 @@ const Login = () => {
     try {
       const response = await login(formData)
       localStorage.setItem('Token', response.data.token)
-      getLoggedInUser(response.data.user[0]._id)
+      await getLoggedInUser(response.data.user[0]._id)
       if (!response.data.user[0].name) {
         navigate('/profile')
+      } else if (response.data.user[0]?.isPetSitter) {
+        navigate(`/homepetsitter/${response.data.user[0]?._id}`)
       } else {
         navigate('/')
       }

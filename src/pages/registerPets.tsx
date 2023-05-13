@@ -101,6 +101,8 @@ const RegisterPets = () => {
       getLoggedInUser(response.data.result)
       if (loggedInUser.isPetSitter === null || loggedInUser.isPetSitter === undefined) {
         navigate('/bepetsitter')
+      } else if (loggedInUser.isPetSitter) {
+        navigate(`/homepetsitter/${loggedInUser._id}`)
       } else {
         navigate('/')
       }
