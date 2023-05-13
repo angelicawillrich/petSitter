@@ -26,6 +26,12 @@ const PagePetSitter = () => {
   const { getUserWithToken, loggedInUser } = useContext(StoreContext)
   const { petSitterId } = useParams()
 
+  useEffect(() => {
+    if (petSitterId && loggedInUser && petSitterId === loggedInUser._id) {
+      navigate('/home')
+    }
+  }, [loggedInUser, petSitterId])
+
   const getPetSitter = async () => {
     try {
       setIsLoading(true)

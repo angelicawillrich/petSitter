@@ -17,8 +17,14 @@ const PageUser = () => {
 
   const navigate = useNavigate()
 
-  const { getUserWithToken } = useContext(StoreContext)
+  const { getUserWithToken, loggedInUser } = useContext(StoreContext)
   const { userId } = useParams()
+
+  useEffect(() => {
+    if (userId && loggedInUser && userId === loggedInUser._id) {
+      navigate('/home')
+    }
+  }, [loggedInUser, userId])
 
   const getUser = async () => {
     try {
