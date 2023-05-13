@@ -76,10 +76,9 @@ export const addPhotoAlbum = async (addData: IaddPhotoData) => {
   return result
 }
 
-export const deletePhotoAlbum = async (deleteData: { userId: string, album: { filename: string, date: Date }[] }) => {
-  const result = await axios.patch(
-    'http://127.0.0.1:3000/user/deletePhotoAlbum',
-    deleteData,
+export const deletePhotoAlbum = async (deleteDataParams: string) => {
+  const result = await axios.delete(
+    `http://127.0.0.1:3000/user/deletePhotoAlbum/deleteDataParams${deleteDataParams}`,
   )
   return result
 }

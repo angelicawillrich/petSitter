@@ -42,19 +42,10 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
   }
 
   const onDeleteImage = async (photoId?: string) => {
-    if (!user?.album) return
-    const updatedAlbum = user?.album.filter((photo) => photo._id !== photoId)
-    const album = updatedAlbum.map((photo) => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { _id, ...rest } = photo
-      return { ...rest }
-    })
+    if (!user?.album || !photoId) return
 
-    const deleteData = {
-      userId: user?._id,
-      album,
-    }
-    await deletePhotoAlbum(deleteData)
+    const deleteDataParams = new URLSearchParams({ userId: user._id, photoId })
+    await deletePhotoAlbum(deleteDataParams.toString())
     await getLoggedInUser(user._id)
     alert('Imagem removida com sucesso!')
   }
@@ -69,7 +60,6 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
   return (
     <Modal title="Álbum" onClose={onClose}>
       {photos && photos.length > 0
-
         ? (
           <div className=" max-h-80 overflow-auto grid grid-cols-5 gap-1 grid-cols">
 
@@ -77,7 +67,7 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
               <div key={photo._id} className="relative p-2">
                 <IoMdCloseCircle
                   className="absolute top-0 right-0 cursor-pointer"
-                  onClick={() => onDeleteImage(photo._id)}
+                  onClick={() => onDeleteImage(photo?._id)}
                 />
                 <img src={`${path}${photo.filename}`} alt="" />
               </div>
