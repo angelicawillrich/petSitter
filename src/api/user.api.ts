@@ -111,10 +111,9 @@ export const getPetSitterById = async (id: string) => {
   return result.data.result[0]
 }
 
-export const deletePost = async (deleteData: { petSitterId: string, posts: { filename: string, date: Date, description: string }[] }) => {
-  const result = await axios.patch(
-    'http://127.0.0.1:3000/user/deletePost',
-    deleteData,
+export const deletePost = async (deleteDataParams: string) => {
+  const result = await axios.delete(
+    `http://127.0.0.1:3000/user/deletePost/deleteDataParams${deleteDataParams}`,
   )
   return result
 }

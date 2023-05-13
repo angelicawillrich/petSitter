@@ -58,19 +58,8 @@ const PostsModal = ({ onClose }: PostsModalProps) => {
     try {
       if (!loggedInPetSitter?.posts) return
 
-      const updatedPosts = loggedInPetSitter?.posts.filter((post) => post._id !== postId)
-      const posts = updatedPosts.map((post) => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { _id, ...rest } = post
-        return { ...rest }
-      })
-
-      const deleteData = {
-        petSitterId: loggedInPetSitter?._id,
-        posts,
-      }
-
-      await deletePost(deleteData)
+      const deleteDataParams = new URLSearchParams({ userId: loggedInPetSitter._id, postId })
+      await deletePost(deleteDataParams.toString())
       if (loggedInPetSitter) getLoggedInPetSitter(loggedInPetSitter?._id)
       alert('Post removido com sucesso!')
     } catch (error: any) {
