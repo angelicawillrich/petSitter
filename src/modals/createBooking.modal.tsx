@@ -9,7 +9,7 @@ import { services } from '../shared'
 import { createBooking } from '../api/booking.api'
 import { StoreContext } from '../context/context'
 
-interface SetAppointmentModalProps {
+interface ISetBookingModalProps {
   petSitterId: string
   userId: string
   onClose: () => void
@@ -35,7 +35,7 @@ const initialFormState = {
   userId: '',
 }
 
-const SetAppointmentModal = ({ petSitterId, userId, onClose }: SetAppointmentModalProps) => {
+const CreateBookingModal = ({ petSitterId, userId, onClose }: ISetBookingModalProps) => {
   const [formState, setFormState] = useState<IFormState>(initialFormState)
 
   const { getLoggedInUser } = useContext(StoreContext)
@@ -44,7 +44,7 @@ const SetAppointmentModal = ({ petSitterId, userId, onClose }: SetAppointmentMod
     setFormState((previousState) => ({ ...previousState, userId, petSitterId }))
   }, [])
 
-  const handleCreateAppointment = async () => {
+  const handleCreateBooking = async () => {
     if (!formState.service || !formState.initialDate || !formState.finalDate || !formState.initialTime || !formState.finalTime) {
       alert('Todos os campos sao obrigatórios.')
       return
@@ -117,7 +117,7 @@ const SetAppointmentModal = ({ petSitterId, userId, onClose }: SetAppointmentMod
         </div>
         <Button
           type="button"
-          onClick={() => handleCreateAppointment()}
+          onClick={() => handleCreateBooking()}
         >
           Solicitar agendamento
 
@@ -132,4 +132,4 @@ const SetAppointmentModal = ({ petSitterId, userId, onClose }: SetAppointmentMod
   )
 }
 
-export default SetAppointmentModal
+export default CreateBookingModal

@@ -6,19 +6,19 @@ import { BiSearchAlt } from 'react-icons/bi'
 import { AiTwotoneEdit } from 'react-icons/ai'
 
 import { useNavigate } from 'react-router-dom'
-import CancelAppointmentModal from '../modals/cancelAppointment.modal'
+import CancelBookingModal from '../modals/cancelBooking.modal'
 import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 import AlbumModal from '../modals/album.modal'
 import { calculateRatingsStars, showStars } from '../utils'
 import { StoreContext } from '../context/context'
-import { appointmentStatus, path } from '../shared'
+import { bookingStatus, path } from '../shared'
 import {
-  IAppointment, IBooking, IBookingPersonalData, IRating,
+  IBooking, IBookingPersonalData, IRating,
 } from '../interfaces/interfaces'
 import Dummy2 from '../assets/dummy2.png'
 
 const HomeUser = () => {
-  const [selectedAppointment, setSelectedAppointment] = useState<IAppointment | undefined>()
+  const [selectedBooking, setSelectedBooking] = useState<IBooking | undefined>()
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false)
 
@@ -33,8 +33,8 @@ const HomeUser = () => {
     fetchPetSittersList()
   }, [])
 
-  const handleCloseAppointmentModal = () => {
-    setSelectedAppointment(undefined)
+  const handleCloseBookingModal = () => {
+    setSelectedBooking(undefined)
   }
 
   const recentPetSitters = useMemo(() => {
@@ -55,8 +55,8 @@ const HomeUser = () => {
       ? (<span>CARREGANDO...</span>)
       : (
         <div className="flex flex-col flex-3 w-full h-full gap-5 md:gap-10 justify-center md:flex-row">
-          {selectedAppointment && Object.keys(selectedAppointment).length > 0 && (
-          <CancelAppointmentModal onClose={handleCloseAppointmentModal} appointment={selectedAppointment} />
+          {selectedBooking && Object.keys(selectedBooking).length > 0 && (
+          <CancelBookingModal onClose={handleCloseBookingModal} booking={selectedBooking} />
           )}
           {isSearchModalOpen && <SearchPetSitterModal onClose={() => setIsSearchModalOpen(false)} />}
           {isAlbumModalOpen && <AlbumModal photos={loggedInUser?.album} user={loggedInUser} onClose={() => setIsAlbumModalOpen(false)} />}
@@ -166,44 +166,44 @@ const HomeUser = () => {
           <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
             <h1 className="mb-3">Sua agenda</h1>
             <div className="max-h-96 overflow-auto">
-              {loggedInUser?.bookings.map((appointment) => (
-                <div key={appointment._id} className="flex flex-col mt-3">
+              {loggedInUser?.bookings.map((booking) => (
+                <div key={booking._id} className="flex flex-col mt-3">
                   <div className="flex flex-row text-base font-bold text-gray-900 items-center">
                     <span>
-                      {new Date(appointment.initialDate).toLocaleDateString('pt-BR')}
+                      {new Date(booking.initialDate).toLocaleDateString('pt-BR')}
                       {' '}
-                      {appointment.initialTime}
+                      {booking.initialTime}
                       {' '}
                       -
                       {' '}
-                      {new Date(appointment.finalDate).toLocaleDateString('pt-BR')}
+                      {new Date(booking.finalDate).toLocaleDateString('pt-BR')}
                       {' '}
-                      {appointment.finalTime}
+                      {booking.finalTime}
                     </span>
                   </div>
                   <span className="text-gray-200">
                     (
-                    {appointmentStatus.find((status) => status.id === String(appointment.status))?.label}
+                    {bookingStatus.find((status) => status.id === String(booking.status))?.label}
                     )
                   </span>
                   <button
                     type="submit"
                     className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                    onClick={() => navigate(`/petsitter/${appointment.petSitterId?._id}`)}
+                    onClick={() => navigate(`/petsitter/${booking.petSitterId?._id}`)}
                   >
-                    {appointment?.petSitterId?.name}
+                    {booking?.petSitterId?.name}
                   </button>
                   <span>
-                    {appointment.petSitterId?.address}
+                    {booking.petSitterId?.address}
                     {' '}
                     -
                     {' '}
-                    {appointment.petSitterId?.cityName}
+                    {booking.petSitterId?.cityName}
                   </span>
                   <button
                     type="button"
                     className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                    onClick={() => setSelectedAppointment(appointment)}
+                    onClick={() => setSelectedBooking(booking)}
                   >
                     Cancelar
                   </button>

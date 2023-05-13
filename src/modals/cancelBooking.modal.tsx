@@ -1,33 +1,32 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable max-len */
-import moment from 'moment'
 import React, { useContext } from 'react'
 import Button from '../components/baseComponents/button'
 import Modal from '../components/baseComponents/modal'
-import { IAppointment } from '../interfaces/interfaces'
-import { StoreContext } from '../context/context'
+import { IBooking } from '../interfaces/interfaces'
 import { updateBookingStatus } from '../api/booking.api'
+import { StoreContext } from '../context/context'
 
-interface RejectAppointmentModalProps {
+interface ICancelBookingModalProps {
   onClose: () => void
-  appointment: IAppointment
+  booking: IBooking
 }
 
-const RejectAppointmentModal = ({ onClose, appointment }: RejectAppointmentModalProps) => {
+const CancelBookingModal = ({ onClose, booking }: ICancelBookingModalProps) => {
   const {
     getLoggedInUser, loggedInUser, loggedInPetSitter, getLoggedInPetSitter,
   } = useContext(StoreContext)
 
-  const onRejectAppointment = async () => {
+  const onCancelBooking = async () => {
     try {
       const data = {
-        bookingId: appointment._id,
-        status: 'rejected',
+        bookingId: booking._id,
+        status: 'canceled',
       }
       await updateBookingStatus(data)
       loggedInUser && getLoggedInUser(loggedInUser?._id)
       loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
-      alert('Agendamento rejeitado com sucesso!')
+      alert('Agendamento cancelado com sucesso!')
       onClose()
     } catch (error: any) {
       console.error(error)
@@ -36,38 +35,37 @@ const RejectAppointmentModal = ({ onClose, appointment }: RejectAppointmentModal
   }
 
   return (
-    <Modal title="Rejeitar agendamento" onClose={onClose}>
+    <Modal title="Cancelar agendamento" onClose={onClose}>
       <div className="flex flex-col p-4 justify-center items-center">
         <div className="flex flex-col p-4 justify-center items-center">
           <span>
             Você tem certeza que deseja
             {' '}
-            <b>rejeitar</b>
+            <b>cancelar</b>
             {' '}
             o seguinte agendamento?
           </span>
-          <span className="font-bold">
-            {moment(new Date(appointment.initialDate)).format('DD/MM/YYYY')}
+          <span className="font-bold">{booking.petSitterId?.name || booking.userId?.name}</span>
+          <span>
+            {new Date(booking.initialDate).toLocaleDateString('pt-BR')}
             {' '}
-            {appointment.initialTime}
+            {booking.initialTime}
             {' '}
             -
             {' '}
-            {moment(new Date(appointment.finalDate)).format('DD/MM/YYYY')}
+            {new Date(booking.finalDate).toLocaleDateString('pt-BR')}
             {' '}
-            {' '}
-            {appointment.finalTime}
+            {booking.finalTime}
           </span>
-          {appointment.petSitterId?.name}
         </div>
         <div
           className=""
         >
-          <Button onClick={onRejectAppointment}>Rejeitar agendamento</Button>
+          <Button onClick={onCancelBooking}>Cancelar agendamento</Button>
         </div>
       </div>
     </Modal>
   )
 }
 
-export default RejectAppointmentModal
+export default CancelBookingModal

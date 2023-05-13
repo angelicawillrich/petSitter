@@ -12,42 +12,43 @@ export interface IPetSitterInfo {
 }
 
 export interface IWeekDaysAndTime {
-  weekday: string;
-  initialTime: string;
-  finalTime: string;
-  _id: string;
+  weekday: string
+  initialTime: string
+  finalTime: string
+  _id?: string
 }
 
 export interface IAvailableDates {
-  initialDate: Date;
-  finalDate: Date;
+  initialDate: Date
+  finalDate: Date
   weekDaysAndTime: IWeekDaysAndTime[]
+  _id: string
 }
 
 export interface IPet {
-  _id: string;
-  name: string;
-  yearBirth: number;
-  specie: string;
-  breed: string;
-  age: number;
-  weight: number;
-  picture: string | null;
-  others: string;
+  _id: string
+  name: string
+  yearBirth: number
+  specie: string
+  breed: string
+  age: number
+  weight: number
+  picture: string | null
+  others: string
 }
 
 export interface IAlbum {
-  _id: string;
-  id: string;
-  filename: string;
-  date: Date;
+  _id: string
+  id: string
+  filename: string
+  date: Date
 }
 
 export interface IPost {
-  _id: string;
-  filename: string;
-  description: string;
-  date: Date;
+  _id: string
+  filename: string
+  description: string
+  date: Date
 }
 
 export interface IBookingPersonalData {
@@ -81,8 +82,8 @@ export interface IRating {
     name: string
     _id: string
   }
-  rating: number;
-  description: string;
+  rating: number
+  description: string
   reviewedByPetSitter: boolean
   _id: string
   createdAt: Date
@@ -90,27 +91,27 @@ export interface IRating {
 
 export interface IUser {
   _id: string
-  email: string;
-  password: string;
-  name: string;
-  address: string;
-  district: string;
-  cityId: string;
-  cityName: string;
-  stateId: string;
-  stateName: string;
-  country: string;
-  phone: string;
-  profilePicture: string;
-  pets: IPet[];
-  album?: IAlbum[];
-  posts: IPost[];
-  isPetSitter: boolean;
-  petSitterInfo: IPetSitterInfo;
+  email: string
+  password: string
+  name: string
+  address: string
+  district: string
+  cityId: string
+  cityName: string
+  stateId: string
+  stateName: string
+  country: string
+  phone: string
+  profilePicture: string
+  pets: IPet[]
+  album?: IAlbum[]
+  posts: IPost[]
+  isPetSitter: boolean
+  petSitterInfo: IPetSitterInfo
   availableDates: IAvailableDates[]
-  createdAt: Date;
-  ratingsReceived: IRating[];
-  bookings: IBooking[];
+  createdAt: Date
+  ratingsReceived: IRating[]
+  bookings: IBooking[]
 }
 export interface ILoginForm {
   email: string
@@ -155,17 +156,17 @@ export interface Service {
 
 export interface IUpdatePetSitter {
   petSitterInfo: {
-    allowedPets: string[];
-    services: Service[];
-    others: string;
+    allowedPets: string[]
+    services: Service[]
+    others: string
   }
-  userId: string;
-  _id?: string;
+  userId: string
+  _id?: string
 }
 
 export interface IaddPhotoData {
-  photo: string | ArrayBuffer | null;
-  userId: string;
+  photo: string | ArrayBuffer | null
+  userId: string
 }
 
 export interface IFilterPetSitter {
@@ -176,23 +177,23 @@ export interface IFilterPetSitter {
   rating?: string
 }
 
-export interface IAppointment {
-  _id: string
-  initialDate: Date
-  initialTime: string
-  finalDate: Date
-  finalTime: string
-  petSitterId?: {
-    name: string
-    address: string
-    cityName: string
-    _id: string
-  },
-  userId?: {
-    name: string
-    address: string
-    cityName: string
-    _id: string
-  },
-  status: string
-}
+// export interface IBooking {
+//   _id: string
+//   initialDate: Date
+//   initialTime: string
+//   finalDate: Date
+//   finalTime: string
+//   petSitterId?: {
+//     name: string
+//     address: string
+//     cityName: string
+//     _id: string
+//   },
+//   userId?: {
+//     name: string
+//     address: string
+//     cityName: string
+//     _id: string
+//   },
+//   status: string
+// }

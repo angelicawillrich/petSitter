@@ -34,7 +34,7 @@ export const searchRatings = [
 
 export const path = 'http://localhost:3000'
 
-export const appointmentStatus = [
+export const bookingStatus = [
   { id: 'approved', label: 'aprovado' },
   { id: 'pending', label: 'aguardando' },
   { id: 'canceled', label: 'cancelado' },

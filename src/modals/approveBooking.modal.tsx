@@ -1,32 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable max-len */
+import moment from 'moment'
 import React, { useContext } from 'react'
 import Button from '../components/baseComponents/button'
 import Modal from '../components/baseComponents/modal'
-import { IAppointment } from '../interfaces/interfaces'
+import { IBooking } from '../interfaces/interfaces'
 import { updateBookingStatus } from '../api/booking.api'
 import { StoreContext } from '../context/context'
 
-interface CancelAppointmentModalProps {
+interface IApproveBookingtModalProps {
   onClose: () => void
-  appointment: IAppointment
+  booking: IBooking
 }
 
-const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModalProps) => {
+const ApproveBookingtModal = ({ onClose, booking }: IApproveBookingtModalProps) => {
   const {
     getLoggedInUser, loggedInUser, loggedInPetSitter, getLoggedInPetSitter,
   } = useContext(StoreContext)
 
-  const onCancelAppointment = async () => {
+  const onApproveBookingt = async () => {
     try {
       const data = {
-        bookingId: appointment._id,
-        status: 'canceled',
+        bookingId: booking._id,
+        status: 'approved',
       }
       await updateBookingStatus(data)
       loggedInUser && getLoggedInUser(loggedInUser?._id)
       loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
-      alert('Agendamento cancelado com sucesso!')
+      alert('Agendamento aprovado com sucesso!')
       onClose()
     } catch (error: any) {
       console.error(error)
@@ -35,37 +36,38 @@ const CancelAppointmentModal = ({ onClose, appointment }: CancelAppointmentModal
   }
 
   return (
-    <Modal title="Cancelar agendamento" onClose={onClose}>
+    <Modal title="Aprovar agendamento" onClose={onClose}>
       <div className="flex flex-col p-4 justify-center items-center">
         <div className="flex flex-col p-4 justify-center items-center">
           <span>
             Você tem certeza que deseja
             {' '}
-            <b>cancelar</b>
+            <b>aprovar</b>
             {' '}
             o seguinte agendamento?
           </span>
-          <span className="font-bold">{appointment.petSitterId?.name || appointment.userId?.name}</span>
-          <span>
-            {new Date(appointment.initialDate).toLocaleDateString('pt-BR')}
+          <span className="font-bold">
+            {moment(new Date(booking.initialDate)).format('DD/MM/YYYY')}
             {' '}
-            {appointment.initialTime}
+            {booking.initialTime}
             {' '}
             -
             {' '}
-            {new Date(appointment.finalDate).toLocaleDateString('pt-BR')}
+            {moment(new Date(booking.finalDate)).format('DD/MM/YYYY')}
             {' '}
-            {appointment.finalTime}
+            {' '}
+            {booking.finalTime}
           </span>
+          {booking.petSitterId?.name}
         </div>
         <div
           className=""
         >
-          <Button onClick={onCancelAppointment}>Cancelar agendamento</Button>
+          <Button onClick={onApproveBookingt}>Aprovar agendamento</Button>
         </div>
       </div>
     </Modal>
   )
 }
 
-export default CancelAppointmentModal
+export default ApproveBookingtModal

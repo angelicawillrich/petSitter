@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import {
   calculateRatingAverage, generateInitialsAvatar, showStars,
 } from '../utils'
-import SetAppointmentModal from '../modals/setAppointment.modal'
+import CreateBookingModal from '../modals/createBooking.modal'
 import { StoreContext } from '../context/context'
 import { getPetSitterById } from '../api/user.api'
 import { IUser } from '../interfaces/interfaces'
@@ -17,7 +17,7 @@ import Button from '../components/baseComponents/button'
 import PetSitterCalendar from '../components/petSitterCalendar'
 
 const PagePetSitter = () => {
-  const [isSetAppointmentModalOpen, setIsSetAppointmentModalOpen] = useState(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [petSitter, setPetSitter] = useState<IUser | undefined>()
 
@@ -59,8 +59,8 @@ const PagePetSitter = () => {
       ? (<span>CARREGANDO...</span>)
       : (
         <div className="flex flex-col flex-3 w-full h-full gap-5 md:gap-10 justify-center md:flex-row">
-          {petSitter?._id && loggedInUser?._id && isSetAppointmentModalOpen
-            && <SetAppointmentModal petSitterId={petSitter._id} userId={loggedInUser._id} onClose={() => setIsSetAppointmentModalOpen(false)} />}
+          {petSitter?._id && loggedInUser?._id && isCreateModalOpen
+            && <CreateBookingModal petSitterId={petSitter._id} userId={loggedInUser._id} onClose={() => setIsCreateModalOpen(false)} />}
           <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
             <div>
               <div className="flex flex-row gap-4">
@@ -173,7 +173,7 @@ const PagePetSitter = () => {
               <PetSitterCalendar petSitter={petSitter} />
               <Button
                 className="mb-3"
-                onClick={() => setIsSetAppointmentModalOpen(true)}
+                onClick={() => setIsCreateModalOpen(true)}
               >
                 Solicitar agendamento
               </Button>

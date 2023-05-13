@@ -4,30 +4,30 @@ import moment from 'moment'
 import React, { useContext } from 'react'
 import Button from '../components/baseComponents/button'
 import Modal from '../components/baseComponents/modal'
-import { IAppointment } from '../interfaces/interfaces'
-import { updateBookingStatus } from '../api/booking.api'
+import { IBooking } from '../interfaces/interfaces'
 import { StoreContext } from '../context/context'
+import { updateBookingStatus } from '../api/booking.api'
 
-interface ApproveAppointmentModalProps {
+interface IRejectBookingModalProps {
   onClose: () => void
-  appointment: IAppointment
+  booking: IBooking
 }
 
-const ApproveAppointmentModal = ({ onClose, appointment }: ApproveAppointmentModalProps) => {
+const RejectBookingModal = ({ onClose, booking }: IRejectBookingModalProps) => {
   const {
     getLoggedInUser, loggedInUser, loggedInPetSitter, getLoggedInPetSitter,
   } = useContext(StoreContext)
 
-  const onApproveAppointment = async () => {
+  const onRejectBooking = async () => {
     try {
       const data = {
-        bookingId: appointment._id,
-        status: 'approved',
+        bookingId: booking._id,
+        status: 'rejected',
       }
       await updateBookingStatus(data)
       loggedInUser && getLoggedInUser(loggedInUser?._id)
       loggedInPetSitter && getLoggedInPetSitter(loggedInPetSitter._id)
-      alert('Agendamento aprovado com sucesso!')
+      alert('Agendamento rejeitado com sucesso!')
       onClose()
     } catch (error: any) {
       console.error(error)
@@ -36,38 +36,38 @@ const ApproveAppointmentModal = ({ onClose, appointment }: ApproveAppointmentMod
   }
 
   return (
-    <Modal title="Aprovar agendamento" onClose={onClose}>
+    <Modal title="Rejeitar agendamento" onClose={onClose}>
       <div className="flex flex-col p-4 justify-center items-center">
         <div className="flex flex-col p-4 justify-center items-center">
           <span>
             Você tem certeza que deseja
             {' '}
-            <b>aprovar</b>
+            <b>rejeitar</b>
             {' '}
             o seguinte agendamento?
           </span>
           <span className="font-bold">
-            {moment(new Date(appointment.initialDate)).format('DD/MM/YYYY')}
+            {moment(new Date(booking.initialDate)).format('DD/MM/YYYY')}
             {' '}
-            {appointment.initialTime}
+            {booking.initialTime}
             {' '}
             -
             {' '}
-            {moment(new Date(appointment.finalDate)).format('DD/MM/YYYY')}
+            {moment(new Date(booking.finalDate)).format('DD/MM/YYYY')}
             {' '}
             {' '}
-            {appointment.finalTime}
+            {booking.finalTime}
           </span>
-          {appointment.petSitterId?.name}
+          {booking.petSitterId?.name}
         </div>
         <div
           className=""
         >
-          <Button onClick={onApproveAppointment}>Aprovar agendamento</Button>
+          <Button onClick={onRejectBooking}>Rejeitar agendamento</Button>
         </div>
       </div>
     </Modal>
   )
 }
 
-export default ApproveAppointmentModal
+export default RejectBookingModal
