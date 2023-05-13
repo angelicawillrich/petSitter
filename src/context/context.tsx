@@ -68,7 +68,8 @@ export const ContextProvider = ({ children }: any) => {
     try {
       const result = await fetchPetSitters()
       if (result.data.result) {
-        setPetSittersList(result.data.result)
+        const list = result.data.result.filter((petSitter:IUser) => petSitter._id !== loggedInUser?._id)
+        setPetSittersList(list)
       }
     } catch (error: any) {
       console.error(error)
