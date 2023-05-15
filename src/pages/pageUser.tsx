@@ -33,7 +33,6 @@ const PageUser = () => {
         const result = await (await getUserById(userId))
         setUserInfo(result)
       } else {
-        console.log('ELSE')
         alert('Usuário não encontrado.')
         navigate('/')
       }

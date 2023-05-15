@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
-export interface IVerifyRating {
+export interface IFilterRating {
   reviewerId: string
   reviewedId: string
   rating: number
@@ -12,13 +12,22 @@ export interface IVerifyRating {
   updatedAt: Date
 }
 
+export interface ICreateRating {
+  reviewerId: string
+  reviewedId: string
+  rating: number
+  description: string
+  reviewedByPetSitter: boolean
+  createdAt: Date
+}
+
 export interface IUpdateRating {
   rating: number
   description: string
   _id: string
 }
 
-export const createRating = async (data: Omit<IVerifyRating, '_id'>) => {
+export const createRating = async (data: ICreateRating) => {
   const result = await axios.post(
     'http://127.0.0.1:3000/rating',
     data,
@@ -34,7 +43,7 @@ export const updateRating = async (data: IUpdateRating) => {
   return result
 }
 
-export const filterRating = async (filter: string): Promise<IVerifyRating> => {
+export const filterRating = async (filter: string): Promise<IFilterRating> => {
   const result = await axios.get(
     `http://127.0.0.1:3000/rating/filter${filter}`,
   )

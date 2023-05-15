@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
@@ -5,7 +6,7 @@ import Button from '../components/baseComponents/button'
 import TextArea from '../components/baseComponents/textArea'
 import { Rating } from '../components/rating'
 import { searchRating } from '../utils'
-import { IUpdateRating, updateRating } from '../api/rating.api'
+import { IUpdateRating, createRating, updateRating } from '../api/rating.api'
 import { StoreContext } from '../context/context'
 
 const initialState = {
@@ -16,13 +17,11 @@ const initialState = {
 
 const RatingPage = () => {
   const [formState, setFormState] = useState<IUpdateRating>(initialState)
-  const { getUserWithToken } = useContext(StoreContext)
+  const { getUserWithToken, getLoggedInUser, loggedInUser } = useContext(StoreContext)
 
   const {
-    userId, petSitterId, reviewedByPetSitter, ratingId,
+    reviewerId, reviewedId, reviewedByPetSitter, ratingId,
   } = useParams()
-  console.log(userId, petSitterId, reviewedByPetSitter)
-  console.log({ formState })
 
   const navigate = useNavigate()
 
@@ -35,7 +34,6 @@ const RatingPage = () => {
       try {
         const filter = new URLSearchParams({ _id: ratingId })
         const searchResult = await searchRating(filter.toString())
-        console.log({ searchResult })
         setFormState({
           _id: searchResult._id,
           rating: searchResult.rating,
@@ -43,7 +41,7 @@ const RatingPage = () => {
         })
       } catch (err: any) {
         alert('Não foi possível encontrar a avaliação.')
-        navigate('-1')
+        navigate(-1)
       }
     }
   }
@@ -54,7 +52,6 @@ const RatingPage = () => {
 
   const onSetRating = (value: number) => {
     setFormState((previousState) => ({ ...previousState, rating: value }))
-    console.log({ value })
   }
 
   const handleSubmitUpdate = async () => {
@@ -67,9 +64,13 @@ const RatingPage = () => {
         description: formState.description,
         rating: formState.rating,
       }
-      await updateRating(data)
-      alert('Sua avaliação foi salva com sucesso!')
-      navigate(-1)
+      const result = await updateRating(data)
+
+      if (result) {
+        loggedInUser && await getLoggedInUser(loggedInUser?._id)
+        alert('Sua avaliação foi salva com sucesso!')
+        navigate(-1)
+      }
     } catch (error: any) {
       console.error(error)
       alert(JSON.parse(error.request.responseText).message)
@@ -77,7 +78,32 @@ const RatingPage = () => {
   }
 
   const handleSubmitCreate = async () => {
-    console.log('aa')
+    if (!formState.description) {
+      alert('Por favor, preecha o campo de texto.')
+    }
+    if (!reviewedByPetSitter || !reviewedId || !reviewerId) {
+      alert('Não foi possível completar a operação.')
+      return
+    }
+    try {
+      const data = {
+        description: formState.description,
+        rating: formState.rating,
+        reviewedByPetSitter: reviewedByPetSitter === 'true',
+        reviewerId,
+        reviewedId,
+        createdAt: new Date(),
+      }
+      const result = await createRating(data)
+      if (result) {
+        loggedInUser && await getLoggedInUser(loggedInUser?._id)
+        alert('Sua avaliação foi salva com sucesso!')
+        navigate(-1)
+      }
+    } catch (error: any) {
+      console.error(error)
+      alert(JSON.parse(error.request.responseText).message)
+    }
   }
 
   return (
@@ -96,21 +122,24 @@ const RatingPage = () => {
         </span>
       </div>
       <Rating rating={formState.rating} onClick={onSetRating} />
-      <form className="flex flex-col w-full items-center justify-center gap-6" onSubmit={ratingId ? handleSubmitUpdate : handleSubmitCreate}>
-        <div className="flex flex-col w-full">
-          <TextArea
-            id="comment"
-            value={formState.description}
-            rows={3}
-            placeholder="Comentário..."
-            maxLength={200}
-            required
-            onChange={(e) => setFormState((previousState) => ({ ...previousState, description: e.target.value }))}
-          />
-          <span className="text-[12px]">Máx. 200 caracteres</span>
-        </div>
-        <Button type="submit">Enviar avaliação</Button>
-      </form>
+      <div className="flex flex-col w-full">
+        <TextArea
+          id="comment"
+          value={formState.description}
+          rows={3}
+          placeholder="Comentário..."
+          maxLength={200}
+          required
+          onChange={(e) => setFormState((previousState) => ({ ...previousState, description: e.target.value }))}
+        />
+        <span className="text-[12px]">Máx. 200 caracteres</span>
+      </div>
+      <Button
+        type="button"
+        onClick={() => (ratingId ? handleSubmitUpdate() : handleSubmitCreate())}
+      >
+        Enviar avaliação
+      </Button>
     </div>
   )
 }
