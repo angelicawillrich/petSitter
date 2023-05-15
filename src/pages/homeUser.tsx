@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import CancelBookingModal from '../modals/cancelBooking.modal'
 import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 import AlbumModal from '../modals/album.modal'
-import { calculateRatingsStars, showStars } from '../utils'
+import { calculateRatingAverage, calculateRatingsStars, showStars } from '../utils'
 import { StoreContext } from '../context/context'
 import { bookingStatus, path } from '../shared'
 import {
@@ -225,7 +225,10 @@ const HomeUser = () => {
                 ))}
               </div>
               <div className="mt-4">
-                <h1 className="mb-3">Veja como você está sendo avaliado</h1>
+                <h1 className="mb-3">
+                  Veja como você está sendo avaliado
+                  {loggedInUser?.ratingsReceived && loggedInUser?.ratingsReceived?.length > 0 && `${calculateRatingAverage(loggedInUser.ratingsReceived)}/5`}
+                </h1>
                 {loggedInUser?.ratingsReceived.length
                   ? loggedInUser.ratingsReceived.map((rating: IRating) => (
                     <div key={rating._id} className="flex flex-col mb-3">

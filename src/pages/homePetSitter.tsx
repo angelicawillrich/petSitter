@@ -8,7 +8,7 @@ import ApproveBookingModal from '../modals/approveBooking.modal'
 import CancelBookingModal from '../modals/cancelBooking.modal'
 import PostsModal from '../modals/posts.modal'
 import RejectBookingModal from '../modals/rejectBooking.modal'
-import { getServiceName, showStars } from '../utils'
+import { calculateRatingAverage, getServiceName, showStars } from '../utils'
 import { StoreContext } from '../context/context'
 import { IBooking } from '../interfaces/interfaces'
 import { path, services, species } from '../shared'
@@ -320,7 +320,11 @@ const HomePetSitter = () => {
               </div>
               <div />
               <div className="mt-4">
-                <h1 className="mb-3">Avaliações recebidas</h1>
+                <h1 className="mb-3">
+                  Avaliações recebidas
+                  {' '}
+                  {loggedInPetSitter?.ratingsReceived && loggedInPetSitter?.ratingsReceived?.length > 0 && `${calculateRatingAverage(loggedInPetSitter.ratingsReceived)}/5`}
+                </h1>
                 <div className="flex flex-col gap-3">
                   {loggedInPetSitter?.ratingsReceived.length
                     ? loggedInPetSitter?.ratingsReceived.map((rating) => (
