@@ -24,7 +24,7 @@ export const services = [
   { id: '2', value: 'cuidar em casa', label: 'cuidar em casa' },
 ]
 
-export const searchRatings = [
+export const arrayRatings = [
   { id: '0', value: '5', label: '5 estrelas' },
   { id: '1', value: '4', label: '5 à 4 estrelas' },
   { id: '2', value: '3', label: '5 à 3 estrelas' },

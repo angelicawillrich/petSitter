@@ -1,25 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {
+  useContext, useEffect, useState,
+} from 'react'
 import { HiOutlineMail } from 'react-icons/hi'
 import { BsWhatsapp } from 'react-icons/bs'
 import 'react-calendar/dist/Calendar.css'
 import { useNavigate, useParams } from 'react-router-dom'
+import moment from 'moment'
 import {
-  calculateRatingAverage, generateInitialsAvatar, showStars,
+  calculateRatingAverage, generateInitialsAvatar, searchFilteredBookings, searchRating, showStars,
 } from '../utils'
 import CreateBookingModal from '../modals/createBooking.modal'
 import { StoreContext } from '../context/context'
 import { getPetSitterById } from '../api/user.api'
-import { IUser } from '../interfaces/interfaces'
+import { IBooking, IRating, IUser } from '../interfaces/interfaces'
 import { path, services, species } from '../shared'
 
 import 'react-tooltip/dist/react-tooltip.css'
 import Button from '../components/baseComponents/button'
 import PetSitterCalendar from '../components/petSitterCalendar'
+import { IVerifyRating } from '../api/rating.api'
 
 const PagePetSitter = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [petSitter, setPetSitter] = useState<IUser | undefined>()
+  const [userRating, setUserRating] = useState<IVerifyRating | null>(null)
+  const [missingRatingBooking, setMissingRatingBookings] = useState<IBooking[]>()
 
   const navigate = useNavigate()
 
@@ -45,6 +51,7 @@ const PagePetSitter = () => {
     } catch (error: any) {
       console.error(error)
       alert(JSON.parse(error.request.responseText).message)
+      navigate('/')
     } finally {
       setIsLoading(false)
     }
@@ -55,6 +62,39 @@ const PagePetSitter = () => {
   }, [])
 
   useEffect(() => { getPetSitter() }, [petSitterId])
+
+  const getUserRating = async () => {
+    let result = null
+    if (loggedInUser && petSitterId) {
+      const reviewerId = loggedInUser._id
+      const reviewedId = petSitterId
+      const filter = new URLSearchParams({ reviewerId, reviewedId })
+      const searchResult = await searchRating(filter.toString())
+      result = searchResult
+    }
+    setUserRating(result)
+  }
+
+  const getFilteredBookings = async () => {
+    if (petSitterId && loggedInUser?._id) {
+      const filter = new URLSearchParams({ petSitterId, userId: loggedInUser?._id, status: 'approved' })
+      const result = await searchFilteredBookings(filter.toString())
+
+      const missingRatingsBookingsResult = result.filter((booking) => {
+        return moment(booking.finalDate).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD')
+      })
+      if (!userRating) {
+        setMissingRatingBookings(missingRatingsBookingsResult)
+      } else {
+        setMissingRatingBookings(undefined)
+      }
+    }
+  }
+
+  useEffect(() => {
+    getUserRating()
+    getFilteredBookings()
+  }, [loggedInUser, petSitterId])
 
   const onImageError = (e: any) => {
     e.target.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D'
@@ -166,7 +206,7 @@ const PagePetSitter = () => {
                       className="w-40"
                     />
                     <span className="text-gray-400 text-xs font-medium">{post.description}</span>
-                    <span className="text-gray-400 text-[8px] font-medium">{new Date(post.date).toLocaleDateString('pt-BR')}</span>
+                    <span className="text-gray-400 text-[9px] font-medium">{new Date(post.date).toLocaleDateString('pt-BR')}</span>
                   </div>
                 ))}
 
@@ -184,22 +224,57 @@ const PagePetSitter = () => {
                 Solicitar agendamento
               </Button>
             </div>
-            <div className="mt-4">
+            <div className="flex flex-col mt-4 gap-3 pb-3">
               <h1 className="mb-3">
                 Avaliações
                 {' '}
                 {petSitter?.ratingsReceived && petSitter?.ratingsReceived?.length > 0 && `${calculateRatingAverage(petSitter.ratingsReceived)}/5`}
               </h1>
+              {userRating
+                && (
+                <div className="flex flex-col bg-purple-50 rounded p-3">
+                  <span className="font-bold mb-2">Esta é a sua avaliaçao para este PetSitter:</span>
+                  <div className="flex flex-row">
+                    {showStars(userRating.rating)}
+                  </div>
+                  <span>{userRating.description}</span>
+                  <span className="text-[9px]">{new Date(userRating.createdAt).toLocaleDateString('pt-BR')}</span>
+                  <button
+                    type="button"
+                    className="w-fit mt-2 text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                    onClick={() => navigate(`/rating/${userRating._id}`)}
+                  >
+                    Editar
+                  </button>
+                </div>
+                )}
+              {missingRatingBooking
+                && (
+                  <div className="flex flex-col bg-purple-50 rounded p-3">
+                    <span className="font-bold">Você ainda não avaliou este PetSitter.</span>
+                    <button
+                      type="button"
+                      className="w-fit mt-2 text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                      onClick={() => navigate(`/rating/${false}/${loggedInUser?._id}/${petSitterId}`)}
+                    >
+                      Avalie agora
+                    </button>
+                  </div>
+                )}
               {petSitter?.ratingsReceived.length
                 ? petSitter?.ratingsReceived.map((rating) => (
-                  <div key={rating._id} className="flex flex-col mb-4">
-                    <div className="flex flex-row">
-                      {showStars(rating.rating)}
-                    </div>
-                    <span className="text-base text-gray-900 font-bold">{rating.description}</span>
-                    <span>{rating.reviewerId?.name}</span>
-                    <span className="text-[8px]">{new Date(rating.createdAt).toLocaleDateString('pt-BR')}</span>
-                  </div>
+                  rating._id === userRating?._id
+                    ? <></>
+                    : (
+                      <div key={rating._id} className="flex flex-col mb-4">
+                        <div className="flex flex-row">
+                          {showStars(rating.rating)}
+                        </div>
+                        <span className="text-base text-gray-900 font-bold">{rating.description}</span>
+                        <span>{rating.reviewerId?.name}</span>
+                        <span className="text-[9px]">{new Date(rating.createdAt).toLocaleDateString('pt-BR')}</span>
+                      </div>
+                    )
                 ))
                 : (<span>Usuário ainda não recebeu avaliações.</span>)}
 

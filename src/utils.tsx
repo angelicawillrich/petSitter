@@ -4,6 +4,8 @@ import moment from 'moment'
 import { BiTime } from 'react-icons/bi'
 import { services } from './shared'
 import { IBooking, IRating } from './interfaces/interfaces'
+import { filterRating } from './api/rating.api'
+import { searchBookings } from './api/booking.api'
 
 // eslint-disable-next-line import/prefer-default-export
 export const showStars = (stars: number) => {
@@ -154,4 +156,14 @@ export const getTileContent = ({ date, availableDates }: any) => {
 
     </div>
   )
+}
+
+export const searchRating = async (filter: string) => {
+  const result = await filterRating(filter)
+  return result
+}
+
+export const searchFilteredBookings = async (filter: string) => {
+  const result = await searchBookings(filter)
+  return result
 }

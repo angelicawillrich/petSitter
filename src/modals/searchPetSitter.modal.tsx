@@ -5,7 +5,7 @@ import Button from '../components/baseComponents/button'
 import Dropdown from '../components/baseComponents/dropdown'
 import Input from '../components/baseComponents/input'
 import Modal from '../components/baseComponents/modal'
-import { species, searchRatings, path } from '../shared'
+import { species, arrayRatings, path } from '../shared'
 import { getCitiesByState, getStates } from '../api/external.api'
 import { IFilterPetSitter, IUser } from '../interfaces/interfaces'
 import { fetchPetSitters, filterPetSitter } from '../api/user.api'
@@ -69,7 +69,7 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
 
     if (formState.rating) {
       const formRating = Number(formState.rating)
-      const selectedRating = Number(searchRatings[formRating].value)
+      const selectedRating = Number(arrayRatings[formRating].value)
 
       updatedPetSitter = updatedPetSitter.filter((petSitter: IUser) => calculateRatingAverage(petSitter.ratingsReceived) >= selectedRating)
     }
@@ -171,7 +171,7 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
               <Dropdown
                 id="rating"
                 label="Avaliacoes"
-                list={searchRatings}
+                list={arrayRatings}
                 value={formState.rating}
                 onChange={(e) => onChangeForm('rating', e.target.value)}
               />

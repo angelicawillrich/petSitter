@@ -74,11 +74,11 @@ export interface IBooking {
 }
 
 export interface IRating {
-  reviewerId?: {
+  reviewerId: {
     name: string
     _id: string
   }
-  reviewedId?: {
+  reviewedId: {
     name: string
     _id: string
   }
@@ -87,6 +87,7 @@ export interface IRating {
   reviewedByPetSitter: boolean
   _id: string
   createdAt: Date
+  updatedAt: Date
 }
 
 export interface IUser {

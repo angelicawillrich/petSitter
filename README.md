@@ -13,6 +13,11 @@ As seguintes ferramentas e suas correspondendes versões foram utilizadas:
 
 ## Execução
 
+Instalar dependdências
+```bash
+npm i
+```
+
 Executar o projeto
 ```bash
 npm run dev
