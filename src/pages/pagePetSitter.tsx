@@ -8,24 +8,23 @@ import { useNavigate, useParams } from 'react-router-dom'
 import moment from 'moment'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
 import {
-  calculateRatingAverage, generateInitialsAvatar, searchFilteredBookings, searchRating, showStars,
+  calculateRatingAverage, generateInitialsAvatar, searchFilteredBookings, showStars,
 } from '../utils'
 import CreateBookingModal from '../modals/createBooking.modal'
 import { StoreContext } from '../context/context'
 import { getPetSitterById } from '../api/user.api'
-import { IBooking, IUser } from '../interfaces/interfaces'
+import { IBooking, IRating, IUser } from '../interfaces/interfaces'
 import { path, services, species } from '../shared'
 
 import 'react-tooltip/dist/react-tooltip.css'
 import Button from '../components/baseComponents/button'
 import PetSitterCalendar from '../components/petSitterCalendar'
-import { IFilterRating } from '../api/rating.api'
 
 const PagePetSitter = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [petSitter, setPetSitter] = useState<IUser | undefined>()
-  const [userRating, setUserRating] = useState<IFilterRating | null>(null)
+  const [userRating, setUserRating] = useState<IRating | null>(null)
   const [missingRatingBooking, setMissingRatingBookings] = useState<IBooking[]>()
 
   const navigate = useNavigate()
@@ -84,11 +83,8 @@ const PagePetSitter = () => {
   const getUserRating = async () => {
     let result = null
     if (loggedInUser && petSitterId) {
-      const reviewerId = loggedInUser._id
-      const reviewedId = petSitterId
-      const filter = new URLSearchParams({ reviewerId, reviewedId })
-      const searchResult = await searchRating(filter.toString())
-      result = searchResult
+      result = petSitter?.ratingsReceived.filter((rating) => rating.reviewerId._id === loggedInUser._id
+        && rating.reviewedByPetSitter === false)[0]
     }
     if (result) {
       setUserRating(result)
@@ -281,7 +277,7 @@ const PagePetSitter = () => {
                 {petSitter?.ratingsReceived.length
                   ? petSitter?.ratingsReceived.map((rating) => (
                     rating._id === userRating?._id
-                      ? <></>
+                      ? <React.Fragment key={rating._id} />
                       : (
                         <div key={rating._id} className="flex flex-col mb-4">
                           <div className="flex flex-row">
