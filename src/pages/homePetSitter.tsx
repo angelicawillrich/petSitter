@@ -103,14 +103,14 @@ const HomePetSitter = () => {
       ? (<span>CARREGANDO...</span>)
       : (
         <>
-          <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+          <div className="flex flex-row w-full justify-start mb-8 items-center gap-1">
             <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
             <button
               type="button"
               className="text-purple-900 font-bold"
               onClick={() => navigate('/')}
             >
-              Home usuário
+              Ir para Home usuário
             </button>
           </div>
           <div className="flex flex-col flex-3 w-full h-full gap-5 md:gap-10 justify-center md:flex-row">

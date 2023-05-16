@@ -162,26 +162,26 @@ const RegisterProfile = () => {
       {loggedInUser?.name && (
         loggedInUser?.isPetSitter
           ? (
-            <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+            <div className="flex flex-row w-full justify-start mb-8 items-center gap-1">
               <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
               <button
                 type="button"
                 className="text-purple-900 font-bold"
                 onClick={() => navigate(`/homepetsitter/${loggedInUser._id}`)}
               >
-                Home PetSitter
+                Ir para Home PetSitter
               </button>
             </div>
           )
           : (
-            <div className="flex flex-row w-full justify-start mb-4 items-center gap-1">
+            <div className="flex flex-row w-full justify-start mb-8 items-center gap-1">
               <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
               <button
                 type="button"
                 className="text-purple-900 font-bold"
                 onClick={() => navigate('/')}
               >
-                Home usuário
+                Ir para Home usuário
               </button>
             </div>
           ))}
