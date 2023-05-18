@@ -195,10 +195,10 @@ const HomeUser = () => {
                         {booking.finalTime}
                       </span>
                     </div>
-                    <span className="text-gray-200">
-                      (
+                    <span className={`${booking.status === 'rejected' || booking.status === 'canceled' ? 'text-red-300' : 'text-gray-200'}`}>
+                      Status:
+                      {' '}
                       {bookingStatus.find((status) => status.id === String(booking.status))?.label}
-                      )
                     </span>
                     <button
                       type="submit"

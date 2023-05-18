@@ -57,7 +57,7 @@ const CreateBookingModal = ({ petSitterId, userId, onClose }: ISetBookingModalPr
 
     try {
       await createBooking(formState)
-      alert('A sua solicitação foi enviada ao PetSitter. Aguarde pela resposta que será enviada por e-mail.')
+      alert('A sua solicitação foi enviada ao PetSitter. Acompanhe o status do agendamento na sua Home.')
       await getLoggedInUser(formState.userId)
     } catch (error: any) {
       console.error(error)
