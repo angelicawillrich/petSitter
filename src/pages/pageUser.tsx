@@ -43,6 +43,7 @@ const PageUser = () => {
     } catch (error: any) {
       console.error(error)
       alert(JSON.parse(error.request.responseText).message)
+      navigate(-1)
     } finally {
       setIsLoading(false)
     }
