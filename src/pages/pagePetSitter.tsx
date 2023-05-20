@@ -250,7 +250,7 @@ const PagePetSitter = () => {
                   {' '}
                   {petSitter?.ratingsReceived && petSitter?.ratingsReceived?.length > 0 && `${calculateRatingAverage(petSitter.ratingsReceived)}/5`}
                 </h1>
-                {userRating && !missingRatingBooking
+                {userRating && missingRatingBooking?.length === 0
                 && (
                 <div className="flex flex-col bg-purple-50 rounded p-3">
                   <span className="font-bold mb-2">Esta é a sua avaliaçao para este PetSitter:</span>
@@ -268,7 +268,7 @@ const PagePetSitter = () => {
                   </button>
                 </div>
                 )}
-                {missingRatingBooking && !userRating
+                {missingRatingBooking && missingRatingBooking.length > 0 && !userRating
                 && (
                   <div className="flex flex-col bg-purple-50 rounded p-3">
                     <span className="font-bold">Você ainda não avaliou este PetSitter.</span>
