@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
 import { AiOutlineDoubleRight, AiTwotoneEdit } from 'react-icons/ai'
@@ -159,28 +160,30 @@ const HomePetSitter = () => {
                           Cancelar
                         </button>
                       )
-                      : (
-                        <div className="flex flex-row gap-2">
-                          <button
-                            type="button"
-                            className="w-fit decoration-transparent border-b-[1px] border-green-900 p-0 m-0 leading-none text-green-900"
-                            onClick={() => {
-                              handleOpenBookingModal(booking, Actions.approve)
-                            }}
-                          >
-                            Aprovar
-                          </button>
-                          <button
-                            type="button"
-                            className="w-fit decoration-transparent border-b-[1px] border-red-400 p-0 m-0 leading-none text-red-400"
-                            onClick={() => {
-                              handleOpenBookingModal(booking, Actions.reject)
-                            }}
-                          >
-                            Rejeitar
-                          </button>
-                        </div>
-                      )}
+                      : booking.status !== 'canceled'
+                        ? (
+                          <div className="flex flex-row gap-2">
+                            <button
+                              type="button"
+                              className="w-fit decoration-transparent border-b-[1px] border-green-900 p-0 m-0 leading-none text-green-900"
+                              onClick={() => {
+                                handleOpenBookingModal(booking, Actions.approve)
+                              }}
+                            >
+                              Aprovar
+                            </button>
+                            <button
+                              type="button"
+                              className="w-fit decoration-transparent border-b-[1px] border-red-400 p-0 m-0 leading-none text-red-400"
+                              onClick={() => {
+                                handleOpenBookingModal(booking, Actions.reject)
+                              }}
+                            >
+                              Rejeitar
+                            </button>
+                          </div>
+                        )
+                        : <span>cancelado</span>}
                   </div>
                 </div>
                 {checkBookingsConflicts({ bookingInfo: booking, bookings: loggedInPetSitter.bookings }) && (
