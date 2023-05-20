@@ -26,9 +26,9 @@ export const services = [
 
 export const arrayRatings = [
   { id: '0', value: '5', label: '5 estrelas' },
-  { id: '1', value: '4', label: '5 à 4 estrelas' },
-  { id: '2', value: '3', label: '5 à 3 estrelas' },
-  { id: '3', value: '2', label: '5 à 2 estrelas' },
+  { id: '1', value: '4', label: '4 à 5 estrelas' },
+  { id: '2', value: '3', label: '3 à 5 estrelas' },
+  { id: '3', value: '2', label: '2 à 5 estrelas' },
   { id: '4', value: '1', label: 'Todos' },
 ]
 
