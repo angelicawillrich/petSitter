@@ -119,7 +119,14 @@ const PagePetSitter = () => {
           </div>
           <div className="flex flex-col flex-3 w-full h-full gap-5 md:gap-10 justify-center md:flex-row">
             {petSitter?._id && loggedInUser?._id && isCreateModalOpen
-            && <CreateBookingModal petSitterId={petSitter._id} userId={loggedInUser._id} onClose={() => setIsCreateModalOpen(false)} />}
+            && (
+            <CreateBookingModal
+              petSitterId={petSitter._id}
+              userId={loggedInUser._id}
+              onClose={() => setIsCreateModalOpen(false)}
+              petSitterServices={petSitter.petSitterInfo.services}
+            />
+            )}
             <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
               <div>
                 <div className="flex flex-row gap-4">

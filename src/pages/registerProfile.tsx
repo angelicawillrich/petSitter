@@ -185,7 +185,7 @@ const RegisterProfile = () => {
               </button>
             </div>
           ))}
-      <form onSubmit={handleSubmit} className="w-full">
+      <form onSubmit={handleSubmit} className="w-full p-4">
         <div className="flex flex-col gap-4 justify-center items-center">
           <h1>Dados pessoais</h1>
           <Input

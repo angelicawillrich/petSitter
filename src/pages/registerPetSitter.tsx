@@ -42,7 +42,9 @@ const RegisterPetSitter = () => {
 
   const navigate = useNavigate()
 
-  const { loggedInUser, getUserWithToken, getLoggedInUser } = useContext(StoreContext)
+  const {
+    loggedInUser, getUserWithToken, getLoggedInUser, getLoggedInPetSitter,
+  } = useContext(StoreContext)
 
   useEffect(() => {
     if (loggedInUser?.petSitterInfo) {
@@ -103,7 +105,8 @@ const RegisterPetSitter = () => {
       }
       await updatePetSitter(updatedPetSitter)
       await getLoggedInUser(loggedInUser._id)
-      navigate('/')
+      await getLoggedInPetSitter(loggedInUser._id)
+      navigate(`/homepetsitter/${loggedInUser._id}`)
     } catch (error:any) {
       console.error({ error })
       alert(JSON.parse(error.request.responseText).message)

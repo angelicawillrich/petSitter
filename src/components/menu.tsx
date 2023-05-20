@@ -49,7 +49,7 @@ const Menu = () => {
           </button>
           {isMenuOpen
       && (
-      <div className="flex flex-col mt-12 shadow-md p-2 bg-white gap-3">
+      <div className="flex flex-col mt-12 shadow-md p-2 bg-white gap-3 z-50">
         {!loggedInUser.isPetSitter && (
         <button
           type="button"

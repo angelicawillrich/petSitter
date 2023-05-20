@@ -142,7 +142,7 @@ const RegisterPets = () => {
             </button>
           </div>
         )}
-      <div className="flex flex-col w-full gap-4 justify-center items-center">
+      <div className="flex flex-col w-full gap-4 justify-center items-center p-4">
         <h1>Seu(s) pet(s)</h1>
         {pets && pets.map((pet, index) => (
           <Accordion

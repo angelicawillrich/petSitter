@@ -8,10 +8,12 @@ import Modal from '../components/baseComponents/modal'
 import { services } from '../shared'
 import { createBooking } from '../api/booking.api'
 import { StoreContext } from '../context/context'
+import { IServices } from '../interfaces/interfaces'
 
 interface ISetBookingModalProps {
   petSitterId: string
   userId: string
+  petSitterServices: IServices[]
   onClose: () => void
 }
 
@@ -35,7 +37,9 @@ const initialFormState = {
   userId: '',
 }
 
-const CreateBookingModal = ({ petSitterId, userId, onClose }: ISetBookingModalProps) => {
+const CreateBookingModal = ({
+  petSitterId, userId, petSitterServices, onClose,
+}: ISetBookingModalProps) => {
   const [formState, setFormState] = useState<IFormState>(initialFormState)
 
   const { getLoggedInUser } = useContext(StoreContext)
@@ -56,9 +60,12 @@ const CreateBookingModal = ({ petSitterId, userId, onClose }: ISetBookingModalPr
     }
 
     try {
-      await createBooking(formState)
-      alert('A sua solicitação foi enviada ao PetSitter. Acompanhe o status do agendamento na sua Home.')
-      await getLoggedInUser(formState.userId)
+      const result = await createBooking(formState)
+      if (result) {
+        alert('A sua solicitação foi enviada ao PetSitter. Acompanhe o status do agendamento na sua Home.')
+        getLoggedInUser(formState.userId)
+        onClose()
+      }
     } catch (error: any) {
       console.error(error)
       alert(JSON.parse(error.request.responseText).message)
@@ -75,7 +82,7 @@ const CreateBookingModal = ({ petSitterId, userId, onClose }: ISetBookingModalPr
           <Dropdown
             id="service"
             label="Selecione o servico"
-            list={services}
+            list={services.filter((service) => petSitterServices.find((petSitterService) => petSitterService.serviceId === service.id))}
             value={formState.service}
             onChange={(e) => onChangeForm('service', e.target.value)}
             required

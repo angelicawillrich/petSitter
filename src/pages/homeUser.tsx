@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-param-reassign */
 import React, {
   useContext, useEffect, useMemo, useState,
@@ -179,51 +180,63 @@ const HomeUser = () => {
             </div>
             <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
               <h1 className="mb-3">Sua agenda</h1>
-              <div className="max-h-96 overflow-auto">
-                {loggedInUser?.bookings.map((booking) => (
-                  <div key={booking._id} className="flex flex-col mt-3">
-                    <div className="flex flex-row text-base font-bold text-gray-900 items-center">
-                      <span>
-                        {new Date(booking.initialDate).toLocaleDateString('pt-BR')}
-                        {' '}
-                        {booking.initialTime}
-                        {' '}
-                        -
-                        {' '}
-                        {new Date(booking.finalDate).toLocaleDateString('pt-BR')}
-                        {' '}
-                        {booking.finalTime}
-                      </span>
+              {loggedInUser?.bookings.length === 0
+                ? <span>Você não tem agendamentos.</span>
+                : (
+                  <>
+                    <div className="max-h-96 overflow-auto">
+                      {loggedInUser?.bookings.map((booking) => (
+                        <div key={booking._id} className="flex flex-col mt-3">
+                          <div className="flex flex-row text-base font-bold text-gray-900 items-center">
+                            <span>
+                              {new Date(booking.initialDate).toLocaleDateString('pt-BR')}
+                              {' '}
+                              {booking.initialTime}
+                              {' '}
+                              -
+                              {' '}
+                              {new Date(booking.finalDate).toLocaleDateString('pt-BR')}
+                              {' '}
+                              {booking.finalTime}
+                            </span>
+                          </div>
+                          <span
+                            className={`${booking.status === 'rejected' || booking.status === 'canceled'
+                              ? 'text-red-300'
+                              : booking.status === 'approved'
+                                ? 'text-green-300'
+                                : 'text-gray-200'}`}
+                          >
+                            Status:
+                            {' '}
+                            {bookingStatus.find((status) => status.id === String(booking.status))?.label}
+                          </span>
+                          <button
+                            type="submit"
+                            className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                            onClick={() => navigate(`/petsitter/${booking.petSitterId?._id}`)}
+                          >
+                            {booking?.petSitterId?.name}
+                          </button>
+                          <span>
+                            {booking.petSitterId?.address}
+                            {' '}
+                            -
+                            {' '}
+                            {booking.petSitterId?.cityName}
+                          </span>
+                          <button
+                            type="button"
+                            className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
+                            onClick={() => setSelectedBooking(booking)}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                    <span className={`${booking.status === 'rejected' || booking.status === 'canceled' ? 'text-red-300' : 'text-gray-200'}`}>
-                      Status:
-                      {' '}
-                      {bookingStatus.find((status) => status.id === String(booking.status))?.label}
-                    </span>
-                    <button
-                      type="submit"
-                      className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                      onClick={() => navigate(`/petsitter/${booking.petSitterId?._id}`)}
-                    >
-                      {booking?.petSitterId?.name}
-                    </button>
-                    <span>
-                      {booking.petSitterId?.address}
-                      {' '}
-                      -
-                      {' '}
-                      {booking.petSitterId?.cityName}
-                    </span>
-                    <button
-                      type="button"
-                      className="w-fit text-base mb-3 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                      onClick={() => setSelectedBooking(booking)}
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                ))}
-              </div>
+                  </>
+                )}
               <div className="mt-4">
                 <h1 className="mb-3">
                   Veja como você está sendo avaliado
