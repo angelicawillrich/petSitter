@@ -99,7 +99,7 @@ const RegisterPets = () => {
         return rest
       })
       const response = await updateUserPets(updatedPets)
-      getLoggedInUser(response.data.result)
+      getLoggedInUser(response.data.result._id)
       if (loggedInUser.isPetSitter === null || loggedInUser.isPetSitter === undefined) {
         navigate('/bepetsitter')
       } else if (loggedInUser.isPetSitter) {
