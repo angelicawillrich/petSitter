@@ -16,7 +16,7 @@ const Header = () => {
     }
   }
   return (
-    <div className="flex w-full items-center justify-center p-2 bg-purple-900 flex-col max-w-6xl  px-[5%] md:px-[10%] relative">
+    <div className="flex w-full items-center justify-center p-2 bg-purple-900 flex-col max-w-6xl relative">
       <button type="button" onClick={() => redirect()}>
         <img src={Logo} className="h-8" alt="logo" />
       </button>
