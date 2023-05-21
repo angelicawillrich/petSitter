@@ -8,7 +8,6 @@ import HomeUser from './pages/homeUser'
 import Login from './pages/login'
 import PagePetSitter from './pages/pagePetSitter'
 import PageUser from './pages/pageUser'
-import RatingPage from './pages/ratingPage'
 import Register from './pages/register'
 import RegisterProfile from './pages/registerProfile'
 import RegisterPets from './pages/registerPets'
@@ -33,8 +32,6 @@ const App = () => {
             <Route path="/homepetsitter/:petSitterId" element={<HomePetSitter />} />
             <Route path="/user/:userId" element={<PageUser />} />
             <Route path="/petsitter/:petSitterId" element={<PagePetSitter />} />
-            <Route path="/rating/:reviewedByPetSitter/:reviewerId/:reviewedId" element={<RatingPage />} />
-            <Route path="/rating/:ratingId" element={<RatingPage />} />
             <Route path="*" element={<HomeUser />} />
           </Route>
         </Routes>
