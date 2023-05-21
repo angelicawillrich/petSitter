@@ -123,7 +123,7 @@ const PageUser = () => {
                 onClose={() => setIsRatingModalOpen(false)}
                 reviewedName={userInfo?.name || ''}
                 ratingId={userRating ? userRating._id : undefined}
-                reviewedByPetSitter={userRating ? undefined : true}
+                reviewedByPetSitter
                 reviewedId={userRating ? undefined : userInfo?._id}
                 reviewerId={userRating ? undefined : loggedInUser?._id}
               />

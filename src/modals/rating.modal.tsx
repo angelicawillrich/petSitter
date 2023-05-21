@@ -107,19 +107,36 @@ const RatingModal = ({
     }
   }
 
+  const text = reviewedByPetSitter
+    ? (
+      <div className="flex flex-col">
+        <span>Olá!</span>
+        <span>
+          Você foi recentemente contratado por
+          {' '}
+          <b>{reviewedName}</b>
+          {' '}
+          e nós gostaríamos de saber a sua opinião sobre este(a) usuário(a). A sua avaliação ficará disponível na página do(a) usuário(a) onde outros PetSitters poderão vê-la.
+        </span>
+      </div>
+    )
+    : (
+      <div className="flex flex-col">
+        <span>Olá!</span>
+        <span>
+          Você contratou o serviço de
+          {' '}
+          <b>{reviewedName}</b>
+          {' '}
+          e nós gostaríamos de saber a sua opinião sobre este(a) PetSitter. A sua avaliação ficará disponível na página do(a) PetSitter onde outras pessoas poderão vê-la.
+        </span>
+      </div>
+    )
+
   return (
     <Modal title="Avaliacao" onClose={onClose}>
       <div className="flex flex-col max-w-xl justify-center items-center gap-6">
-        <div className="flex flex-col">
-          <span>Olá!</span>
-          <span>
-            Você contratou o serviço de
-            {' '}
-            <b>{reviewedName}</b>
-            {' '}
-            e nós gostaríamos de saber a sua opinião sobre este(a) PetSitter. A sua avaliação ficará disponível na página do(a) PetSitter onde outras pessoas poderão vê-la.
-          </span>
-        </div>
+        {text}
         <Rating rating={formState.rating} onClick={onSetRating} />
         <div className="flex flex-col w-full">
           <TextArea
