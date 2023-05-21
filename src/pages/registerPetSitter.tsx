@@ -163,30 +163,36 @@ const RegisterPetSitter = () => {
             />
           </div>
           {listOfSelectableServices?.length > 0 && (
-          <div className="flex w-full gap-2 items-end">
-            <Dropdown
-              id="servico"
-              label="Serviço*"
-              list={listOfSelectableServices}
-              onChange={onChangeService}
-              value={selectedService.serviceId}
-            />
-            <Input
-              label="Valor R$*"
-              value={selectedService.price}
-              type="number"
-              min="1"
-              step="any"
-              onChange={onChangePrice}
-            />
-            <button
-              type="button"
-              disabled={selectedService.serviceId.trim().length === 0 || selectedService.price.trim().length === 0}
-              onClick={onAddService}
-              className="disabled:opacity-20"
-            >
-              <GoPlus size={40} className="cursor-pointer" />
-            </button>
+          <div className="grid grid-cols-9 w-full gap-2 items-end">
+            <div className="col-span-4">
+              <Dropdown
+                id="servico"
+                label="Serviço*"
+                list={listOfSelectableServices}
+                onChange={onChangeService}
+                value={selectedService.serviceId}
+              />
+            </div>
+            <div className="col-span-4">
+              <Input
+                label="Valor R$*"
+                value={selectedService.price}
+                type="number"
+                min="1"
+                step="any"
+                onChange={onChangePrice}
+              />
+            </div>
+            <div className="flex items-center col-span-1 pb-1">
+              <button
+                type="button"
+                disabled={selectedService.serviceId.trim().length === 0 || selectedService.price.trim().length === 0}
+                onClick={onAddService}
+                className="disabled:opacity-20 w-full"
+              >
+                <GoPlus size={40} className="cursor-pointer" />
+              </button>
+            </div>
           </div>
           )}
           <div className="flex flex-col w-full">

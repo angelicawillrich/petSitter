@@ -162,7 +162,7 @@ const RegisterProfile = () => {
       {loggedInUser?.name && (
         loggedInUser?.isPetSitter
           ? (
-            <div className="flex flex-row w-full justify-start mb-8 items-center gap-1">
+            <div className="flex flex-row w-full justify-start mb-8 items-center gap-1 px-4">
               <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
               <button
                 type="button"
@@ -203,7 +203,7 @@ const RegisterProfile = () => {
             value={formState.district}
             onChange={(e) => onChangeForm('district', e.target.value)}
           />
-          <div className="flex w-full gap-2">
+          <div className="grid grid-cols-2 w-full gap-2">
             <Dropdown
               id="estado"
               label="Estado*"

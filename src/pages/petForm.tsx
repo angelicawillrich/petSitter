@@ -28,7 +28,7 @@ const PetForm = ({
         required
         onChange={(e) => onChangeForm('name', e.target.value)}
       />
-      <div className="flex w-full gap-2">
+      <div className="grid grid-cols-2 w-full gap-2">
         <Input
           value={formState.yearBirth}
           label="Ano de nascimento*"

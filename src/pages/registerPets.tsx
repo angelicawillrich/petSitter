@@ -119,7 +119,7 @@ const RegisterPets = () => {
     <>
       { loggedInUser?.isPetSitter
         ? (
-          <div className="flex flex-row w-full justify-start mb-8 items-center gap-1">
+          <div className="flex flex-row w-full justify-start mb-8 items-center gap-1 px-4">
             <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
             <button
               type="button"
@@ -131,7 +131,7 @@ const RegisterPets = () => {
           </div>
         )
         : (
-          <div className="flex flex-row w-full justify-start mb-8 items-center gap-1">
+          <div className="flex flex-row w-full justify-start mb-8 items-center gap-1 px-4">
             <AiOutlineDoubleRight className="w-3 h-3 text-purple-900" />
             <button
               type="button"
@@ -142,7 +142,7 @@ const RegisterPets = () => {
             </button>
           </div>
         )}
-      <div className="flex flex-col w-full gap-4 justify-center items-center p-4">
+      <div className="flex flex-col w-full gap-4 justify-center items-center px-4">
         <h1>Seu(s) pet(s)</h1>
         {pets && pets.map((pet, index) => (
           <Accordion
