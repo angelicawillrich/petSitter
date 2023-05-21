@@ -1,13 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import Logo from '../assets/logo.svg'
+import { useNavigate } from 'react-router-dom'
 import Button from '../components/baseComponents/button'
 import TextArea from '../components/baseComponents/textArea'
 import { Rating } from '../components/rating'
 import { searchRating } from '../utils'
 import { IUpdateRating, createRating, updateRating } from '../api/rating.api'
 import { StoreContext } from '../context/context'
+import Modal from '../components/baseComponents/modal'
+
+interface IRatingProps {
+  reviewerId?: string
+  reviewedId?: string
+  reviewedName: string
+  reviewedByPetSitter?: boolean
+  ratingId?: string
+  onClose: () => void
+}
 
 const initialState = {
   _id: '',
@@ -15,19 +24,11 @@ const initialState = {
   description: '',
 }
 
-const RatingPage = () => {
+const RatingModal = ({
+  ratingId, reviewedName, reviewedByPetSitter, reviewedId, reviewerId, onClose,
+}: IRatingProps) => {
   const [formState, setFormState] = useState<IUpdateRating>(initialState)
-  const { getUserWithToken, getLoggedInUser, loggedInUser } = useContext(StoreContext)
-
-  const {
-    reviewerId, reviewedId, reviewedByPetSitter, ratingId,
-  } = useParams()
-
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    getUserWithToken(() => navigate('/login'))
-  }, [])
+  const { getLoggedInUser, loggedInUser } = useContext(StoreContext)
 
   const getRating = async () => {
     if (ratingId) {
@@ -41,7 +42,7 @@ const RatingPage = () => {
         })
       } catch (err: any) {
         alert('Não foi possível encontrar a avaliação.')
-        navigate(-1)
+        onClose()
       }
     }
   }
@@ -69,7 +70,7 @@ const RatingPage = () => {
       if (result) {
         loggedInUser && await getLoggedInUser(loggedInUser?._id)
         alert('Sua avaliação foi salva com sucesso!')
-        navigate(-1)
+        onClose()
       }
     } catch (error: any) {
       console.error(error)
@@ -81,7 +82,7 @@ const RatingPage = () => {
     if (!formState.description) {
       alert('Por favor, preecha o campo de texto.')
     }
-    if (!reviewedByPetSitter || !reviewedId || !reviewerId) {
+    if (reviewedByPetSitter === undefined || !reviewedId || !reviewerId) {
       alert('Não foi possível completar a operação.')
       return
     }
@@ -89,7 +90,7 @@ const RatingPage = () => {
       const data = {
         description: formState.description,
         rating: formState.rating,
-        reviewedByPetSitter: reviewedByPetSitter === 'true',
+        reviewedByPetSitter,
         reviewerId,
         reviewedId,
         createdAt: new Date(),
@@ -98,7 +99,7 @@ const RatingPage = () => {
       if (result) {
         loggedInUser && await getLoggedInUser(loggedInUser?._id)
         alert('Sua avaliação foi salva com sucesso!')
-        navigate(-1)
+        onClose()
       }
     } catch (error: any) {
       console.error(error)
@@ -107,41 +108,40 @@ const RatingPage = () => {
   }
 
   return (
-    <div className="flex flex-col max-w-xl justify-center items-center gap-6">
-      <header>
-        <img src={Logo} alt="PetSitter logomarca" />
-      </header>
-      <div className="flex flex-col">
-        <span>Olá!</span>
-        <span>
-          Você contratou o serviço de
-          {' '}
-          <b>Maria A.</b>
-          {' '}
-          e nós gostaríamos de saber a sua opinião sobre este(a) PetSitter. A sua avaliação ficará disponível na página do(a) PetSitter onde outras pessoas poderão vê-la.
-        </span>
+    <Modal title="Avaliacao" onClose={onClose}>
+      <div className="flex flex-col max-w-xl justify-center items-center gap-6">
+        <div className="flex flex-col">
+          <span>Olá!</span>
+          <span>
+            Você contratou o serviço de
+            {' '}
+            <b>{reviewedName}</b>
+            {' '}
+            e nós gostaríamos de saber a sua opinião sobre este(a) PetSitter. A sua avaliação ficará disponível na página do(a) PetSitter onde outras pessoas poderão vê-la.
+          </span>
+        </div>
+        <Rating rating={formState.rating} onClick={onSetRating} />
+        <div className="flex flex-col w-full">
+          <TextArea
+            id="comment"
+            value={formState.description}
+            rows={3}
+            placeholder="Comentário..."
+            maxLength={200}
+            required
+            onChange={(e) => setFormState((previousState) => ({ ...previousState, description: e.target.value }))}
+          />
+          <span className="text-[12px]">Máx. 200 caracteres</span>
+        </div>
+        <Button
+          type="button"
+          onClick={() => (ratingId ? handleSubmitUpdate() : handleSubmitCreate())}
+        >
+          Enviar avaliação
+        </Button>
       </div>
-      <Rating rating={formState.rating} onClick={onSetRating} />
-      <div className="flex flex-col w-full">
-        <TextArea
-          id="comment"
-          value={formState.description}
-          rows={3}
-          placeholder="Comentário..."
-          maxLength={200}
-          required
-          onChange={(e) => setFormState((previousState) => ({ ...previousState, description: e.target.value }))}
-        />
-        <span className="text-[12px]">Máx. 200 caracteres</span>
-      </div>
-      <Button
-        type="button"
-        onClick={() => (ratingId ? handleSubmitUpdate() : handleSubmitCreate())}
-      >
-        Enviar avaliação
-      </Button>
-    </div>
+    </Modal>
   )
 }
 
-export default RatingPage
+export default RatingModal

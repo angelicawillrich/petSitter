@@ -19,6 +19,7 @@ import { path, services, species } from '../shared'
 import 'react-tooltip/dist/react-tooltip.css'
 import Button from '../components/baseComponents/button'
 import PetSitterCalendar from '../components/petSitterCalendar'
+import RatingModal from '../modals/rating.modal'
 
 const PagePetSitter = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -26,6 +27,7 @@ const PagePetSitter = () => {
   const [petSitter, setPetSitter] = useState<IUser | undefined>()
   const [userRating, setUserRating] = useState<IRating | null>(null)
   const [missingRatingBooking, setMissingRatingBookings] = useState<IBooking[]>()
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
 
   const navigate = useNavigate()
 
@@ -61,7 +63,7 @@ const PagePetSitter = () => {
     getUserWithToken(() => navigate('/login'))
   }, [])
 
-  useEffect(() => { getPetSitter() }, [petSitterId])
+  useEffect(() => { getPetSitter() }, [petSitterId, isRatingModalOpen])
 
   const getMissingBookingsRating = async () => {
     if (petSitterId && loggedInUser?._id) {
@@ -96,7 +98,7 @@ const PagePetSitter = () => {
 
   useEffect(() => {
     getUserRating()
-  }, [loggedInUser, petSitterId])
+  }, [loggedInUser, petSitterId, petSitter])
 
   const onImageError = (e: any) => {
     e.target.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D'
@@ -126,6 +128,17 @@ const PagePetSitter = () => {
               onClose={() => setIsCreateModalOpen(false)}
               petSitterServices={petSitter.petSitterInfo.services}
             />
+            )}
+            {isRatingModalOpen
+            && (
+              <RatingModal
+                onClose={() => setIsRatingModalOpen(false)}
+                reviewedName={petSitter?.name || ''}
+                ratingId={userRating ? userRating._id : undefined}
+                reviewedByPetSitter={userRating ? undefined : false}
+                reviewedId={userRating ? undefined : petSitter?._id}
+                reviewerId={userRating ? undefined : loggedInUser?._id}
+              />
             )}
             <div className="flex flex-col flex-1 h-full basis-3/5 divide-y divide-y-reverse divide-gray-100">
               <div>
@@ -217,20 +230,23 @@ const PagePetSitter = () => {
                 <div className="flex flex-row justify-between mt-4">
                   <h1 className="mb-3">Posts</h1>
                 </div>
-                <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols">
-                  {petSitter?.posts.map((post) => (
-                    <div key={post._id} className="flex flex-col">
-                      <img
-                        src={`${path}${post?.filename}`}
-                        alt=""
-                        className="w-40"
-                      />
-                      <span className="text-gray-400 text-xs font-medium">{post.description}</span>
-                      <span className="text-gray-400 text-[9px] font-medium">{new Date(post.date).toLocaleDateString('pt-BR')}</span>
+                {petSitter?.posts && petSitter?.posts.length > 0
+                  ? (
+                    <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols">
+                      {petSitter?.posts.map((post) => (
+                        <div key={post._id} className="flex flex-col">
+                          <img
+                            src={`${path}${post?.filename}`}
+                            alt=""
+                            className="w-40"
+                          />
+                          <span className="text-gray-400 text-xs font-medium">{post.description}</span>
+                          <span className="text-gray-400 text-[9px] font-medium">{new Date(post.date).toLocaleDateString('pt-BR')}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-
-                </div>
+                  )
+                  : <span>PetSitter ainda não postou nada.</span>}
               </div>
             </div>
             <div className="flex flex-col flex-1 h-full basis-2/5 divide-y divide-y-reverse divide-gray-100">
@@ -250,7 +266,7 @@ const PagePetSitter = () => {
                   {' '}
                   {petSitter?.ratingsReceived && petSitter?.ratingsReceived?.length > 0 && `${calculateRatingAverage(petSitter.ratingsReceived)}/5`}
                 </h1>
-                {userRating && missingRatingBooking?.length === 0
+                {userRating && (!missingRatingBooking || missingRatingBooking?.length === 0)
                 && (
                 <div className="flex flex-col bg-purple-50 rounded p-3">
                   <span className="font-bold mb-2">Esta é a sua avaliaçao para este PetSitter:</span>
@@ -262,7 +278,7 @@ const PagePetSitter = () => {
                   <button
                     type="button"
                     className="w-fit mt-2 text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                    onClick={() => navigate(`/rating/${userRating._id}`)}
+                    onClick={() => setIsRatingModalOpen(true)}
                   >
                     Editar
                   </button>
@@ -275,7 +291,7 @@ const PagePetSitter = () => {
                     <button
                       type="button"
                       className="w-fit mt-2 text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
-                      onClick={() => navigate(`/rating/${false}/${loggedInUser?._id}/${petSitterId}`)}
+                      onClick={() => setIsRatingModalOpen(true)}
                     >
                       Avalie agora
                     </button>
@@ -296,7 +312,7 @@ const PagePetSitter = () => {
                         </div>
                       )
                   ))
-                  : (<span>Usuário ainda não recebeu avaliações.</span>)}
+                  : (<span>PetSitter ainda não recebeu avaliações.</span>)}
 
               </div>
             </div>

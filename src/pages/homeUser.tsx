@@ -240,6 +240,7 @@ const HomeUser = () => {
               <div className="mt-4">
                 <h1 className="mb-3">
                   Veja como você está sendo avaliado
+                  {' '}
                   {loggedInUser?.ratingsReceived && loggedInUser?.ratingsReceived?.length > 0 && `${calculateRatingAverage(loggedInUser.ratingsReceived)}/5`}
                 </h1>
                 {loggedInUser?.ratingsReceived.length
