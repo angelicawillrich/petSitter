@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-nested-ternary */
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
@@ -15,6 +16,7 @@ import { IBooking } from '../interfaces/interfaces'
 import { path, services, species } from '../shared'
 import PetSitterCalendar from '../components/petSitterCalendar'
 import { deleteAvailableDate } from '../api/user.api'
+import ImageNotFound from '../assets/not_found.png'
 
 interface IBookingsConflict {
   bookingInfo: IBooking
@@ -267,7 +269,15 @@ const HomePetSitter = () => {
                     <div className="max-h-96 overflow-auto grid grid-cols-3 gap-2 grid-cols">
                       {loggedInPetSitter?.posts.map((post) => (
                         <div key={post._id} className="flex flex-col">
-                          <img src={`${path}${post.filename}`} alt="" />
+                          <img
+                            src={`${path}${post.filename}`}
+                            alt=""
+                            className="w-40"
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null // prevents looping
+                              currentTarget.src = ImageNotFound
+                            }}
+                          />
                           <span className="text-gray-400 text-xs font-medium">{post.description}</span>
                           <span className="text-gray-400 text-[8px]">{new Date(post.date).toLocaleDateString('pt-BR')}</span>
                         </div>

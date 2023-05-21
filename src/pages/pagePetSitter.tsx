@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, {
   useContext, useEffect, useState,
 } from 'react'
@@ -21,6 +22,8 @@ import Button from '../components/baseComponents/button'
 import PetSitterCalendar from '../components/petSitterCalendar'
 import RatingModal from '../modals/rating.modal'
 
+import ImageNotFound from '../assets/not_found.png'
+
 const PagePetSitter = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -28,6 +31,7 @@ const PagePetSitter = () => {
   const [userRating, setUserRating] = useState<IRating | null>(null)
   const [missingRatingBooking, setMissingRatingBookings] = useState<IBooking[]>()
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
+  const [imageError, setImageError] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -100,10 +104,6 @@ const PagePetSitter = () => {
     getUserRating()
   }, [loggedInUser, petSitterId, petSitter])
 
-  const onImageError = (e: any) => {
-    e.target.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D'
-  }
-
   return (
     isLoading
       ? (<span>CARREGANDO...</span>)
@@ -144,17 +144,18 @@ const PagePetSitter = () => {
               <div>
                 <div className="flex flex-row gap-4">
                   <div className="flex justify-center items-center mb-3">
-                    {petSitter?.profilePicture
+                    {petSitter?.profilePicture && !imageError.includes(petSitter._id)
                       ? (
                         <img
-                          src={`${path}${petSitter?.profilePicture}`}
-                          alt="dummy1"
-                          className="w-16 h-16 rounded-full"
-                          onError={onImageError}
+                          src={`${path}${petSitter.profilePicture}`}
+                          alt="Foto de perfil"
+                          className="w-9 h-9 rounded-full"
+                          onError={() => {
+                            setImageError((previousState) => [...previousState, petSitter._id])
+                          }}
                         />
                       )
-                      : (generateInitialsAvatar(petSitter?.name || ''))}
-
+                      : generateInitialsAvatar(petSitter?.name || '')}
                     <div className="fley flex-col ml-2">
                       <h1>{petSitter?.name}</h1>
                     </div>
@@ -236,9 +237,13 @@ const PagePetSitter = () => {
                       {petSitter?.posts.map((post) => (
                         <div key={post._id} className="flex flex-col">
                           <img
-                            src={`${path}${post?.filename}`}
+                            src={`${path}${post.filename}`}
                             alt=""
                             className="w-40"
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null // prevents looping
+                              currentTarget.src = ImageNotFound
+                            }}
                           />
                           <span className="text-gray-400 text-xs font-medium">{post.description}</span>
                           <span className="text-gray-400 text-[9px] font-medium">{new Date(post.date).toLocaleDateString('pt-BR')}</span>

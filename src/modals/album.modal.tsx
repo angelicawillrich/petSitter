@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 import React, { useContext, useState } from 'react'
 import { IoMdCloseCircle } from 'react-icons/io'
@@ -9,6 +10,7 @@ import { convertBase64 } from '../utils'
 import { StoreContext } from '../context/context'
 import { addPhotoAlbum, deletePhotoAlbum } from '../api/user.api'
 import { IUser } from '../interfaces/interfaces'
+import ImageNotFound from '../assets/not_found.png'
 
 interface Photo {
   _id?: string
@@ -69,7 +71,15 @@ const AlbumModal = ({ onClose, photos, user }: AlbumModalProps) => {
                   className="absolute top-0 right-0 cursor-pointer"
                   onClick={() => onDeleteImage(photo?._id)}
                 />
-                <img src={`${path}${photo.filename}`} alt="" />
+                <img
+                  src={`${path}${photo.filename}`}
+                  alt=""
+                  className="w-40"
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null // prevents looping
+                    currentTarget.src = ImageNotFound
+                  }}
+                />
               </div>
             ))}
           </div>

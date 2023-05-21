@@ -9,8 +9,7 @@ import { species, arrayRatings, path } from '../shared'
 import { getCitiesByState, getStates } from '../api/external.api'
 import { IFilterPetSitter, IUser } from '../interfaces/interfaces'
 import { fetchPetSitters, filterPetSitter } from '../api/user.api'
-import { calculateRatingAverage, calculateRatingsStars } from '../utils'
-import Dummy2 from '../assets/dummy2.png'
+import { calculateRatingAverage, calculateRatingsStars, generateInitialsAvatar } from '../utils'
 
 interface ISearchPetSitter {
   onClose: () => void
@@ -54,6 +53,7 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
   const [listCity, setListCity] = useState<IList[] | []>([])
   const [selectedState, setSelectedState] = useState<string | undefined>()
   const [listOfPetSitters, setListOfPetSitters] = useState<IPetSitterData[]>([])
+  const [imageError, setImageError] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -184,15 +184,18 @@ const SearchPetSitterModal = ({ onClose }: ISearchPetSitter) => {
           ) : (
             listOfPetSitters.map((petSitter) => (
               <div key={petSitter.name} className="flex flex-row w-full justify-start items-center mb-3 gap-3">
-                <img
-                  src={`${path}${petSitter.profilePicture}`}
-                  alt="Foto do PetSitter"
-                  className="w-12 h-12 rounded-full"
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null // prevents looping
-                    currentTarget.src = Dummy2
-                  }}
-                />
+                {petSitter?.profilePicture && !imageError.includes(petSitter._id)
+                  ? (
+                    <img
+                      src={`${path}${petSitter.profilePicture}`}
+                      alt="Foto de perfil"
+                      className="w-9 h-9 rounded-full"
+                      onError={() => {
+                        setImageError((previousState) => [...previousState, petSitter._id])
+                      }}
+                    />
+                  )
+                  : generateInitialsAvatar(petSitter?.name || '')}
                 <div className="flex flex-col">
                   <div className="flex flex-row items-center gap-2">
                     <button

@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable no-param-reassign */
 import React, { useContext, useState } from 'react'
 import { IoMdCloseCircle } from 'react-icons/io'
 import Button from '../components/baseComponents/button'
@@ -8,6 +8,7 @@ import { createPost, deletePost } from '../api/user.api'
 import { StoreContext } from '../context/context'
 import { convertBase64 } from '../utils'
 import { path } from '../shared'
+import ImageNotFound from '../assets/not_found.png'
 
 interface PostsModalProps {
   onClose: () => void
@@ -85,7 +86,15 @@ const PostsModal = ({ onClose }: PostsModalProps) => {
               className="absolute top-0 right-0 cursor-pointer"
               onClick={() => onDeletePost(post._id)}
             />
-            <img src={`${path}${post.filename}`} alt="" />
+            <img
+              src={`${path}${post.filename}`}
+              alt=""
+              className="w-40"
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null // prevents looping
+                currentTarget.src = ImageNotFound
+              }}
+            />
             <span className="text-gray-400 text-xs font-medium">{post.description}</span>
             <span className="text-gray-400 text-[8px]">{new Date(post.date).toLocaleDateString('pt-BR')}</span>
           </div>

@@ -9,6 +9,7 @@ import useOutsideClick from '../hooks'
 
 const Menu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
   const navigate = useNavigate()
 
@@ -25,6 +26,7 @@ const Menu = () => {
     setIsMenuOpen(false)
     navigate('/login')
   }
+
   return (
     loggedInUser && loggedInUser.name
       ? (
@@ -37,12 +39,15 @@ const Menu = () => {
             className="right-1 absolute w-10 h-10"
             onClick={() => setIsMenuOpen((previousState) => !previousState)}
           >
-            {loggedInUser?.profilePicture
+            {loggedInUser?.profilePicture && !imageError
               ? (
                 <img
                   src={`${path}${loggedInUser.profilePicture}`}
                   alt="Foto de perfil"
                   className="w-9 h-9 rounded-full"
+                  onError={() => {
+                    setImageError(true)
+                  }}
                 />
               )
               : generateInitialsAvatar(loggedInUser?.name || '')}

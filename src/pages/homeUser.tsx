@@ -10,18 +10,21 @@ import { useNavigate } from 'react-router-dom'
 import CancelBookingModal from '../modals/cancelBooking.modal'
 import SearchPetSitterModal from '../modals/searchPetSitter.modal'
 import AlbumModal from '../modals/album.modal'
-import { calculateRatingAverage, calculateRatingsStars, showStars } from '../utils'
+import {
+  calculateRatingAverage, calculateRatingsStars, generateInitialsAvatar, showStars,
+} from '../utils'
 import { StoreContext } from '../context/context'
 import { bookingStatus, path } from '../shared'
 import {
   IBooking, IBookingPersonalData, IRating,
 } from '../interfaces/interfaces'
-import Dummy2 from '../assets/dummy2.png'
+import ImageNotFound from '../assets/not_found.png'
 
 const HomeUser = () => {
   const [selectedBooking, setSelectedBooking] = useState<IBooking | undefined>()
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false)
+  const [imageError, setImageError] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -87,17 +90,18 @@ const HomeUser = () => {
                   ? (
                     recentPetSitters?.map((petSitter) => (
                       <div key={petSitter._id} className="flex flex-col justify-center items-center mb-3">
-                        {petSitter.profilePicture && (
-                        <img
-                          src={`${path}${petSitter.profilePicture}`}
-                          alt="Foto do PetSitter"
-                          className="w-12 h-12 rounded-full mb-2"
-                          onError={({ currentTarget }) => {
-                            currentTarget.onerror = null // prevents looping
-                            currentTarget.src = Dummy2
-                          }}
-                        />
-                        )}
+                        {petSitter?.profilePicture && !imageError.includes(petSitter._id)
+                          ? (
+                            <img
+                              src={`${path}${petSitter.profilePicture}`}
+                              alt="Foto de perfil"
+                              className="w-9 h-9 rounded-full"
+                              onError={() => {
+                                setImageError((previousState) => [...previousState, petSitter._id])
+                              }}
+                            />
+                          )
+                          : generateInitialsAvatar(petSitter?.name || '')}
                         <button
                           type="button"
                           className="w-fit text-base text-gray-900 decoration-transparent border-b-[1px] p-0 m-0 leading-none hover:text-gray-600"
@@ -120,15 +124,18 @@ const HomeUser = () => {
                   {petSittersList && petSittersList.map((petSitter) => (
                     (
                       <div key={petSitter._id} className="flex flex-row items-center mb-3 gap-3">
-                        <img
-                          src={`${path}${petSitter.profilePicture}`}
-                          alt="Foto do PetSitter"
-                          className="w-12 h-12 rounded-full"
-                          onError={({ currentTarget }) => {
-                            currentTarget.onerror = null // prevents looping
-                            currentTarget.src = Dummy2
-                          }}
-                        />
+                        {petSitter?.profilePicture && !imageError.includes(petSitter._id)
+                          ? (
+                            <img
+                              src={`${path}${petSitter.profilePicture}`}
+                              alt="Foto de perfil"
+                              className="w-9 h-9 rounded-full"
+                              onError={() => {
+                                setImageError((previousState) => [...previousState, petSitter._id])
+                              }}
+                            />
+                          )
+                          : generateInitialsAvatar(petSitter?.name || '')}
                         <div className="flex flex-col">
                           <div className="flex flex-row items-center gap-2">
                             <button
@@ -176,7 +183,18 @@ const HomeUser = () => {
                   ? (
                     <div className="max-h-80 overflow-auto grid grid-cols-3 gap-2 grid-cols">
 
-                      {loggedInUser.album.map((photo) => <img key={photo._id} src={`${path}${photo.filename}`} alt="" />)}
+                      {loggedInUser.album.map((photo) => (
+                        <img
+                          key={photo._id}
+                          src={`${path}${photo.filename}`}
+                          alt=""
+                          className="w-40"
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null // prevents looping
+                            currentTarget.src = ImageNotFound
+                          }}
+                        />
+                      ))}
 
                     </div>
                   )

@@ -27,6 +27,7 @@ const RegisterPets = () => {
   const [formState, setFormState] = useState<IPetFormState>(formStateInitialState)
   const [pets, setPets] = useState<IPetFormState[]>([])
   const [selectedPet, setSelectedPet] = useState<number | undefined>()
+  const [imageError, setImageError] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -148,10 +149,9 @@ const RegisterPets = () => {
           <Accordion
             header={(
               <div className="flex flex-row gap-2 items-center">
-                {pet.picture
+                {pet.picture && (pet?.localPicture || (pet._id && !imageError.includes(pet._id)))
                   ? (
                     <img
-                      className="h-10 w-10 rounded-full object-cover"
                       src={
                       pet.picture?.split('/')[1] === 'images'
                         ? (`${path}${pet.picture}`)
@@ -159,7 +159,11 @@ const RegisterPets = () => {
                           ? (URL.createObjectURL(pet.localPicture))
                           : undefined
                     }
-                      alt="Foto do pet"
+                      alt="Foto de perfil"
+                      className="w-9 h-9 rounded-full"
+                      onError={() => {
+                        setImageError((previousState) => [...previousState, pet._id!])
+                      }}
                     />
                   )
                   : (generateInitialsAvatar(pet.name))}

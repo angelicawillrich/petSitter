@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AiOutlineDoubleRight } from 'react-icons/ai'
 import moment from 'moment'
-import Dummy1 from '../assets/dummy1.png'
+import ImageNotFound from '../assets/not_found.png'
 import {
   calculateRatingAverage, generateInitialsAvatar, searchFilteredBookings, showStars,
 } from '../utils'
@@ -20,6 +20,7 @@ const PageUser = () => {
   const [userRating, setUserRating] = useState<IRating | null>(null)
   const [missingRatingBooking, setMissingRatingBookings] = useState<IBooking[]>()
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
+  const [imageError, setImageError] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -94,10 +95,6 @@ const PageUser = () => {
     getUserRating()
   }, [loggedInUser, userId, userInfo])
 
-  const onImageError = (e: any) => {
-    e.target.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D'
-  }
-
   return (
     isLoading
       ? (<span>CARREGANDO...</span>)
@@ -132,16 +129,19 @@ const PageUser = () => {
               <div>
                 <div className="flex flex-row gap-4">
                   <div className="flex justify-center items-center mb-3">
-                    <img
-                      src={`${path}${userInfo?.profilePicture}`}
-                      alt="dummy1"
-                      className="w-16 h-16 rounded-full mr-2"
-                      onError={({ currentTarget }) => {
-                        currentTarget.onerror = null // prevents looping
-                        currentTarget.src = Dummy1
-                      }}
-                    />
-                    <div className="fley flex-col">
+                    {userInfo?.profilePicture && !imageError.includes(userInfo._id)
+                      ? (
+                        <img
+                          src={`${path}${userInfo.profilePicture}`}
+                          alt="Foto de perfil"
+                          className="w-16 h-16 rounded-full"
+                          onError={() => {
+                            setImageError((previousState) => [...previousState, userInfo._id])
+                          }}
+                        />
+                      )
+                      : generateInitialsAvatar(userInfo?.name || '')}
+                    <div className="fley flex-col ml-2">
                       <h1>{userInfo?.name}</h1>
                     </div>
                   </div>
@@ -176,13 +176,15 @@ const PageUser = () => {
                       <Accordion
                         header={(
                           <div className="flex flex-row gap-2 items-center">
-                            {pet.picture
+                            {pet.picture && !imageError.includes(pet._id)
                               ? (
                                 <img
-                                  className="h-10 w-10 rounded-full object-cover"
                                   src={`${path}${pet.picture}`}
-                                  alt="Foto do pet"
-                                  onError={onImageError}
+                                  alt="Foto de perfil"
+                                  className="w-9 h-9 rounded-full"
+                                  onError={() => {
+                                    setImageError((previousState) => [...previousState, pet._id])
+                                  }}
                                 />
                               )
                               : (generateInitialsAvatar(pet.name))}
@@ -231,12 +233,15 @@ const PageUser = () => {
                   ? (
                     <div className="max-h-96 overflow-auto grid grid-cols-4 gap-2 grid-cols mt-4 mb-3">
                       {userInfo.album.map((photo) => (
-
                         <div key={photo._id} className="mb-3">
                           <img
                             src={`${path}${photo.filename}`}
                             alt=""
                             className="w-40"
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null // prevents looping
+                              currentTarget.src = ImageNotFound
+                            }}
                           />
                         </div>
 
