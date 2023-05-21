@@ -30,8 +30,13 @@ const HomeUser = () => {
   } = useContext(StoreContext)
 
   useEffect(() => {
-    getUserWithToken(() => navigate('/login'))
-    fetchPetSittersList()
+    const hasToken = localStorage.getItem('Token')
+    if (!hasToken) {
+      navigate('/login')
+    } else {
+      getUserWithToken(() => navigate('/login'))
+      fetchPetSittersList()
+    }
   }, [])
 
   const handleCloseBookingModal = () => {
