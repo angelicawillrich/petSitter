@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useEffect, useState } from 'react'
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai'
 import { BsTrash } from 'react-icons/bs'
@@ -18,7 +19,7 @@ const Accordion = ({
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleAccordion = () => {
-    setIsOpen(!isOpen)
+    !isSelected && setIsOpen(!isOpen)
   }
 
   useEffect(() => { if (isSelected) setIsOpen(true) }, [isSelected])
@@ -28,12 +29,18 @@ const Accordion = ({
       <div className="flex w-full items-start">
         <button type="button" className="accordion-header flex w-full text-lg font-bold text-black justify-between mr-2" onClick={() => toggleAccordion()}>
           <h3>{header}</h3>
-          <span>{isOpen ? <AiOutlineCaretUp /> : <AiOutlineCaretDown />}</span>
+          <span>
+            {
+          isOpen
+            ? <AiOutlineCaretUp className={`${isSelected ? 'text-gray-100' : 'text-gray-500'}`} />
+            : <AiOutlineCaretDown className="text-gray-500" />
+          }
+          </span>
         </button>
         {showControllers && onEdit && onDelete && (
           <>
             <FaRegEdit
-              className="w-6 h-6 mr-2 cursor-pointer"
+              className={`w-6 h-6 mr-2 cursor-pointer ${isSelected ? 'text-purple-800' : ''}`}
               onClick={onEdit}
             />
             <BsTrash
