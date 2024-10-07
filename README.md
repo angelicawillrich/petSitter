@@ -16,7 +16,7 @@ Run the project
 npm run dev
 ```
 
-##PT-BR
+## PT-BR
 
 # PetSitter Frontend
 
