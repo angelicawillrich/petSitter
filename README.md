@@ -1,6 +1,6 @@
 # PetSitter Frontend
 
-This project is part of the final project for the Software Engineering 2023 course (UNIGRAN).
+This project is part of the final project for the Bachelor's degree in Software Engineering (2023) at UNIGRAN.
 
 ## Execution
 
